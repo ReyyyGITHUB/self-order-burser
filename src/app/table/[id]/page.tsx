@@ -305,14 +305,24 @@ export default function TablePage() {
 
       {/* Main Body Container */}
       <main className="flex-1 px-6 pt-5 pb-24 overflow-y-auto">
-        {/* Banner Promo */}
-        <div className="bg-primary-cta text-white rounded-2xl p-4 mb-6 shadow-sm flex justify-between items-center relative overflow-hidden">
-          <div className="z-10 max-w-[70%]">
-            <span className="font-mono text-[9px] uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-full">PROMO SPESIAL</span>
-            <h3 className="font-bold text-lg leading-tight mt-2">Mie Dok Dok Terfavorit!</h3>
-            <p className="text-xs text-white/80 mt-1">Hanya Rp 15.000 dengan rasa khas Semarang.</p>
+        {/* Banner Promo (Image Banner with Text Overlay) */}
+        <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden mb-6 shadow-sm border border-border-light">
+          <img
+            alt="Promo Mie Dok Dok"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaXctnCpXa9SsX1UUUvcWzipjtw_MSj6POf1WGxJ3NlJ8gptVSpLqX1dCxs5rWo0sKtzcu8lW4pGA50f4TyG_evAjx6EzHNNSb6sZHfSVlGn1VcI8paZAzAXDBuPm62s_P4wfRVediR1E6jzwawhPOeUUIN2s4D7RRo2cDis2C2HVSrbOcZ_qjlTrmFsIHkcohPLQeODB4Xn9aHC-zvp4e2SUCTHmo_rLlo_USWV-E3S-AOxfLezKt-ScQDFJ15sTCbXPwIBpLvrF2"
+            className="w-full h-full object-cover transition-transform duration-10000 hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-transparent flex flex-col justify-end p-4">
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-widest bg-primary-cta text-white px-2 py-0.5 rounded-full w-fit font-bold shadow-sm">
+              PROMO SPESIAL
+            </span>
+            <h3 className="font-bold text-base sm:text-lg text-white leading-tight mt-1.5 drop-shadow-sm">
+              Mie Dok Dok Terfavorit!
+            </h3>
+            <p className="text-[10px] sm:text-xs text-white/85 mt-0.5 drop-shadow-sm">
+              Hanya Rp 15.000 dengan rasa khas Semarang.
+            </p>
           </div>
-          <Flame className="w-20 h-20 text-white/10 absolute -right-4 -bottom-4 transform rotate-12" />
         </div>
 
         {/* Categories Horizontal Scroll */}
