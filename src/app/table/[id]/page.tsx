@@ -59,15 +59,15 @@ export default function TablePage() {
         {/* Bottom: Content & Form */}
         <div className="flex-1 flex flex-col justify-between px-8 pb-8 z-10 bg-surface overflow-hidden">
           {/* Editorial Header Text */}
-          <div className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-col gap-4 mt-6">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs tracking-widest uppercase text-primary/80">MEJA {tableId}</span>
-              <Utensils className="w-3.5 h-3.5 text-primary/80" />
+              <span className="font-mono text-xs tracking-widest uppercase text-primary/85 font-semibold">MEJA {tableId}</span>
+              <Utensils className="w-3.5 h-3.5 text-primary/85" />
             </div>
-            <h1 className="font-headline text-[32px] sm:text-[36px] leading-[1.1] tracking-tight text-on-surface font-bold">
+            <h1 className="font-sans text-[40px] leading-[1.1] tracking-tight text-on-surface font-bold">
               Selamat<br />Datang.
             </h1>
-            <p className="font-sans text-xs sm:text-sm text-muted-text max-w-[280px]">
+            <p className="font-sans text-sm text-muted-text max-w-[280px] leading-relaxed">
               Yuk, kenalan dulu sebelum mulai pesan makanan favoritmu.
             </p>
           </div>

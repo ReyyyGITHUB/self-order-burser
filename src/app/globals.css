@@ -170,5 +170,5 @@
 body {
   background-color: var(--background);
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif !important;
 }
