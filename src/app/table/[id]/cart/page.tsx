@@ -32,7 +32,17 @@ export default function CartPage() {
   useEffect(() => {
     setMounted(true);
 
-    // Cek transaksi pending aktif untuk auto-redirect
+    // Cart Force-Purge Guard (Solusi 4) - Jika baru sukses bayar, bersihkan paksa sisa cache di memori browser
+    const paymentCompletedFlag = localStorage.getItem("payment_completed_flag");
+    if (paymentCompletedFlag === "true") {
+      localStorage.removeItem("cart_items");
+      localStorage.removeItem("pending_order_mitigation");
+      localStorage.removeItem("payment_completed_flag");
+      window.location.reload();
+      return;
+    }
+
+    // Cek transaksi pending aktif untuk auto-redirect (Solusi 3 & Lock)
     const pendingOrderStr = localStorage.getItem("pending_order_mitigation");
     if (pendingOrderStr) {
       try {

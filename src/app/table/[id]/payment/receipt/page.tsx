@@ -25,6 +25,7 @@ export default function ReceiptPage() {
   const [paymentMethod, setPaymentMethod] = useState("QRIS");
   const [items, setItems] = useState<CartItem[]>([]);
   const [orderTime, setOrderTime] = useState("");
+  const [verifying, setVerifying] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -41,26 +42,82 @@ export default function ReceiptPage() {
 
     // Load paid order details from historical session cache
     const pendingOrderStr = localStorage.getItem("pending_order_mitigation");
-    if (pendingOrderStr) {
-      try {
-        const pendingOrder = JSON.parse(pendingOrderStr);
-        setTotalAmount(pendingOrder.total || 25000);
-        setOrderId(pendingOrder.orderId || `BJR-${Date.now().toString().slice(-3)}`);
-        setPaymentMethod(pendingOrder.paymentMethod === "qris" ? "QRIS / E-Wallet" : "Kasir (Tunai)");
-        setItems(pendingOrder.items || []);
-      } catch (e) {
-        console.error("Gagal memuat struk pesanan:", e);
-      }
-    }
-    
-    const savedName = localStorage.getItem("customer_name");
-    if (savedName) {
-      setCustomerName(savedName);
+    const activeCacheStr = localStorage.getItem("pending_order_mitigation"); // We keep it in cache for verification
+
+    if (!pendingOrderStr) {
+      // Jika tidak ada data transaksi aktif di cache, usir langsung ke menu
+      console.warn("Akses ditolak: Tidak ada detail transaksi.");
+      router.push(`/table/${tableId}`);
+      return;
     }
 
-    // Bersihkan cart & pending order setelah sukses agar user tidak terlock saat kembali ke menu
-    localStorage.removeItem("cart_items");
-    localStorage.removeItem("pending_order_mitigation");
+    try {
+      const pendingOrder = JSON.parse(pendingOrderStr);
+      const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+      const txId = pendingOrder.orderId;
+
+      // Ambil cache QRIS untuk verifikasi ID transaksi asli Louvin
+      let louvinTxId = "";
+      const qrisCacheStr = localStorage.getItem(`qris_cache_${txId}`);
+      if (qrisCacheStr) {
+        const qrisCache = JSON.parse(qrisCacheStr);
+        louvinTxId = qrisCache.transactionId;
+      }
+
+      // MILITARY-GRADE GUARD: Validasi langsung status pembayaran di server gateway!
+      const verifyPaymentOnServer = async () => {
+        try {
+          // Jika mode demo & menggunakan mock transaction, loloskan verifikasi
+          if (isDemoMode && (!louvinTxId || louvinTxId.startsWith("mock-txn-"))) {
+            setVerifying(false);
+            return;
+          }
+
+          if (!louvinTxId) {
+            throw new Error("ID Transaksi Louvin tidak ditemukan di cache.");
+          }
+
+          const res = await fetch(`/api/payment/status?id=${louvinTxId}`);
+          if (!res.ok) throw new Error("Gagal verifikasi pembayaran di server.");
+
+          const data = await res.json();
+          if (data.success && data.transaction.status === "settled") {
+            // Sukses bayar! Loloskan verifikasi
+            setVerifying(false);
+          } else {
+            throw new Error("Transaksi belum lunas di server.");
+          }
+        } catch (err) {
+          console.error("Payment Guard Blocked Access:", err);
+          // Hancurkan semua sesi karena terdeteksi fraud/bypass ilegal
+          localStorage.removeItem("cart_items");
+          localStorage.removeItem("pending_order_mitigation");
+          if (qrisCacheStr) localStorage.removeItem(`qris_cache_${txId}`);
+          
+          alert("Akses Ditolak: Pembayaran Anda belum terverifikasi secara sah di server.");
+          router.push(`/table/${tableId}`);
+        }
+      };
+
+      verifyPaymentOnServer();
+
+      setTotalAmount(pendingOrder.total || 25000);
+      setOrderId(pendingOrder.orderId || `BJR-${Date.now().toString().slice(-3)}`);
+      setPaymentMethod(pendingOrder.paymentMethod === "qris" ? "QRIS / E-Wallet" : "Kasir (Tunai)");
+      setItems(pendingOrder.items || []);
+
+      const savedName = localStorage.getItem("customer_name");
+      if (savedName) {
+        setCustomerName(savedName);
+      }
+
+      // Pasang flag sukses untuk mengaktifkan Cart Force-Purge Guard di halaman lain
+      localStorage.setItem("payment_completed_flag", "true");
+
+    } catch (e) {
+      console.error("Error parsing pending order:", e);
+      router.push(`/table/${tableId}`);
+    }
   }, []);
 
   const getSubtotal = () => {
@@ -71,10 +128,19 @@ export default function ReceiptPage() {
     return Math.round(getSubtotal() * 0.11);
   };
 
-  if (!mounted) {
+  // Bersihkan cache keranjang saat user menekan tombol "Pesan Lagi" untuk keluar dari halaman struk
+  const handleExitReceipt = () => {
+    localStorage.removeItem("cart_items");
+    localStorage.removeItem("pending_order_mitigation");
+    localStorage.removeItem("payment_completed_flag");
+    router.push(`/table/${tableId}`);
+  };
+
+  if (!mounted || verifying) {
     return (
-      <div className="flex-grow flex items-center justify-center bg-page-bg min-h-screen">
-        <div className="w-8 h-8 border-4 border-primary-cta border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex-grow flex items-center justify-center bg-page-bg min-h-screen flex-col gap-3">
+        <div className="w-8 h-8 border-4 border-[#825429] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-xs text-text-secondary font-semibold font-mono animate-pulse">Memverifikasi keamanan struk...</p>
       </div>
     );
   }
@@ -203,7 +269,7 @@ export default function ReceiptPage() {
 
         {/* Action Button: Back to Main Menu */}
         <button
-          onClick={() => router.push(`/table/${tableId}`)}
+          onClick={handleExitReceipt}
           className="w-full bg-[#825429] text-white py-3.5 rounded-xl font-bold text-xs shadow-md hover:bg-[#825429]/95 transition-all flex items-center justify-center gap-1.5 group mt-2"
         >
           <span>Pesan Lagi</span>
