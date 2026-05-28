@@ -109,11 +109,28 @@ export default function CartPage() {
     setTimeout(() => {
       setIsOrdering(false);
       
-      const generatedOrderId = `BJR-${Math.floor(100 + Math.random() * 900)}`;
+      let finalOrderId = `BJR-${Math.floor(100 + Math.random() * 900)}`;
+      
+      // Cek apakah pesanan identik dengan pesanan pending sebelumnya untuk reuse Order ID
+      const prevPendingStr = localStorage.getItem("pending_order_mitigation");
+      if (prevPendingStr) {
+        try {
+          const prevPending = JSON.parse(prevPendingStr);
+          const isSameCart = JSON.stringify(prevPending.items) === JSON.stringify(currentCart);
+          const isSameTotal = prevPending.total === currentTotal;
+          const isSameMethod = prevPending.paymentMethod === currentMethod;
+          
+          if (isSameCart && isSameTotal && isSameMethod) {
+            finalOrderId = prevPending.orderId;
+          }
+        } catch (e) {
+          console.error("Gagal mencocokkan order ID sebelumnya:", e);
+        }
+      }
       
       // Simpan riwayat order sementara
       const pendingOrder = {
-        orderId: generatedOrderId,
+        orderId: finalOrderId,
         items: currentCart,
         total: currentTotal,
         paymentMethod: currentMethod,
