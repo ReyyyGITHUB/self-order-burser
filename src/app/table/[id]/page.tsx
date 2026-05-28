@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare, ChevronDown, LogOut } from "lucide-react";
+import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare, ChevronDown, LogOut, Trash2 } from "lucide-react";
 
 // Hardcoded Menu Data
 const MENU_ITEMS = [
@@ -122,15 +122,33 @@ export default function TablePage() {
 
   const handleOpenCustomization = (item: typeof MENU_ITEMS[0]) => {
     setSelectedItem(item);
-    setCustomSpicyLevel(item.hasSpicy ? 1 : 0);
-    setCustomNotes("");
-    setCustomQuantity(1);
+    
+    // Cari apakah item ini sudah ada di keranjang
+    const existing = cart.find((c) => c.menuItemId === item.id);
+    
+    setCustomSpicyLevel(existing?.spicyLevel !== undefined ? existing.spicyLevel : (item.hasSpicy ? 1 : 0));
+    setCustomNotes(existing?.notes || "");
+    setCustomQuantity(existing ? existing.quantity : 1);
     setShowDesc(false);
     setSheetOpen(true);
   };
 
   const handleAddToCart = () => {
     if (!selectedItem) return;
+
+    if (customQuantity === 0) {
+      // Hapus item dari keranjang
+      const updatedCart = cart.filter(
+        (item) =>
+          !(item.menuItemId === selectedItem.id &&
+            item.spicyLevel === (selectedItem.hasSpicy ? customSpicyLevel : undefined) &&
+            item.notes === (customNotes.trim() ? customNotes.trim() : undefined))
+      );
+      setCart(updatedCart);
+      setSheetOpen(false);
+      setSelectedItem(null);
+      return;
+    }
 
     const newItem: CartItem = {
       menuItemId: selectedItem.id,
@@ -152,7 +170,7 @@ export default function TablePage() {
 
     if (existingIndex > -1) {
       const updatedCart = [...cart];
-      updatedCart[existingIndex].quantity += newItem.quantity;
+      updatedCart[existingIndex].quantity = newItem.quantity;
       setCart(updatedCart);
     } else {
       setCart([...cart, newItem]);
@@ -481,7 +499,7 @@ export default function TablePage() {
               <div className="flex items-center bg-card-bg border border-border-subtle rounded-xl shadow-sm">
                 <button
                   type="button"
-                  onClick={() => setCustomQuantity(Math.max(1, customQuantity - 1))}
+                  onClick={() => setCustomQuantity(Math.max(0, customQuantity - 1))}
                   className="w-9 h-9 flex items-center justify-center text-muted-text hover:text-primary-cta transition-colors focus:outline-none"
                 >
                   <Minus className="w-3.5 h-3.5" />
@@ -497,13 +515,23 @@ export default function TablePage() {
               </div>
             </div>
             
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-primary-cta text-white py-3.5 px-5 rounded-xl font-bold shadow-md hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between text-sm"
-            >
-              <span>Tambah ke Keranjang</span>
-              <span>Rp {(selectedItem.price * customQuantity).toLocaleString("id-ID")}</span>
-            </button>
+            {customQuantity === 0 ? (
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-secondary-cta text-white py-3.5 px-5 rounded-xl font-semibold shadow-md hover:bg-secondary-cta/90 transition-all active:scale-[0.98] flex items-center justify-between text-sm"
+              >
+                <span>Hapus dari Pesanan</span>
+                <Trash2 className="w-4 h-4" />
+              </button>
+            ) : (
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-primary-cta text-white py-3.5 px-5 rounded-xl font-semibold shadow-md hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between text-sm"
+              >
+                <span>Tambah ke Keranjang</span>
+                <span>Rp {(selectedItem.price * customQuantity).toLocaleString("id-ID")}</span>
+              </button>
+            )}
           </div>
         </div>
       )}
