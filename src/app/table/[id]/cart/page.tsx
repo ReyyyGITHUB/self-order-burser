@@ -205,7 +205,7 @@ export default function CartPage() {
                         <div className="flex gap-1.5 items-center mt-2 w-full">
                           <input
                             type="text"
-                            className="bg-white border border-primary-cta rounded-lg px-2.5 py-1 text-xs text-text-primary flex-grow focus:outline-none focus:ring-1 focus:ring-primary-cta"
+                            className="bg-white border border-primary-cta rounded-lg px-2.5 py-1 text-xs text-text-primary flex-grow min-w-0 focus:outline-none focus:ring-1 focus:ring-primary-cta"
                             value={editingNotesText}
                             onChange={(e) => setEditingNotesText(e.target.value)}
                             placeholder="Catatan porsi ini..."
@@ -217,13 +217,13 @@ export default function CartPage() {
                           />
                           <button
                             onClick={() => saveInlineNotes(idx)}
-                            className="bg-primary-cta text-white p-1.5 rounded-lg hover:bg-primary-cta/90 transition-colors flex items-center justify-center"
+                            className="bg-primary-cta text-white p-1.5 rounded-lg hover:bg-primary-cta/90 transition-colors flex items-center justify-center flex-shrink-0"
                           >
                             <Check className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setEditingIndex(null)}
-                            className="bg-zinc-200 text-text-primary p-1.5 rounded-lg hover:bg-zinc-300 transition-colors flex items-center justify-center"
+                            className="bg-zinc-200 text-text-primary p-1.5 rounded-lg hover:bg-zinc-300 transition-colors flex items-center justify-center flex-shrink-0"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
