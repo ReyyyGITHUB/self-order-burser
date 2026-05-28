@@ -364,11 +364,11 @@ export default function TablePage() {
               </div>
               <div className="text-left">
                 <p className="text-xs text-white/90 font-medium">{getTotalCartItems()} pesanan</p>
-                <p className="text-sm font-bold text-white mt-0.5">Rp {getTotalCartPrice().toLocaleString("id-ID")}</p>
+                <p className="text-sm font-semibold text-white mt-0.5">Rp {getTotalCartPrice().toLocaleString("id-ID")}</p>
               </div>
             </div>
-            <div className="flex items-center gap-1 bg-white/20 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors hover:bg-white/30">
-              <span>Keranjang</span>
+            <div className="flex items-center gap-1 bg-white/20 text-white font-medium text-xs px-3.5 py-1.5 rounded-lg transition-colors hover:bg-white/30">
+              <span>Pesan sekarang</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </div>
           </button>

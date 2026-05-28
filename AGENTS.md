@@ -21,3 +21,4 @@ This version has breaking changes — APIs, conventions, and file structure may 
 > **IKON & VISUAL:**
 > - Gunakan **lucide-react** sebagai pustaka ikon standar.
 > - Pilih ikon yang menarik, estetik, dan premium (bukan ikon generik standar). Pastikan ikon memperkuat nuansa modern-earthy.
+> - **Gaya Teks:** Hindari penggunaan huruf kapital/uppercase berlebihan (`UPPERCASE`) pada teks UI atau nama komponen agar desain tetap terasa tenang, premium, dan profesional (gunakan Sentence case atau lowercase jika sesuai tema modern).
