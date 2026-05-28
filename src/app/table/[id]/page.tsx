@@ -2,17 +2,103 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowUpRight, Check, Utensils } from "lucide-react";
+import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare } from "lucide-react";
+
+// Hardcoded Menu Data
+const MENU_ITEMS = [
+  {
+    id: "1",
+    name: "Mie Dok Dok",
+    description: "Mie soup khas burjo dengan bumbu gurih kental, telur orak-arik, sayuran segar, dan kuah hangat nikmat.",
+    price: 15000,
+    category: "Makanan",
+    hasSpicy: true,
+    hasNotes: true,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBaXctnCpXa9SsX1UUUvcWzipjtw_MSj6POf1WGxJ3NlJ8gptVSpLqX1dCxs5rWo0sKtzcu8lW4pGA50f4TyG_evAjx6EzHNNSb6sZHfSVlGn1VcI8paZAzAXDBuPm62s_P4wfRVediR1E6jzwawhPOeUUIN2s4D7RRo2cDis2C2HVSrbOcZ_qjlTrmFsIHkcohPLQeODB4Xn9aHC-zvp4e2SUCTHmo_rLlo_USWV-E3S-AOxfLezKt-ScQDFJ15sTCbXPwIBpLvrF2"
+  },
+  {
+    id: "2",
+    name: "Nasi Gila Burjo",
+    description: "Nasi hangat bertabur tumisan sosis, bakso, telur dengan bumbu manis pedas gurih ala Burjo Semarang.",
+    price: 16000,
+    category: "Makanan",
+    hasSpicy: true,
+    hasNotes: true,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
+  },
+  {
+    id: "3",
+    name: "Intel Rebus (Indomie Telur)",
+    description: "Indomie rebus hangat disajikan dengan telur rebus setengah matang, sawi hijau, dan taburan bawang goreng.",
+    price: 12000,
+    category: "Makanan",
+    hasSpicy: true,
+    hasNotes: true,
+    image: "https://lh3.googleusercontent.com/aida/ADBb0ujJZwC405KohpKlRRL8AktY3CJ-4zju7BbjO6kGYBhsLNb91RgKGI6hIqLT8smd7Ld6yOgpPiL0vhDztklGh4mS-7i1QPy4mpzNy-YfB_DvOLkUmdykQsw1DuKDJDdixzZa73y-KuBu104EOX1pcSqeTkOl3uDhEXoH_1UvY-BOLp3ZBiwHD36stiIaSYIx_Uw2o4IQPLpMmaFIMOvJNkoZJeroNfvUCNr0p3cU_BmEXD72mlqdflZGT8UW"
+  },
+  {
+    id: "4",
+    name: "Bubur Kacang Ijo",
+    description: "Bubur kacang hijau manis legit disiram santan gurih kental dan susu kental manis.",
+    price: 10000,
+    category: "Makanan",
+    hasSpicy: false,
+    hasNotes: true,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
+  },
+  {
+    id: "5",
+    name: "Es Teh Manis",
+    description: "Teh seduh khas burjo manis dingin menyegarkan tenggorokan.",
+    price: 4000,
+    category: "Minuman",
+    hasSpicy: false,
+    hasNotes: true,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
+  },
+  {
+    id: "6",
+    name: "Es Jeruk Peras",
+    description: "Jeruk peras asli segar kaya vitamin C disajikan dingin.",
+    price: 6000,
+    category: "Minuman",
+    hasSpicy: false,
+    hasNotes: true,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
+  }
+];
+
+const CATEGORIES = ["Semua", "Makanan", "Minuman"];
+
+interface CartItem {
+  menuItemId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  spicyLevel?: number;
+  notes?: string;
+  image?: string;
+}
 
 export default function TablePage() {
   const params = useParams();
-  const router = useRouter();
   const tableId = params?.id;
 
   const [mounted, setMounted] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
   const [inputName, setInputName] = useState("");
+
+  // Menu List states
+  const [selectedCategory, setSelectedCategory] = useState("Semua");
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  // Bottom Sheet customization states
+  const [selectedItem, setSelectedItem] = useState<typeof MENU_ITEMS[0] | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [customSpicyLevel, setCustomSpicyLevel] = useState(1); // 0: Ori, 1: Sedang, 2: Pedas, 3: Gila
+  const [customNotes, setCustomNotes] = useState("");
+  const [customQuantity, setCustomQuantity] = useState(1);
 
   useEffect(() => {
     setMounted(true);
@@ -33,15 +119,68 @@ export default function TablePage() {
     setIsRegistered(true);
   };
 
+  const handleOpenCustomization = (item: typeof MENU_ITEMS[0]) => {
+    setSelectedItem(item);
+    setCustomSpicyLevel(item.hasSpicy ? 1 : 0);
+    setCustomNotes("");
+    setCustomQuantity(1);
+    setSheetOpen(true);
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedItem) return;
+
+    const newItem: CartItem = {
+      menuItemId: selectedItem.id,
+      name: selectedItem.name,
+      price: selectedItem.price,
+      quantity: customQuantity,
+      spicyLevel: selectedItem.hasSpicy ? customSpicyLevel : undefined,
+      notes: customNotes.trim() ? customNotes.trim() : undefined,
+      image: selectedItem.image
+    };
+
+    // Cari item yang sama persis kustomisasinya di keranjang
+    const existingIndex = cart.findIndex(
+      (item) =>
+        item.menuItemId === newItem.menuItemId &&
+        item.spicyLevel === newItem.spicyLevel &&
+        item.notes === newItem.notes
+    );
+
+    if (existingIndex > -1) {
+      const updatedCart = [...cart];
+      updatedCart[existingIndex].quantity += newItem.quantity;
+      setCart(updatedCart);
+    } else {
+      setCart([...cart, newItem]);
+    }
+
+    setSheetOpen(false);
+    setSelectedItem(null);
+  };
+
+  const getTotalCartItems = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  const getTotalCartPrice = () => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const filteredMenuItems = selectedCategory === "Semua"
+    ? MENU_ITEMS
+    : MENU_ITEMS.filter((item) => item.category === selectedCategory);
+
   if (!mounted) {
     return (
       <div className="flex-1 flex items-center justify-center bg-surface min-h-screen">
-        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-primary-cta border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
-  // Jika belum register nama, tampilkan Onboarding Editorial Premium
+  // View 1: ONBOARDING VIEW
   if (!isRegistered) {
     return (
       <div className="bg-surface h-[100dvh] max-h-screen overflow-hidden flex flex-col font-sans antialiased text-on-surface w-full max-w-md mx-auto shadow-md">
@@ -51,7 +190,7 @@ export default function TablePage() {
             <img
               alt="Appetizing bowl of warm Burjo Order noodles"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida/ADBb0ujJZwC405KohpKlRRL8AktY3CJ-4zju7BbjO6kGYBhsLNb91RgKGI6hIqLT8smd7Ld6yOgpPiL0vhDztklGh4mS-7i1QPy4mpzNy-YfB_DvOLkUmdykQsw1DuKDJDdixzZa73y-KuBu104EOX1pcSqeTkOl3uDhEXoH_1UvY-BOLp3ZBiwHD36stiIaSYIx_Uw2o4IQPLpMmaFIMOvJNkoZJeroNfvUCNr0p3cU_BmEXD72mlqdflZGT8UW"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaXctnCpXa9SsX1UUUvcWzipjtw_MSj6POf1WGxJ3NlJ8gptVSpLqX1dCxs5rWo0sKtzcu8lW4pGA50f4TyG_evAjx6EzHNNSb6sZHfSVlGn1VcI8paZAzAXDBuPm62s_P4wfRVediR1E6jzwawhPOeUUIN2s4D7RRo2cDis2C2HVSrbOcZ_qjlTrmFsIHkcohPLQeODB4Xn9aHC-zvp4e2SUCTHmo_rLlo_USWV-E3S-AOxfLezKt-ScQDFJ15sTCbXPwIBpLvrF2"
             />
           </div>
         </div>
@@ -61,8 +200,8 @@ export default function TablePage() {
           {/* Editorial Header Text */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs tracking-widest uppercase text-primary/85 font-semibold">MEJA {tableId}</span>
-              <Utensils className="w-3.5 h-3.5 text-primary/85" />
+              <span className="font-mono text-xs tracking-widest uppercase text-primary-cta font-semibold">MEJA {tableId}</span>
+              <Utensils className="w-3.5 h-3.5 text-primary-cta" />
             </div>
             <h1 className="font-sans text-[40px] leading-[1.1] tracking-tight text-on-surface font-bold">
               Selamat<br />Datang.
@@ -107,39 +246,246 @@ export default function TablePage() {
     );
   }
 
-  // Jika sudah terdaftar, tampilkan halaman menu sementara
+  // View 2: MAIN MENU & HOME PAGE (AFTER ONBOARDING)
   return (
-    <div className="bg-page-bg min-h-screen flex flex-col font-sans text-on-surface w-full max-w-md mx-auto shadow-md">
-      <header className="bg-color-header-bg text-white px-6 py-4 flex justify-between items-center shadow-md">
-        <div>
-          <h2 className="font-bold text-lg text-primary-cta">Burjo Semarang</h2>
-          <p className="text-xs text-zinc-400">Meja {tableId}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-xs text-zinc-400">Halo,</p>
-          <p className="font-semibold text-sm">{customerName}</p>
-        </div>
-      </header>
+    <div className="bg-page-bg min-h-screen flex flex-col font-sans text-on-surface w-full max-w-md mx-auto shadow-lg relative overflow-x-hidden">
+      
+      {/* Dimming overlay when Bottom Sheet is open */}
+      {sheetOpen && (
+        <div
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300"
+          onClick={() => setSheetOpen(false)}
+        />
+      )}
 
-      <main className="flex-1 p-6 flex flex-col items-center justify-center text-center gap-4">
-        <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center text-success animate-pulse mb-2">
-          <Check className="w-8 h-8" />
+      {/* Header */}
+      <header className="bg-white border-b border-border-subtle px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+        <div>
+          <h2 className="font-bold text-base text-primary-cta flex items-center gap-1.5">
+            <Utensils className="w-4 h-4" />
+            Burjo Semarang
+          </h2>
+          <div className="flex items-center gap-1 mt-0.5">
+            <span className="text-[10px] bg-primary-cta/10 text-primary-cta font-semibold px-2 py-0.5 rounded-full">Meja {tableId}</span>
+            <span className="text-xs text-muted-text">· Halo, {customerName}</span>
+          </div>
         </div>
-        <h3 className="text-xl font-bold text-text-primary">Registrasi Berhasil!</h3>
-        <p className="text-sm text-text-secondary">
-          Halo <strong>{customerName}</strong>, kamu siap memesan hidangan lezat di Meja {tableId}. Menu utama akan segera hadir.
-        </p>
         <button
           onClick={() => {
             localStorage.removeItem("customer_name");
             setIsRegistered(false);
-            setInputName("");
+            setCart([]);
           }}
-          className="mt-4 px-4 py-2 border border-secondary text-secondary rounded-lg text-sm font-semibold hover:bg-secondary/10 transition-colors"
+          className="p-2 text-muted-text hover:text-secondary-cta rounded-full hover:bg-zinc-100 transition-colors"
+          title="Keluar"
         >
-          Ganti Nama
+          <X className="w-4.5 h-4.5" />
         </button>
+      </header>
+
+      {/* Main Body Container */}
+      <main className="flex-1 px-6 pt-5 pb-24 overflow-y-auto">
+        {/* Banner Promo */}
+        <div className="bg-primary-cta text-white rounded-2xl p-4 mb-6 shadow-sm flex justify-between items-center relative overflow-hidden">
+          <div className="z-10 max-w-[70%]">
+            <span className="font-mono text-[9px] uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-full">PROMO SPESIAL</span>
+            <h3 className="font-bold text-lg leading-tight mt-2">Mie Dok Dok Terfavorit!</h3>
+            <p className="text-xs text-white/80 mt-1">Hanya Rp 15.000 dengan rasa khas Semarang.</p>
+          </div>
+          <Flame className="w-20 h-20 text-white/10 absolute -right-4 -bottom-4 transform rotate-12" />
+        </div>
+
+        {/* Categories Horizontal Scroll */}
+        <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-none sticky top-[68px] bg-page-bg z-20">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all border ${
+                selectedCategory === cat
+                  ? "bg-primary-cta border-primary-cta text-white shadow-sm"
+                  : "bg-white border-border-subtle text-muted-text hover:border-primary-cta/40"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Menu Items Grid */}
+        <div className="flex flex-col gap-4 mt-2">
+          {filteredMenuItems.map((item) => (
+            <div
+              key={item.id}
+              className="bg-card-bg border border-border-subtle rounded-2xl p-4 flex gap-4 shadow-sm hover:shadow-md transition-shadow"
+            >
+              {/* Product Info */}
+              <div className="flex-1 flex flex-col justify-between">
+                <div>
+                  <h4 className="font-bold text-base text-text-primary">{item.name}</h4>
+                  <p className="text-xs text-muted-text mt-1 line-clamp-2 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center mt-3">
+                  <span className="font-bold text-sm text-primary-cta">
+                    Rp {item.price.toLocaleString("id-ID")}
+                  </span>
+                  <button
+                    onClick={() => handleOpenCustomization(item)}
+                    className="bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 duration-100 flex items-center gap-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Tambah
+                  </button>
+                </div>
+              </div>
+
+              {/* Product Image */}
+              {item.image && (
+                <div className="w-24 h-24 rounded-xl overflow-hidden bg-zinc-100 flex-shrink-0 relative shadow-sm border border-border-light">
+                  <img
+                    alt={item.name}
+                    src={item.image}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </main>
+
+      {/* Floating Summary Bar (if cart has items) */}
+      {cart.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto p-4 z-30 bg-gradient-to-t from-page-bg via-page-bg/95 to-transparent">
+          <button className="w-full bg-color-header-bg text-white py-4 px-5 rounded-xl shadow-lg hover:bg-color-header-bg/95 transition-all active:scale-[0.98] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-primary-cta text-white p-2 rounded-lg">
+                <ShoppingBag className="w-4 h-4" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] text-zinc-400 font-mono tracking-wider">{getTotalCartItems()} ITEMS SELECTED</p>
+                <p className="text-sm font-bold text-primary-cta">Rp {getTotalCartPrice().toLocaleString("id-ID")}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 bg-primary-cta text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg">
+              <span>Keranjang</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Bottom Sheet Customization */}
+      {selectedItem && (
+        <div
+          className={`absolute bottom-0 left-0 right-0 w-full bg-white rounded-t-2xl z-50 flex flex-col shadow-2xl transition-transform duration-300 ease-out border-t border-border-light ${
+            sheetOpen ? "translate-y-0" : "translate-y-full"
+          }`}
+        >
+          {/* Header Drag Handle */}
+          <div className="w-full flex justify-center py-2.5 cursor-pointer" onClick={() => setSheetOpen(false)}>
+            <div className="w-12 h-1 bg-zinc-300 rounded-full" />
+          </div>
+
+          {/* Item Meta info */}
+          <div className="px-6 py-4 flex gap-4 border-b border-border-subtle">
+            {selectedItem.image && (
+              <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm flex-shrink-0">
+                <img
+                  alt={selectedItem.name}
+                  src={selectedItem.image}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <div>
+              <h3 className="font-bold text-lg text-text-primary">{selectedItem.name}</h3>
+              <p className="font-bold text-sm text-primary-cta mt-0.5">Rp {selectedItem.price.toLocaleString("id-ID")}</p>
+            </div>
+          </div>
+
+          <div className="px-6 py-4 max-h-[50vh] overflow-y-auto">
+            {/* Spicy Customization (if applicable) */}
+            {selectedItem.hasSpicy && (
+              <div className="mb-6">
+                <div className="flex items-center gap-1 mb-2.5">
+                  <Flame className="w-4 h-4 text-secondary-cta" />
+                  <h4 className="font-bold text-sm text-text-primary">Level Pedas</h4>
+                </div>
+                <div className="flex gap-2">
+                  {[0, 1, 2, 3].map((lvl) => {
+                    const label = lvl === 0 ? "0 (Ori)" : lvl === 1 ? "1 (Sedang)" : lvl === 2 ? "2 (Pedas)" : "3 (Gila)";
+                    return (
+                      <button
+                        key={lvl}
+                        onClick={() => setCustomSpicyLevel(lvl)}
+                        className={`flex-1 py-2 px-1 rounded-xl text-xs font-semibold border text-center transition-all ${
+                          customSpicyLevel === lvl
+                            ? "bg-primary-cta/10 border-primary-cta text-primary-cta shadow-sm font-bold"
+                            : "bg-card-bg border-border-subtle text-muted-text hover:border-primary-cta/50"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Custom Notes */}
+            {selectedItem.hasNotes && (
+              <div className="mb-6">
+                <div className="flex items-center gap-1 mb-2.5">
+                  <MessageSquare className="w-4 h-4 text-primary-cta" />
+                  <h4 className="font-bold text-sm text-text-primary">
+                    Catatan Khusus <span className="text-xs text-muted-text font-normal">(Opsional)</span>
+                  </h4>
+                </div>
+                <textarea
+                  className="w-full bg-card-bg border border-border-subtle rounded-xl px-4 py-2 text-sm text-text-primary placeholder:text-muted-text/30 focus:border-primary-cta focus:outline-none resize-none transition-colors"
+                  placeholder="Contoh: tanpa sawi, telur setengah matang..."
+                  rows={2}
+                  value={customNotes}
+                  onChange={(e) => setCustomNotes(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Bottom Sticky Action: Quantity Selector and Add CTA */}
+          <div className="px-6 py-4 border-t border-border-subtle bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <span className="font-bold text-sm text-text-primary">Jumlah</span>
+              <div className="flex items-center bg-card-bg border border-border-subtle rounded-xl shadow-sm">
+                <button
+                  onClick={() => setCustomQuantity(Math.max(1, customQuantity - 1))}
+                  className="w-10 h-10 flex items-center justify-center text-muted-text hover:text-primary-cta transition-colors focus:outline-none"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="w-8 text-center font-bold text-sm text-text-primary">{customQuantity}</span>
+                <button
+                  onClick={() => setCustomQuantity(customQuantity + 1)}
+                  className="w-10 h-10 flex items-center justify-center text-primary-cta hover:text-primary-cta/80 transition-colors focus:outline-none"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-primary-cta text-white py-4 px-6 rounded-xl font-bold shadow-md hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between"
+            >
+              <span>Tambah ke Keranjang</span>
+              <span>Rp {(selectedItem.price * customQuantity).toLocaleString("id-ID")}</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
