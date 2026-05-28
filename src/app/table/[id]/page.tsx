@@ -315,7 +315,7 @@ export default function TablePage() {
               {showInfoPopover && (
                 <div className="absolute top-6 left-0 right-0 bg-zinc-900 text-white rounded-xl p-3 text-[11px] shadow-xl animate-in fade-in slide-in-from-top-1 duration-200 z-50">
                   <p className="leading-relaxed font-sans font-medium text-white/95">
-                    Nama ini digunakan oleh pelayan untuk memanggil atau mencocokkan pesananmu ketika sudah siap dihidangkan.
+                    Digunakan untuk memanggil pesananmu ketika sudah siap.
                   </p>
                   {/* Popover indicator arrow */}
                   <div className="absolute top-[-3.5px] left-[84px] w-1.75 h-1.75 bg-zinc-900 rotate-45" />
