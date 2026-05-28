@@ -238,7 +238,7 @@ export default function QrisPaymentPage() {
               </div>
 
               {/* QR Code Container (Highly optimized sizing & larger QR for scan UX) */}
-              <div className="relative w-44 h-44 bg-white border border-border-subtle rounded-xl p-1 flex flex-col items-center justify-center shadow-inner group flex-shrink min-h-0 aspect-square">
+              <div className="relative w-56 h-56 bg-white border border-border-subtle rounded-xl p-1 flex flex-col items-center justify-center shadow-inner group flex-shrink min-h-0 aspect-square">
                 {/* Tiny QRIS label */}
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 py-0.5 rounded-full border border-border-subtle text-[7px] font-bold text-zinc-400 tracking-wider flex items-center justify-center">
                   QRIS
