@@ -322,7 +322,7 @@ export default function TablePage() {
               <div>
                 {/* Product Image */}
                 {item.image && (
-                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-zinc-100 relative shadow-sm border border-border-light mb-3">
+                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-zinc-100 relative shadow-sm border border-border-light mb-2.5">
                     <img
                       alt={item.name}
                       src={item.image}
@@ -333,20 +333,17 @@ export default function TablePage() {
 
                 {/* Product Info */}
                 <h4 className="font-bold text-sm text-text-primary line-clamp-1">{item.name}</h4>
-                <p className="text-[10px] text-muted-text mt-1 line-clamp-2 leading-relaxed">
-                  {item.description}
-                </p>
               </div>
 
-              <div className="flex flex-col gap-2 mt-3.5">
-                <span className="font-bold text-sm text-primary-cta">
+              <div className="flex justify-between items-center mt-3 gap-2">
+                <span className="font-bold text-[13px] text-primary-cta whitespace-nowrap">
                   Rp {item.price.toLocaleString("id-ID")}
                 </span>
                 <button
                   onClick={() => handleOpenCustomization(item)}
-                  className="w-full bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 duration-100 flex items-center justify-center gap-1"
+                  className="bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-95 duration-100 flex items-center justify-center gap-1 flex-shrink-0"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-3 h-3" />
                   Tambah
                 </button>
               </div>
@@ -399,9 +396,14 @@ export default function TablePage() {
                 />
               </div>
             )}
-            <div>
+            <div className="flex-1">
               <h3 className="font-bold text-lg text-text-primary">{selectedItem.name}</h3>
               <p className="font-bold text-sm text-primary-cta mt-0.5">Rp {selectedItem.price.toLocaleString("id-ID")}</p>
+              {selectedItem.description && (
+                <p className="text-xs text-muted-text mt-1.5 leading-relaxed">
+                  {selectedItem.description}
+                </p>
+              )}
             </div>
           </div>
 
