@@ -26,6 +26,8 @@ export default function CartPage() {
   const [orderNotes, setOrderNotes] = useState("");
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingNotesText, setEditingNotesText] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -38,6 +40,18 @@ export default function CartPage() {
       setCart(JSON.parse(savedCart));
     }
   }, []);
+
+  const startEditingNotes = (index: number, text: string) => {
+    setEditingIndex(index);
+    setEditingNotesText(text);
+  };
+
+  const saveInlineNotes = (index: number) => {
+    const updatedCart = [...cart];
+    updatedCart[index].notes = editingNotesText;
+    setCart(updatedCart);
+    setEditingIndex(null);
+  };
 
   useEffect(() => {
     if (mounted) {
@@ -155,7 +169,7 @@ export default function CartPage() {
           <>
             {/* Cart list section */}
             <section className="flex flex-col gap-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider font-mono text-muted-text">Pesanan Anda</h3>
+              <h3 className="text-xs font-bold text-muted-text font-sans">Pesanan Anda</h3>
               <div className="flex flex-col gap-3">
                 {cart.map((item, idx) => (
                   <article
@@ -186,19 +200,50 @@ export default function CartPage() {
                       </div>
                       <p className="font-mono text-xs text-primary-cta mt-0.5">Rp {item.price.toLocaleString("id-ID")}</p>
                       
-                      {/* Spicy & Notes badge tags */}
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {item.spicyLevel !== undefined && (
-                          <span className="bg-secondary-cta/10 text-secondary-cta px-2 py-0.5 rounded-md font-mono text-[9px] font-bold">
-                            Lvl {item.spicyLevel} ({item.spicyLevel === 0 ? "Ori" : item.spicyLevel === 1 ? "Sedang" : item.spicyLevel === 2 ? "Pedas" : "Gila"})
-                          </span>
-                        )}
-                        {item.notes && (
-                          <span className="bg-zinc-100 text-muted-text px-2 py-0.5 rounded-md text-[9px] font-semibold truncate max-w-[150px]">
-                            "{item.notes}"
-                          </span>
-                        )}
-                      </div>
+                      {/* Spicy & Notes badge tags with inline editor */}
+                      {editingIndex === idx ? (
+                        <div className="flex gap-1.5 items-center mt-2 w-full">
+                          <input
+                            type="text"
+                            className="bg-white border border-primary-cta rounded-lg px-2.5 py-1 text-xs text-text-primary flex-grow focus:outline-none focus:ring-1 focus:ring-primary-cta"
+                            value={editingNotesText}
+                            onChange={(e) => setEditingNotesText(e.target.value)}
+                            placeholder="Catatan porsi ini..."
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") saveInlineNotes(idx);
+                              if (e.key === "Escape") setEditingIndex(null);
+                            }}
+                          />
+                          <button
+                            onClick={() => saveInlineNotes(idx)}
+                            className="bg-primary-cta text-white p-1.5 rounded-lg hover:bg-primary-cta/90 transition-colors flex items-center justify-center"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => setEditingIndex(null)}
+                            className="bg-zinc-200 text-text-primary p-1.5 rounded-lg hover:bg-zinc-300 transition-colors flex items-center justify-center"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {item.spicyLevel !== undefined && (
+                            <span className="bg-secondary-cta/10 text-secondary-cta px-2 py-0.5 rounded-md font-mono text-[9px] font-bold">
+                              Lvl {item.spicyLevel} ({item.spicyLevel === 0 ? "Ori" : item.spicyLevel === 1 ? "Sedang" : item.spicyLevel === 2 ? "Pedas" : "Gila"})
+                            </span>
+                          )}
+                          <button
+                            onClick={() => startEditingNotes(idx, item.notes || "")}
+                            className="bg-zinc-100 hover:bg-zinc-200 text-muted-text px-2 py-0.5 rounded-md text-[9px] font-semibold flex items-center gap-1 transition-colors group"
+                            title="Edit catatan porsi ini"
+                          >
+                            <span className="truncate max-w-[150px]">{item.notes ? `"${item.notes}"` : "+ Tambah catatan"}</span>
+                          </button>
+                        </div>
+                      )}
 
                       {/* Quantity counter inside card */}
                       <div className="flex justify-end mt-3">
@@ -226,7 +271,7 @@ export default function CartPage() {
 
             {/* Payment Selector section */}
             <section className="flex flex-col gap-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider font-mono text-muted-text">Metode Pembayaran</h3>
+              <h3 className="text-xs font-bold text-muted-text font-sans">Metode Pembayaran</h3>
               <div className="grid grid-cols-2 gap-3">
                 <label className="relative cursor-pointer">
                   <input
@@ -268,10 +313,10 @@ export default function CartPage() {
 
             {/* Notes Section */}
             <section className="flex flex-col gap-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider font-mono text-muted-text">Catatan Pesanan</h3>
+              <h3 className="text-xs font-bold text-muted-text font-sans">Instruksi Tambahan untuk Meja</h3>
               <textarea
                 className="w-full bg-white border border-border-subtle rounded-2xl p-4 text-xs text-text-primary placeholder:text-muted-text/30 focus:border-primary-cta focus:outline-none resize-none transition-colors shadow-sm"
-                placeholder="Contoh: telur matang semua, minuman saji belakangan..."
+                placeholder="Contoh: minta sendok tambahan 2, minuman disajikan belakangan..."
                 rows={2}
                 value={orderNotes}
                 onChange={(e) => setOrderNotes(e.target.value)}
