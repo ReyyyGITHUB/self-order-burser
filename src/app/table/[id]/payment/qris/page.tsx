@@ -148,8 +148,8 @@ export default function QrisPaymentPage() {
             <p className="text-xl font-bold text-[#825429] mt-0.5 font-mono">Rp {totalAmount.toLocaleString("id-ID")}</p>
           </div>
 
-          {/* QR Code Container (Highly optimized sizing) */}
-          <div className="relative w-40 h-40 bg-white border border-border-subtle rounded-xl p-2.5 flex flex-col items-center justify-center shadow-inner group flex-shrink min-h-0 aspect-square">
+          {/* QR Code Container (Highly optimized sizing & larger QR for scan UX) */}
+          <div className="relative w-44 h-44 bg-white border border-border-subtle rounded-xl p-1 flex flex-col items-center justify-center shadow-inner group flex-shrink min-h-0 aspect-square">
             {/* Tiny QRIS label */}
             <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 py-0.5 rounded-full border border-border-subtle text-[7px] font-bold text-zinc-400 tracking-wider flex items-center justify-center">
               QRIS
