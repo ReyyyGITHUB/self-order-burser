@@ -82,6 +82,7 @@ interface CartItem {
 
 export default function TablePage() {
   const params = useParams();
+  const router = useRouter();
   const tableId = params?.id;
 
   const [mounted, setMounted] = useState(false);
@@ -108,7 +109,17 @@ export default function TablePage() {
       setCustomerName(savedName);
       setIsRegistered(true);
     }
+    const savedCart = localStorage.getItem("cart_items");
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("cart_items", JSON.stringify(cart));
+    }
+  }, [cart, mounted]);
 
   const handleStartOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -385,7 +396,10 @@ export default function TablePage() {
       {/* Floating Summary Bar (if cart has items) */}
       {cart.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto p-4 z-30 bg-gradient-to-t from-page-bg via-page-bg/95 to-transparent">
-          <button className="w-full bg-primary-cta text-white py-3.5 px-4 rounded-xl shadow-lg hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between">
+          <button
+            onClick={() => router.push(`/table/${tableId}/cart`)}
+            className="w-full bg-primary-cta text-white py-3.5 px-4 rounded-xl shadow-lg hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between"
+          >
             <div className="flex items-center gap-3">
               <div className="bg-white/20 text-white p-2 rounded-lg flex items-center justify-center">
                 <ShoppingBag className="w-4 h-4" />
