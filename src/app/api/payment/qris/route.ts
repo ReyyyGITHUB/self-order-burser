@@ -24,6 +24,10 @@ export async function POST(req: Request) {
       });
     }
 
+    const uniqueReference = reference 
+      ? `${reference}-${Date.now().toString().slice(-6)}` 
+      : `BJR-${Date.now()}`;
+
     const response = await fetch("https://api.louvin.dev/create-transaction", {
       method: "POST",
       headers: {
@@ -35,7 +39,7 @@ export async function POST(req: Request) {
         payment_type: "qris",
         customer_name: customerName || "Pelanggan",
         description: description || "Pembayaran Self-Order Burjo",
-        reference: reference
+        reference: uniqueReference
       })
     });
 
