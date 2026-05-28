@@ -214,14 +214,14 @@ export default function TablePage() {
           {/* Input Field & Action */}
           <form onSubmit={handleStartOrder} className="flex flex-col gap-8">
             <div className="flex flex-col gap-1.5">
-              <label className="font-mono text-[10px] tracking-widest uppercase text-outline" htmlFor="namaLengkap">
+              <label className="font-mono text-[10px] tracking-widest text-outline" htmlFor="namaLengkap">
                 Nama Lengkap
               </label>
               <div className="relative group">
                 <input
                   className="w-full bg-transparent border-0 border-b-2 border-border-subtle py-2 px-0 font-sans text-base sm:text-lg text-on-surface placeholder:text-muted-text/30 focus:ring-0 focus:border-primary focus:outline-none transition-all rounded-none"
                   id="namaLengkap"
-                  placeholder="Contoh: Budi Santoso"
+                  placeholder="Masukkan nama"
                   type="text"
                   value={inputName}
                   onChange={(e) => setInputName(e.target.value)}
@@ -312,45 +312,44 @@ export default function TablePage() {
           ))}
         </div>
 
-        {/* Menu Items Grid */}
-        <div className="flex flex-col gap-4 mt-2">
+        {/* Menu Items Grid (2x2 Grid) */}
+        <div className="grid grid-cols-2 gap-4 mt-2">
           {filteredMenuItems.map((item) => (
             <div
               key={item.id}
-              className="bg-card-bg border border-border-subtle rounded-2xl p-4 flex gap-4 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-card-bg border border-border-subtle rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow"
             >
-              {/* Product Info */}
-              <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <h4 className="font-bold text-base text-text-primary">{item.name}</h4>
-                  <p className="text-xs text-muted-text mt-1 line-clamp-2 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-                <div className="flex justify-between items-center mt-3">
-                  <span className="font-bold text-sm text-primary-cta">
-                    Rp {item.price.toLocaleString("id-ID")}
-                  </span>
-                  <button
-                    onClick={() => handleOpenCustomization(item)}
-                    className="bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 duration-100 flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    Tambah
-                  </button>
-                </div>
+              <div>
+                {/* Product Image */}
+                {item.image && (
+                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-zinc-100 relative shadow-sm border border-border-light mb-3">
+                    <img
+                      alt={item.name}
+                      src={item.image}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Product Info */}
+                <h4 className="font-bold text-sm text-text-primary line-clamp-1">{item.name}</h4>
+                <p className="text-[10px] text-muted-text mt-1 line-clamp-2 leading-relaxed">
+                  {item.description}
+                </p>
               </div>
 
-              {/* Product Image */}
-              {item.image && (
-                <div className="w-24 h-24 rounded-xl overflow-hidden bg-zinc-100 flex-shrink-0 relative shadow-sm border border-border-light">
-                  <img
-                    alt={item.name}
-                    src={item.image}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
+              <div className="flex flex-col gap-2 mt-3.5">
+                <span className="font-bold text-sm text-primary-cta">
+                  Rp {item.price.toLocaleString("id-ID")}
+                </span>
+                <button
+                  onClick={() => handleOpenCustomization(item)}
+                  className="w-full bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 duration-100 flex items-center justify-center gap-1"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Tambah
+                </button>
+              </div>
             </div>
           ))}
         </div>
