@@ -357,7 +357,7 @@ export default function TablePage() {
       
       {/* Toast Notification */}
       {toast?.show && (
-        <div className="fixed top-3 right-3 z-50 bg-white border border-zinc-100/80 text-zinc-800 py-3 px-4 rounded-xl shadow-lg flex items-center gap-2.5 animate-in fade-in slide-in-from-right-5 duration-300 w-[85%] max-w-[320px]">
+        <div className="fixed top-3 right-3 z-50 bg-white border border-zinc-100/80 text-zinc-800 py-3 px-4 rounded-xl shadow-lg flex items-center gap-2.5 animate-toast-in w-[85%] max-w-[320px]">
           <div className="w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
             <Check className="w-4 h-4" />
           </div>
