@@ -357,17 +357,17 @@ export default function TablePage() {
       {/* Floating Summary Bar (if cart has items) */}
       {cart.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto p-4 z-30 bg-gradient-to-t from-page-bg via-page-bg/95 to-transparent">
-          <button className="w-full bg-color-header-bg text-white py-4 px-5 rounded-xl shadow-lg hover:bg-color-header-bg/95 transition-all active:scale-[0.98] flex items-center justify-between">
+          <button className="w-full bg-primary-cta text-white py-3.5 px-4 rounded-xl shadow-lg hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-primary-cta text-white p-2 rounded-lg">
+              <div className="bg-white/20 text-white p-2 rounded-lg flex items-center justify-center">
                 <ShoppingBag className="w-4 h-4" />
               </div>
               <div className="text-left">
-                <p className="text-[10px] text-zinc-400 font-mono tracking-wider">{getTotalCartItems()} ITEMS SELECTED</p>
-                <p className="text-sm font-bold text-primary-cta">Rp {getTotalCartPrice().toLocaleString("id-ID")}</p>
+                <p className="text-xs text-white/90 font-medium">{getTotalCartItems()} pesanan</p>
+                <p className="text-sm font-bold text-white mt-0.5">Rp {getTotalCartPrice().toLocaleString("id-ID")}</p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 bg-primary-cta text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg">
+            <div className="flex items-center gap-1 bg-white/20 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors hover:bg-white/30">
               <span>Keranjang</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </div>
