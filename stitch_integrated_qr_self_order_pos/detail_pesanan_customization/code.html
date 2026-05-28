@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BurjoOrder - Sesuaikan Pesanan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#1b4f42",
+                        "on-surface-variant": "#51443b",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#003b2f",
+                        "primary-container": "#c89060",
+                        "on-secondary-container": "#772a1b",
+                        "muted-text": "#666666",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#b8eedb",
+                        "on-secondary-fixed-variant": "#7b2d1e",
+                        "outline-variant": "#d5c3b7",
+                        "secondary": "#9a4433",
+                        "background": "#fcf9f8",
+                        "info-blue": "#6b9cc4",
+                        "surface-container-high": "#eae7e7",
+                        "page-bg": "#f8f6f1",
+                        "outline": "#837469",
+                        "error-container": "#ffdad6",
+                        "primary": "#825429",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#502a03",
+                        "tertiary-container": "#73a696",
+                        "primary-fixed": "#ffdcc2",
+                        "on-primary-fixed": "#2e1500",
+                        "surface-container-highest": "#e4e2e1",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dcd9d9",
+                        "border-subtle": "#e5e5e5",
+                        "surface-tint": "#825429",
+                        "surface-bright": "#fcf9f8",
+                        "surface": "#fcf9f8",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "on-surface": "#1b1c1c",
+                        "on-tertiary-fixed": "#002019",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-container": "#f0eded",
+                        "surface-variant": "#e4e2e1",
+                        "secondary-fixed-dim": "#ffb4a4",
+                        "inverse-primary": "#f7ba86",
+                        "on-background": "#1b1c1c",
+                        "on-secondary-fixed": "#3e0500",
+                        "card-surface": "#fafaf8",
+                        "secondary-container": "#ff937d",
+                        "on-primary-fixed-variant": "#673d14",
+                        "tertiary-fixed-dim": "#9dd1c0",
+                        "tertiary": "#356759",
+                        "highlight-surface": "#FFF8F0",
+                        "secondary-fixed": "#ffdad3",
+                        "primary-fixed-dim": "#f7ba86",
+                        "inverse-surface": "#303030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "xl": "40px",
+                        "container-max": "1280px",
+                        "margin-desktop": "32px",
+                        "base": "4px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "subheading": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "caption": ["Inter"],
+                        "label": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "subheading": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "label": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-page-bg font-body text-on-surface h-screen w-full relative overflow-hidden flex justify-center">
+<!-- Background Layer (Simulated Screen) -->
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF');"></div>
+<!-- Dimming Overlay -->
+<div class="absolute inset-0 bg-inverse-surface/60 backdrop-blur-sm z-40 transition-opacity duration-300"></div>
+<!-- Bottom Sheet -->
+<div class="absolute bottom-0 w-full md:w-[480px] bg-surface-container-lowest rounded-t-xl z-50 flex flex-col shadow-lg transform transition-transform duration-300 translate-y-0 pb-sm">
+<!-- Handle -->
+<div class="w-full flex justify-center py-xs cursor-pointer">
+<div class="w-12 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<div class="px-margin-mobile flex-1 overflow-y-auto pb-xl">
+<!-- Item Header -->
+<div class="flex items-center gap-md py-md border-b border-border-subtle">
+<img alt="Mie Dok Dok" class="w-16 h-16 rounded-lg object-cover shadow-sm" data-alt="A close-up food photography shot of Indonesian Mie Dok Dok, a rich noodle soup dish. The bowl is steaming, featuring thick noodles, a boiled egg, and fresh green vegetables in a savory brown broth. The lighting is warm and appetizing, highlighting the textures, set against a soft, creamy minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaXctnCpXa9SsX1UUUvcWzipjtw_MSj6POf1WGxJ3NlJ8gptVSpLqX1dCxs5rWo0sKtzcu8lW4pGA50f4TyG_evAjx6EzHNNSb6sZHfSVlGn1VcI8paZAzAXDBuPm62s_P4wfRVediR1E6jzwawhPOeUUIN2s4D7RRo2cDis2C2HVSrbOcZ_qjlTrmFsIHkcohPLQeODB4Xn9aHC-zvp4e2SUCTHmo_rLlo_USWV-E3S-AOxfLezKt-ScQDFJ15sTCbXPwIBpLvrF2"/>
+<div class="flex-1">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-xs">Mie Dok Dok</h2>
+<p class="font-subheading text-subheading text-info-blue">Rp 15.000</p>
+</div>
+</div>
+<!-- Customization Section 1: Level Pedas -->
+<div class="py-md">
+<div class="flex items-center gap-xs mb-sm">
+<h3 class="font-subheading text-subheading text-on-surface">Level Pedas</h3>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="local_fire_department">local_fire_department</span>
+</div>
+<div class="flex gap-sm">
+<button class="flex-1 py-xs px-sm rounded-lg border border-border-subtle bg-card-surface text-on-surface-variant font-body-sm text-body-sm hover:border-primary-container focus:outline-none focus:ring-2 focus:ring-primary-container/50 transition-colors">
+                        0 (Ori)
+                    </button>
+<button class="flex-1 py-xs px-sm rounded-lg border border-primary-container bg-highlight-surface text-primary-container font-body-sm text-body-sm shadow-sm transition-colors relative overflow-hidden">
+                        1 (Sedang)
+                        <span class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-xs text-secondary" style="font-variation-settings: 'FILL' 1;">whatshot</span>
+</button>
+<button class="flex-1 py-xs px-sm rounded-lg border border-border-subtle bg-card-surface text-on-surface-variant font-body-sm text-body-sm hover:border-primary-container focus:outline-none focus:ring-2 focus:ring-primary-container/50 transition-colors">
+                        2 (Pedas)
+                    </button>
+<button class="flex-1 py-xs px-sm rounded-lg border border-border-subtle bg-card-surface text-on-surface-variant font-body-sm text-body-sm hover:border-primary-container focus:outline-none focus:ring-2 focus:ring-primary-container/50 transition-colors">
+                        3 (Gila)
+                    </button>
+</div>
+</div>
+<!-- Customization Section 2: Catatan Khusus -->
+<div class="py-md">
+<h3 class="font-subheading text-subheading text-on-surface mb-sm">Catatan Khusus <span class="font-caption text-caption text-muted-text font-normal">(Opsional)</span></h3>
+<textarea class="w-full rounded-lg border border-border-subtle bg-card-surface px-md py-sm font-body-sm text-body-sm text-on-surface placeholder:text-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none resize-none transition-colors shadow-sm" placeholder="Contoh: tanpa sawi, telur setengah matang..." rows="2"></textarea>
+</div>
+</div>
+<!-- Sticky Footer: Quantity & CTA -->
+<div class="px-margin-mobile pt-sm pb-md border-t border-border-subtle bg-surface-container-lowest mt-auto">
+<div class="flex items-center justify-between mb-md">
+<span class="font-subheading text-subheading text-on-surface">Jumlah</span>
+<div class="flex items-center bg-card-surface border border-border-subtle rounded-lg shadow-sm">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors focus:outline-none">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="w-8 text-center font-subheading text-subheading text-on-surface">1</span>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:text-primary-container transition-colors focus:outline-none">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<button class="w-full bg-primary-container text-on-primary py-md rounded-lg font-headline-sm text-headline-sm shadow-md hover:bg-primary transition-colors flex items-center justify-between px-md focus:outline-none focus:ring-2 focus:ring-primary-fixed focus:ring-offset-2">
+<span>Tambah ke Keranjang</span>
+<span>Rp 15.000</span>
+</button>
+</div>
+</div>
+</body></html>

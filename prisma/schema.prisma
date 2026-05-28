@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  KASIR
+}
+
+enum TableStatus {
+  AVAILABLE
+  OCCUPIED
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  QRIS
+  CASH
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  role      UserRole @default(KASIR)
+  orders    Order[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Table {
+  id          String      @id @default(uuid())
+  tableNumber Int         @unique @map("table_number")
+  qrCodeUrl   String?     @map("qr_code_url")
+  status      TableStatus @default(AVAILABLE)
+  orders      Order[]
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map("tables")
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  icon      String?
+  sortOrder Int        @default(0) @map("sort_order")
+  isActive  Boolean    @default(true) @map("is_active")
+  menuItems MenuItem[]
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+model MenuItem {
+  id              String      @id @default(uuid())
+  categoryId      String      @map("category_id")
+  category        Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name            String
+  description     String?
+  price           Decimal     @db.Decimal(10, 2)
+  imageUrl        String?     @map("image_url")
+  isAvailable     Boolean     @default(true) @map("is_available")
+  hasSpicyOption  Boolean     @default(false) @map("has_spicy_option")
+  hasNotesOption  Boolean     @default(true) @map("has_notes_option")
+  orderItems      OrderItem[]
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  @@map("menu_items")
+}
+
+model Order {
+  id               String        @id @default(uuid())
+  tableId          String        @map("table_id")
+  table            Table         @relation(fields: [tableId], references: [id])
+  kasirId          String?       @map("kasir_id")
+  kasir            User?         @relation(fields: [kasirId], references: [id])
+  customerName     String        @map("customer_name")
+  status           OrderStatus   @default(PENDING_PAYMENT)
+  paymentMethod    PaymentMethod @map("payment_method")
+  paymentStatus    PaymentStatus @default(UNPAID) @map("payment_status")
+  pgTransactionId  String?       @map("pg_transaction_id")
+  totalAmount      Decimal       @db.Decimal(10, 2) @map("total_amount")
+  orderItems       OrderItem[]
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String   @map("order_id")
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String   @map("menu_item_id")
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  quantity   Int
+  unitPrice  Decimal  @db.Decimal(10, 2) @map("unit_price")
+  spicyLevel Int      @default(0) @map("spicy_level")
+  notes      String?
+  subtotal   Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("order_items")
+}

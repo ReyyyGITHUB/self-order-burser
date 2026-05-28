@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BurjoOrder - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#f0eded",
+                      "primary-fixed": "#ffdcc2",
+                      "on-primary-fixed": "#2e1500",
+                      "on-primary": "#ffffff",
+                      "card-surface": "#fafaf8",
+                      "tertiary-fixed-dim": "#9dd1c0",
+                      "on-tertiary-fixed-variant": "#1b4f42",
+                      "error": "#ba1a1a",
+                      "surface": "#fcf9f8",
+                      "background": "#fcf9f8",
+                      "on-primary-container": "#502a03",
+                      "highlight-surface": "#FFF8F0",
+                      "inverse-surface": "#303030",
+                      "on-surface": "#1b1c1c",
+                      "secondary": "#9a4433",
+                      "primary-fixed-dim": "#f7ba86",
+                      "on-tertiary-fixed": "#002019",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#51443b",
+                      "on-primary-fixed-variant": "#673d14",
+                      "on-error-container": "#93000a",
+                      "surface-container-high": "#eae7e7",
+                      "on-secondary-fixed": "#3e0500",
+                      "surface-container-lowest": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#73a696",
+                      "surface-variant": "#e4e2e1",
+                      "on-secondary-fixed-variant": "#7b2d1e",
+                      "on-secondary-container": "#772a1b",
+                      "inverse-primary": "#f7ba86",
+                      "secondary-fixed-dim": "#ffb4a4",
+                      "on-tertiary-container": "#003b2f",
+                      "surface-dim": "#dcd9d9",
+                      "secondary-fixed": "#ffdad3",
+                      "on-background": "#1b1c1c",
+                      "surface-container-highest": "#e4e2e1",
+                      "page-bg": "#f8f6f1",
+                      "info-blue": "#6b9cc4",
+                      "surface-tint": "#825429",
+                      "on-error": "#ffffff",
+                      "surface-container-low": "#f6f3f2",
+                      "tertiary-fixed": "#b8eedb",
+                      "primary-container": "#c89060",
+                      "outline": "#837469",
+                      "primary": "#825429",
+                      "border-subtle": "#e5e5e5",
+                      "on-tertiary": "#ffffff",
+                      "secondary-container": "#ff937d",
+                      "outline-variant": "#d5c3b7",
+                      "muted-text": "#666666",
+                      "tertiary": "#356759",
+                      "inverse-on-surface": "#f3f0f0",
+                      "surface-bright": "#fcf9f8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "base": "4px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "container-max": "1280px",
+                      "xl": "40px",
+                      "margin-desktop": "32px",
+                      "xs": "4px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Inter", "sans-serif"],
+                      "body-sm": ["Inter", "sans-serif"],
+                      "subheading": ["Inter", "sans-serif"],
+                      "headline-lg-mobile": ["Inter", "sans-serif"],
+                      "caption": ["Inter", "sans-serif"],
+                      "label": ["JetBrains Mono", "monospace"],
+                      "headline-sm": ["Inter", "sans-serif"],
+                      "headline-md": ["Inter", "sans-serif"],
+                      "body": ["Inter", "sans-serif"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                      "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                      "subheading": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                      "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                      "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                      "label": ["12px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                      "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                      "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                      "body": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface min-h-screen flex flex-col font-body antialiased text-on-surface">
+<!-- Top: Magazine-style framed image -->
+<div class="w-full px-6 pt-8 pb-4 flex-shrink-0">
+<div class="relative w-full aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+<img alt="Appetizing bowl of warm Burjo Order noodles" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ujJZwC405KohpKlRRL8AktY3CJ-4zju7BbjO6kGYBhsLNb91RgKGI6hIqLT8smd7Ld6yOgpPiL0vhDztklGh4mS-7i1QPy4mpzNy-YfB_DvOLkUmdykQsw1DuKDJDdixzZa73y-KuBu104EOX1pcSqeTkOl3uDhEXoH_1UvY-BOLp3ZBiwHD36stiIaSYIx_Uw2o4IQPLpMmaFIMOvJNkoZJeroNfvUCNr0p3cU_BmEXD72mlqdflZGT8UW"/>
+</div>
+</div>
+<!-- Bottom: Content & Form -->
+<div class="flex-1 flex flex-col justify-between px-8 pb-12 z-10 bg-surface">
+<!-- Editorial Header Text -->
+<div class="flex flex-col gap-4 mt-6">
+<h1 class="font-headline-lg text-[40px] leading-[1.1] tracking-tight text-on-surface">
+                Selamat<br/>Datang.
+            </h1>
+<p class="font-body text-body text-muted-text max-w-[280px]">
+                Yuk, kenalan dulu sebelum mulai pesan makanan favoritmu.
+            </p>
+</div>
+<!-- Input Field & Action -->
+<div class="flex flex-col gap-10 mt-10">
+<div class="flex flex-col gap-2">
+<label class="font-label text-label tracking-widest uppercase text-outline" for="namaLengkap">
+                    Nama Lengkap
+                </label>
+<div class="relative group">
+<input class="w-full bg-transparent border-0 border-b-2 border-border-subtle py-3 px-0 font-body text-subheading text-on-surface placeholder:text-muted-text/40 focus:ring-0 focus:border-primary transition-all rounded-none" id="namaLengkap" placeholder="Contoh: Budi Santoso" type="text"/>
+</div>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full bg-on-surface text-surface font-headline-sm text-headline-sm py-5 px-6 rounded-lg shadow-sm hover:bg-on-surface/90 transition-colors active:scale-[0.98] duration-150 flex items-center justify-between mt-auto group">
+<span>Mulai Pesan</span>
+<span class="material-symbols-outlined text-surface text-[24px] transform group-hover:translate-x-1 transition-transform">
+                    arrow_forward
+                </span>
+</button>
+</div>
+</div>
+</body></html>
