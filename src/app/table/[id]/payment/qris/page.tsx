@@ -51,7 +51,29 @@ export default function QrisPaymentPage() {
       setCustomerName(currentCustomerName);
     }
 
-    // Call Louvin API server-side proxy
+    // Cek cache transaksi QRIS aktif
+    const cacheStr = localStorage.getItem(`qris_cache_${currentOrderId}`);
+    if (cacheStr) {
+      try {
+        const cache = JSON.parse(cacheStr);
+        const elapsed = Math.floor((Date.now() - cache.createdAt) / 1000);
+        const remaining = cache.duration - elapsed;
+
+        // Jika sisa waktu timer > 10 detik dan nominal belanjanya sama, gunakan QR lama
+        if (remaining > 10 && cache.amount === currentAmount) {
+          setTransactionId(cache.transactionId);
+          setQrString(cache.qrString);
+          setTotalAmount(cache.amount);
+          setTimeLeft(remaining);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Gagal membaca cache QRIS:", e);
+      }
+    }
+
+    // Jika tidak ada cache valid, panggil API Louvin
     createTransaction(currentAmount, currentCustomerName, currentOrderId);
   }, []);
 
@@ -77,14 +99,21 @@ export default function QrisPaymentPage() {
 
       const data = await res.json();
       if (data.success) {
+        const finalAmount = data.payment.total_payment || data.transaction.amount || amount;
+        
         setTransactionId(data.transaction.id);
         setQrString(data.payment.qr_string);
-        // Louvin responses include fee if fee_on_customer is active
-        if (data.payment.total_payment) {
-          setTotalAmount(data.payment.total_payment);
-        } else if (data.transaction.amount) {
-          setTotalAmount(data.transaction.amount);
-        }
+        setTotalAmount(finalAmount);
+
+        // Simpan ke cache agar saat di-refresh tidak generate QR baru
+        const cachePayload = {
+          transactionId: data.transaction.id,
+          qrString: data.payment.qr_string,
+          amount: finalAmount,
+          createdAt: Date.now(),
+          duration: 900 // 15 menit
+        };
+        localStorage.setItem(`qris_cache_${ref}`, JSON.stringify(cachePayload));
       } else {
         throw new Error(data.error || "Gagal membuat kode QRIS");
       }
