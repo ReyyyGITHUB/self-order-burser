@@ -578,7 +578,10 @@ export default function TablePage() {
                     <h4 className="font-bold text-xs text-text-primary uppercase tracking-wider font-mono">Level Pedas</h4>
                   </div>
                   {customSpicyLevel === null && (
-                    <span className="text-[10px] text-secondary-cta font-bold animate-pulse">Wajib dipilih</span>
+                    <span className="text-[10px] text-secondary-cta font-normal flex items-center gap-0.5">
+                      <span>*</span>
+                      <span>Wajib dipilih</span>
+                    </span>
                   )}
                 </div>
                 <div className="flex gap-2">
