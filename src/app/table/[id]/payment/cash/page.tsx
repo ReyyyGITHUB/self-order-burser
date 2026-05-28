@@ -158,14 +158,16 @@ export default function CashPaymentPage() {
             Pesan Lagi
           </button>
 
-          {/* Real cashier status checking simulator */}
+          {/* Real cashier status checking simulator styled as a premium centered status card */}
           <button
             onClick={handleConfirmKasir}
             disabled={confirming}
-            className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer disabled:opacity-50 py-1"
+            className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-xs font-semibold text-text-secondary bg-zinc-50 hover:bg-zinc-100 border border-border-subtle rounded-xl shadow-sm transition-all active:scale-[0.99] disabled:opacity-80"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-text-secondary ${confirming ? "animate-spin" : ""}`} />
-            <span>{confirming ? "Mengecek status..." : "Menunggu konfirmasi kasir"}</span>
+            <div className="w-4 h-4 border-2 border-[#825429] border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+            <span className="text-center leading-none">
+              {confirming ? "Mengecek konfirmasi..." : "Menunggu konfirmasi kasir (Klik untuk Demo)"}
+            </span>
           </button>
         </div>
       </main>

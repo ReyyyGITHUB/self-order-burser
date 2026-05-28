@@ -319,9 +319,9 @@ export default function QrisPaymentPage() {
             )}
           </button>
         ) : (
-          <div className="w-full py-3 flex items-center justify-center gap-2 text-text-secondary text-[11px] font-semibold bg-zinc-100 rounded-xl flex-shrink-0 border border-border-subtle">
-            <div className="w-3.5 h-3.5 border-2 border-[#825429] border-t-transparent rounded-full animate-spin"></div>
-            <span>Menunggu pembayaran otomatis terkonfirmasi...</span>
+          <div className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-text-secondary text-xs font-semibold bg-zinc-50 border border-border-subtle rounded-xl flex-shrink-0 shadow-sm">
+            <div className="w-4 h-4 border-2 border-[#825429] border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+            <span className="text-center leading-none">Menunggu pembayaran otomatis terkonfirmasi...</span>
           </div>
         )}
       </main>
