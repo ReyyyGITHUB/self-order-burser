@@ -335,15 +335,15 @@ export default function TablePage() {
                 <h4 className="font-bold text-sm text-text-primary line-clamp-1">{item.name}</h4>
               </div>
 
-              <div className="flex justify-between items-center mt-3 gap-2">
-                <span className="font-bold text-[13px] text-primary-cta whitespace-nowrap">
+              <div className="flex flex-col gap-2 mt-3 w-full">
+                <span className="font-bold text-[14px] text-primary-cta">
                   Rp {item.price.toLocaleString("id-ID")}
                 </span>
                 <button
                   onClick={() => handleOpenCustomization(item)}
-                  className="bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-95 duration-100 flex items-center justify-center gap-1 flex-shrink-0"
+                  className="w-full bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white py-2 rounded-xl text-xs font-bold transition-all active:scale-95 duration-100 flex items-center justify-center gap-1"
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-3.5 h-3.5" />
                   Tambah
                 </button>
               </div>
