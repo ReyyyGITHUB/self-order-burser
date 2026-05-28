@@ -105,12 +105,24 @@ export default function TablePage() {
   useEffect(() => {
     setMounted(true);
     const savedName = localStorage.getItem("customer_name");
-    if (savedName) {
+    const sessionTime = localStorage.getItem("session_created_at");
+    
+    // Sesi kedaluwarsa setelah 2 jam (7.200.000 ms)
+    const isSessionExpired = sessionTime ? (Date.now() - Number(sessionTime) > 7200000) : true;
+
+    if (savedName && !isSessionExpired) {
       setCustomerName(savedName);
       setIsRegistered(true);
+    } else {
+      localStorage.removeItem("customer_name");
+      localStorage.removeItem("session_created_at");
+      localStorage.removeItem("cart_items");
+      setCart([]);
+      setIsRegistered(false);
     }
+
     const savedCart = localStorage.getItem("cart_items");
-    if (savedCart) {
+    if (savedCart && savedName && !isSessionExpired) {
       setCart(JSON.parse(savedCart));
     }
   }, []);
@@ -126,6 +138,7 @@ export default function TablePage() {
     if (!inputName.trim()) return;
 
     localStorage.setItem("customer_name", inputName.trim());
+    localStorage.setItem("session_created_at", String(Date.now()));
     localStorage.setItem("table_id", String(tableId));
     setCustomerName(inputName.trim());
     setIsRegistered(true);

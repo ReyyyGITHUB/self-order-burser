@@ -32,12 +32,23 @@ export default function CartPage() {
   useEffect(() => {
     setMounted(true);
     const savedName = localStorage.getItem("customer_name");
-    if (savedName) {
+    const sessionTime = localStorage.getItem("session_created_at");
+    
+    // Sesi kedaluwarsa setelah 2 jam (7.200.000 ms)
+    const isSessionExpired = sessionTime ? (Date.now() - Number(sessionTime) > 7200000) : true;
+
+    if (savedName && !isSessionExpired) {
       setCustomerName(savedName);
-    }
-    const savedCart = localStorage.getItem("cart_items");
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
+      
+      const savedCart = localStorage.getItem("cart_items");
+      if (savedCart) {
+        setCart(JSON.parse(savedCart));
+      }
+    } else {
+      localStorage.removeItem("customer_name");
+      localStorage.removeItem("session_created_at");
+      localStorage.removeItem("cart_items");
+      router.push(`/table/${tableId}`);
     }
   }, []);
 
