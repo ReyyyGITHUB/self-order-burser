@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { ArrowUpRight, Check, Sparkles } from "lucide-react";
 
 export default function TablePage() {
   const params = useParams();
@@ -30,9 +31,6 @@ export default function TablePage() {
     localStorage.setItem("table_id", String(tableId));
     setCustomerName(inputName.trim());
     setIsRegistered(true);
-    
-    // Nanti bisa redirect ke menu atau show menu langsung
-    // Untuk sekarang tetap di halaman ini tapi view menu
   };
 
   if (!mounted) {
@@ -46,10 +44,10 @@ export default function TablePage() {
   // Jika belum register nama, tampilkan Onboarding Editorial Premium
   if (!isRegistered) {
     return (
-      <div className="bg-surface min-h-screen flex flex-col font-sans antialiased text-on-surface w-full max-w-md mx-auto shadow-md">
+      <div className="bg-surface h-[100dvh] max-h-screen overflow-hidden flex flex-col font-sans antialiased text-on-surface w-full max-w-md mx-auto shadow-md">
         {/* Top: Magazine-style framed image */}
-        <div className="w-full px-6 pt-8 pb-4 flex-shrink-0">
-          <div className="relative w-full aspect-[4/3] overflow-hidden rounded-2xl shadow-sm bg-surface-container-high">
+        <div className="w-full px-6 pt-5 pb-1 flex-shrink-0">
+          <div className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl shadow-sm bg-surface-container-high">
             <img
               alt="Appetizing bowl of warm Burjo Order noodles"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
@@ -59,27 +57,30 @@ export default function TablePage() {
         </div>
 
         {/* Bottom: Content & Form */}
-        <div className="flex-1 flex flex-col justify-between px-8 pb-12 z-10 bg-surface">
+        <div className="flex-1 flex flex-col justify-between px-8 pb-8 z-10 bg-surface overflow-hidden">
           {/* Editorial Header Text */}
-          <div className="flex flex-col gap-3 mt-6">
-            <span className="font-mono text-xs tracking-widest uppercase text-primary/80">MEJA {tableId}</span>
-            <h1 className="font-headline text-[40px] leading-[1.1] tracking-tight text-on-surface font-bold">
+          <div className="flex flex-col gap-2 mt-4">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs tracking-widest uppercase text-primary/80">MEJA {tableId}</span>
+              <Sparkles className="w-3.5 h-3.5 text-primary/80" />
+            </div>
+            <h1 className="font-headline text-[32px] sm:text-[36px] leading-[1.1] tracking-tight text-on-surface font-bold">
               Selamat<br />Datang.
             </h1>
-            <p className="font-sans text-sm text-muted-text max-w-[280px]">
+            <p className="font-sans text-xs sm:text-sm text-muted-text max-w-[280px]">
               Yuk, kenalan dulu sebelum mulai pesan makanan favoritmu.
             </p>
           </div>
 
           {/* Input Field & Action */}
-          <form onSubmit={handleStartOrder} className="flex flex-col gap-10 mt-10">
-            <div className="flex flex-col gap-2">
-              <label className="font-mono text-xs tracking-widest uppercase text-outline" htmlFor="namaLengkap">
+          <form onSubmit={handleStartOrder} className="flex flex-col gap-8 mt-6">
+            <div className="flex flex-col gap-1.5">
+              <label className="font-mono text-[10px] tracking-widest uppercase text-outline" htmlFor="namaLengkap">
                 Nama Lengkap
               </label>
               <div className="relative group">
                 <input
-                  className="w-full bg-transparent border-0 border-b-2 border-border-subtle py-3 px-0 font-sans text-lg text-on-surface placeholder:text-muted-text/30 focus:ring-0 focus:border-primary focus:outline-none transition-all rounded-none"
+                  className="w-full bg-transparent border-0 border-b-2 border-border-subtle py-2 px-0 font-sans text-base sm:text-lg text-on-surface placeholder:text-muted-text/30 focus:ring-0 focus:border-primary focus:outline-none transition-all rounded-none"
                   id="namaLengkap"
                   placeholder="Contoh: Budi Santoso"
                   type="text"
@@ -95,12 +96,10 @@ export default function TablePage() {
             <button
               type="submit"
               disabled={!inputName.trim()}
-              className="w-full bg-on-surface text-surface font-sans font-semibold py-5 px-6 rounded-lg shadow-sm hover:bg-on-surface/90 transition-all active:scale-[0.98] duration-150 flex items-center justify-between mt-auto group disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full bg-on-surface text-surface font-sans font-semibold py-4 px-6 rounded-lg shadow-sm hover:bg-on-surface/90 transition-all active:scale-[0.98] duration-150 flex items-center justify-between group disabled:opacity-50 disabled:pointer-events-none"
             >
               <span>Mulai Pesan</span>
-              <span className="material-symbols-outlined text-surface text-[24px] transform group-hover:translate-x-1 transition-transform">
-                arrow_forward
-              </span>
+              <ArrowUpRight className="w-5 h-5 text-surface transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
           </form>
         </div>
@@ -108,7 +107,7 @@ export default function TablePage() {
     );
   }
 
-  // Jika sudah terdaftar, tampilkan halaman menu sementara (nanti akan dikembangkan)
+  // Jika sudah terdaftar, tampilkan halaman menu sementara
   return (
     <div className="bg-page-bg min-h-screen flex flex-col font-sans text-on-surface w-full max-w-md mx-auto shadow-md">
       <header className="bg-color-header-bg text-white px-6 py-4 flex justify-between items-center shadow-md">
@@ -123,9 +122,9 @@ export default function TablePage() {
       </header>
 
       <main className="flex-1 p-6 flex flex-col items-center justify-center text-center gap-4">
-        <span className="material-symbols-outlined text-[64px] text-success">
-          check_circle
-        </span>
+        <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center text-success animate-pulse mb-2">
+          <Check className="w-8 h-8" />
+        </div>
         <h3 className="text-xl font-bold text-text-primary">Registrasi Berhasil!</h3>
         <p className="text-sm text-text-secondary">
           Halo <strong>{customerName}</strong>, kamu siap memesan hidangan lezat di Meja {tableId}. Menu utama akan segera hadir.

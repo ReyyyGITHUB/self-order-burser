@@ -16,3 +16,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 > - `fix: perbaiki bug webhook gagal konfirmasi qris`
 > - `refactor: rapikan struktur helper db prisma`
 > - `style: ganti warna tema oranye burjo`
+
+# UI & Iconography Standard
+> [!TIP]
+> **IKON & VISUAL:**
+> - Gunakan **lucide-react** sebagai pustaka ikon standar.
+> - Pilih ikon yang menarik, estetik, dan premium (bukan ikon generik standar). Pastikan ikon memperkuat nuansa modern-earthy.
