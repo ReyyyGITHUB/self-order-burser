@@ -103,6 +103,38 @@ export default function TablePage() {
   const [customQuantity, setCustomQuantity] = useState(1);
   const [showDesc, setShowDesc] = useState(false);
 
+  // Mitigation - Pending Order state
+  const [pendingOrder, setPendingOrder] = useState<any | null>(null);
+  const [showPendingModal, setShowPendingModal] = useState(false);
+
+  // Periksa expired 10 menit pada order tertunda
+  useEffect(() => {
+    if (!mounted) return;
+    const checkPendingOrder = () => {
+      const saved = localStorage.getItem("pending_order_mitigation");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const elapsed = Date.now() - parsed.timestamp;
+          if (elapsed > 600000) { // 10 menit = 600.000 ms
+            localStorage.removeItem("pending_order_mitigation");
+            setPendingOrder(null);
+          } else {
+            setPendingOrder(parsed);
+          }
+        } catch (e) {
+          localStorage.removeItem("pending_order_mitigation");
+        }
+      } else {
+        setPendingOrder(null);
+      }
+    };
+
+    checkPendingOrder();
+    const interval = setInterval(checkPendingOrder, 10000); // periksa setiap 10 detik
+    return () => clearInterval(interval);
+  }, [mounted]);
+
   useEffect(() => {
     if (toast?.show) {
       const timer = setTimeout(() => {
@@ -387,17 +419,29 @@ export default function TablePage() {
             <span className="text-xs text-muted-text">· Halo, {customerName}</span>
           </div>
         </div>
-        <button
-          onClick={() => {
-            localStorage.removeItem("customer_name");
-            setIsRegistered(false);
-            setCart([]);
-          }}
-          className="p-2 text-secondary-cta hover:text-red-700 hover:bg-red-50 rounded-full transition-colors"
-          title="Keluar"
-        >
-          <LogOut className="w-4.5 h-4.5" />
-        </button>
+        <div className="flex items-center gap-2">
+          {pendingOrder && (
+            <button
+              onClick={() => setShowPendingModal(true)}
+              className="p-2 text-primary-cta bg-primary-cta/10 hover:bg-primary-cta/20 rounded-full transition-all relative flex items-center justify-center animate-pulse"
+              title="Lihat Order Tertunda (Aktif)"
+            >
+              <ShoppingBag className="w-4.5 h-4.5" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-secondary-cta rounded-full"></span>
+            </button>
+          )}
+          <button
+            onClick={() => {
+              localStorage.removeItem("customer_name");
+              setIsRegistered(false);
+              setCart([]);
+            }}
+            className="p-2 text-secondary-cta hover:text-red-700 hover:bg-red-50 rounded-full transition-colors flex items-center justify-center"
+            title="Keluar"
+          >
+            <LogOut className="w-4.5 h-4.5" />
+          </button>
+        </div>
       </header>
 
       {/* Main Body Container */}
@@ -669,6 +713,102 @@ export default function TablePage() {
                 <span>Rp {(selectedItem.price * customQuantity).toLocaleString("id-ID")}</span>
               </button>
             )}
+          </div>
+        </div>
+      )}
+      {/* Modal Mitigasi Order Tertunda */}
+      {showPendingModal && pendingOrder && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
+            {/* Header Modal */}
+            <div className="bg-primary-cta text-white p-4 flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-sm">Detail Pesanan Aktif</h3>
+                <p className="text-[10px] opacity-80 font-mono mt-0.5">{pendingOrder.orderId} · Meja {tableId}</p>
+              </div>
+              <button
+                onClick={() => setShowPendingModal(false)}
+                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Konten Detail Pesanan */}
+            <div className="p-5 flex-1 overflow-y-auto flex flex-col gap-4">
+              {/* Alert Expire Banner */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-2.5 items-start">
+                <Sparkles className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0 animate-spin" />
+                <div className="text-[11px] text-amber-800 leading-relaxed">
+                  <p className="font-bold">Akses Sementara Aktif</p>
+                  <p className="mt-0.5">Catatan ini tersimpan di browser Anda selama 10 menit sejak pemesanan untuk mencocokkan pembayaran di kasir / scan QRIS.</p>
+                  <p className="mt-1 font-mono font-bold text-amber-700">
+                    Sisa waktu: {Math.max(0, Math.ceil((600000 - (Date.now() - pendingOrder.timestamp)) / 60000))} menit
+                  </p>
+                </div>
+              </div>
+
+              {/* Daftar Item */}
+              <div className="flex flex-col gap-2">
+                <h4 className="text-[10px] font-bold text-muted-text uppercase tracking-wider font-mono">Daftar Menu</h4>
+                <div className="flex flex-col gap-2.5 max-h-[20vh] overflow-y-auto border border-border-subtle rounded-xl p-3 bg-zinc-50/50">
+                  {pendingOrder.items?.map((item: any, idx: number) => (
+                    <div key={idx} className="flex justify-between items-start text-xs gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-text-primary truncate">{item.name}</p>
+                        {item.spicyLevel !== undefined && (
+                          <p className="text-[9px] text-secondary-cta font-bold mt-0.5">Lvl {item.spicyLevel}</p>
+                        )}
+                        {item.notes && (
+                          <p className="text-[9px] text-muted-text italic truncate mt-0.5">"{item.notes}"</p>
+                        )}
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="font-semibold text-text-primary">x{item.quantity}</p>
+                        <p className="font-mono text-[10px] text-muted-text mt-0.5">Rp {(item.price * item.quantity).toLocaleString("id-ID")}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Rincian Pembayaran */}
+              <div className="border-t border-border-subtle pt-3 flex flex-col gap-2 text-xs">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-text font-medium">Metode Pembayaran</span>
+                  <span className="font-bold text-primary-cta uppercase font-mono bg-primary-cta/5 px-2.5 py-0.5 rounded-lg border border-primary-cta/10">
+                    {pendingOrder.paymentMethod === "qris" ? "QRIS / E-Wallet" : "Tunai / Kasir"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center border-t border-dashed border-border-subtle pt-2">
+                  <span className="font-mono font-bold text-[10px] uppercase tracking-wider text-text-primary">Total Tagihan</span>
+                  <span className="font-mono text-base font-bold text-primary-cta">Rp {pendingOrder.total?.toLocaleString("id-ID")}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Modal Aksi */}
+            <div className="p-4 bg-zinc-50 border-t border-border-subtle flex gap-2">
+              <button
+                onClick={() => {
+                  localStorage.removeItem("pending_order_mitigation");
+                  setPendingOrder(null);
+                  setShowPendingModal(false);
+                  setToast({ show: true, message: "Catatan pesanan berhasil dibersihkan." });
+                }}
+                className="flex-1 border border-border-subtle bg-white text-secondary-cta hover:bg-red-50 hover:border-red-200 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Hapus Sesi</span>
+              </button>
+              <button
+                onClick={() => setShowPendingModal(false)}
+                className="flex-1 bg-primary-cta text-white hover:bg-primary-cta/95 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-1"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>Tutup</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
