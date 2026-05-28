@@ -101,12 +101,28 @@ export default function CartPage() {
     if (cart.length === 0) return;
     setIsOrdering(true);
 
+    const currentTotal = getTotal();
+    const currentCart = [...cart];
+    const currentMethod = paymentMethod;
+
     // Simulasi penempatan pesanan di frontend-only
     setTimeout(() => {
       setIsOrdering(false);
-      setOrderSuccess(true);
-      localStorage.removeItem("cart_items");
-      setCart([]);
+      
+      const generatedOrderId = `BJR-${Math.floor(100 + Math.random() * 900)}`;
+      
+      // Simpan riwayat order sementara
+      const pendingOrder = {
+        orderId: generatedOrderId,
+        items: currentCart,
+        total: currentTotal,
+        paymentMethod: currentMethod,
+        timestamp: Date.now()
+      };
+      localStorage.setItem("pending_order_mitigation", JSON.stringify(pendingOrder));
+
+      // Redirect ke route pembayaran masing-masing
+      router.push(`/table/${tableId}/payment/${currentMethod}`);
     }, 1500);
   };
 
