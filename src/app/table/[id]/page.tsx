@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowUpRight, Check, Sparkles } from "lucide-react";
+import { ArrowUpRight, Check, Utensils } from "lucide-react";
 
 export default function TablePage() {
   const params = useParams();
@@ -62,7 +62,7 @@ export default function TablePage() {
           <div className="flex flex-col gap-2 mt-4">
             <div className="flex items-center gap-2">
               <span className="font-mono text-xs tracking-widest uppercase text-primary/80">MEJA {tableId}</span>
-              <Sparkles className="w-3.5 h-3.5 text-primary/80" />
+              <Utensils className="w-3.5 h-3.5 text-primary/80" />
             </div>
             <h1 className="font-headline text-[32px] sm:text-[36px] leading-[1.1] tracking-tight text-on-surface font-bold">
               Selamat<br />Datang.
