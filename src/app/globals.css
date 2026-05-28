@@ -1,26 +1,175 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colors — Primary */
+  --color-primary-cta: #C89060;
+  --color-header-bg: #2d2d2d;
+  --color-text-primary: #2d2d2d;
+  --color-page-bg: #f8f6f1;
+
+  /* Colors — Secondary */
+  --color-secondary-cta: #d97560;
+  --color-success: #4a7c6d;
+  --color-info-blue: #6b9cc4;
+
+  /* Colors — Neutral */
+  --color-card-bg: #fafaf8;
+  --color-cart-highlight: #FFF8F0;
+  --color-text-secondary: #666666;
+  --color-border-light: #e5e5e5;
+
+  /* UI Tokens from code.html */
+  --surface-container: #f0eded;
+  --primary-fixed: #ffdcc2;
+  --on-primary-fixed: #2e1500;
+  --on-primary: #ffffff;
+  --card-surface: #fafaf8;
+  --tertiary-fixed-dim: #9dd1c0;
+  --on-tertiary-fixed-variant: #1b4f42;
+  --error: #ba1a1a;
+  --surface: #fcf9f8;
+  --background: #fcf9f8;
+  --on-primary-container: #502a03;
+  --highlight-surface: #FFF8F0;
+  --inverse-surface: #303030;
+  --on-surface: #1b1c1c;
+  --secondary: #9a4433;
+  --primary-fixed-dim: #f7ba86;
+  --on-tertiary-fixed: #002019;
+  --on-secondary: #ffffff;
+  --on-surface-variant: #51443b;
+  --on-primary-fixed-variant: #673d14;
+  --on-error-container: #93000a;
+  --surface-container-high: #eae7e7;
+  --on-secondary-fixed: #3e0500;
+  --surface-container-lowest: #ffffff;
+  --error-container: #ffdad6;
+  --tertiary-container: #73a696;
+  --surface-variant: #e4e2e1;
+  --on-secondary-fixed-variant: #7b2d1e;
+  --on-secondary-container: #772a1b;
+  --inverse-primary: #f7ba86;
+  --secondary-fixed-dim: #ffb4a4;
+  --on-tertiary-container: #003b2f;
+  --surface-dim: #dcd9d9;
+  --secondary-fixed: #ffdad3;
+  --on-background: #1b1c1c;
+  --surface-container-highest: #e4e2e1;
+  --page-bg: #f8f6f1;
+  --info-blue: #6b9cc4;
+  --surface-tint: #825429;
+  --on-error: #ffffff;
+  --surface-container-low: #f6f3f2;
+  --tertiary-fixed: #b8eedb;
+  --primary-container: #c89060;
+  --outline: #837469;
+  --primary: #825429;
+  --border-subtle: #e5e5e5;
+  --on-tertiary: #ffffff;
+  --secondary-container: #ff937d;
+  --outline-variant: #d5c3b7;
+  --muted-text: #666666;
+  --tertiary: #356759;
+  --inverse-on-surface: #f3f0f0;
+  --surface-bright: #fcf9f8;
 }
 
-@theme inline {
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-headline: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary-cta: var(--color-primary-cta);
+  --color-header-bg: var(--color-header-bg);
+  --color-text-primary: var(--color-text-primary);
+  --color-page-bg: var(--color-page-bg);
+  
+  --color-secondary-cta: var(--color-secondary-cta);
+  --color-success: var(--color-success);
+  --color-info-blue: var(--color-info-blue);
+  
+  --color-card-bg: var(--color-card-bg);
+  --color-cart-highlight: var(--color-cart-highlight);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-border-light: var(--color-border-light);
+
+  /* code.html Theme Mappings */
+  --color-surface-container: var(--surface-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary: var(--on-primary);
+  --color-card-surface: var(--card-surface);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+  --color-error: var(--error);
+  --color-surface: var(--surface);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-highlight-surface: var(--highlight-surface);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-on-surface: var(--on-surface);
+  --color-secondary: var(--secondary);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-secondary: var(--on-secondary);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+  --color-on-error-container: var(--on-error-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-error-container: var(--error-container);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-surface-variant: var(--surface-variant);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-surface-dim: var(--surface-dim);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-on-background: var(--on-background);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-page-bg: var(--page-bg);
+  --color-info-blue: var(--info-blue);
+  --color-surface-tint: var(--surface-tint);
+  --color-on-error: var(--on-error);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-primary-container: var(--primary-container);
+  --color-outline: var(--outline);
+  --color-primary: var(--primary);
+  --color-border-subtle: var(--border-subtle);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-secondary-container: var(--secondary-container);
+  --color-outline-variant: var(--outline-variant);
+  --color-muted-text: var(--muted-text);
+  --color-tertiary: var(--tertiary);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-surface-bright: var(--surface-bright);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
 }
