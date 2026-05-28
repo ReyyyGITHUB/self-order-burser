@@ -313,14 +313,16 @@ export default function TablePage() {
               </div>
 
               {showInfoPopover && (
-                <div className="bg-zinc-900 text-white rounded-xl p-3 text-[11px] shadow-lg mt-0.5 mb-2 animate-in fade-in slide-in-from-top-1 duration-200 z-50">
+                <div className="absolute top-6 left-0 right-0 bg-zinc-900 text-white rounded-xl p-3 text-[11px] shadow-xl animate-in fade-in slide-in-from-top-1 duration-200 z-50">
                   <p className="leading-relaxed font-sans font-medium text-white/95">
                     Nama ini digunakan oleh pelayan untuk memanggil atau mencocokkan pesananmu ketika sudah siap dihidangkan.
                   </p>
+                  {/* Popover indicator arrow */}
+                  <div className="absolute top-[-3.5px] left-[84px] w-1.75 h-1.75 bg-zinc-900 rotate-45" />
                 </div>
               )}
 
-              <div className="relative group">
+              <div className="relative group mt-1">
                 <input
                   className="w-full bg-transparent border-0 border-b-2 border-border-subtle py-2 px-0 font-sans text-base sm:text-lg text-on-surface placeholder:text-muted-text/30 focus:ring-0 focus:border-primary-cta focus:outline-none transition-all rounded-none"
                   id="namaLengkap"
