@@ -46,8 +46,8 @@ export default function TablePage() {
     return (
       <div className="bg-surface h-[100dvh] max-h-screen overflow-hidden flex flex-col font-sans antialiased text-on-surface w-full max-w-md mx-auto shadow-md">
         {/* Top: Magazine-style framed image */}
-        <div className="w-full px-6 pt-5 pb-1 flex-shrink-0">
-          <div className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl shadow-sm bg-surface-container-high">
+        <div className="w-full px-6 pt-5 pb-1 flex-shrink-0 max-h-[30vh]">
+          <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-sm bg-surface-container-high h-full">
             <img
               alt="Appetizing bowl of warm Burjo Order noodles"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
@@ -57,9 +57,9 @@ export default function TablePage() {
         </div>
 
         {/* Bottom: Content & Form */}
-        <div className="flex-1 flex flex-col justify-between px-8 pb-8 z-10 bg-surface overflow-hidden">
+        <div className="flex-1 flex flex-col justify-center px-8 pb-8 z-10 bg-surface overflow-hidden gap-8">
           {/* Editorial Header Text */}
-          <div className="flex flex-col gap-4 mt-6">
+          <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <span className="font-mono text-xs tracking-widest uppercase text-primary/85 font-semibold">MEJA {tableId}</span>
               <Utensils className="w-3.5 h-3.5 text-primary/85" />
@@ -73,7 +73,7 @@ export default function TablePage() {
           </div>
 
           {/* Input Field & Action */}
-          <form onSubmit={handleStartOrder} className="flex flex-col gap-8 mt-6">
+          <form onSubmit={handleStartOrder} className="flex flex-col gap-8">
             <div className="flex flex-col gap-1.5">
               <label className="font-mono text-[10px] tracking-widest uppercase text-outline" htmlFor="namaLengkap">
                 Nama Lengkap
@@ -96,10 +96,10 @@ export default function TablePage() {
             <button
               type="submit"
               disabled={!inputName.trim()}
-              className="w-full bg-on-surface text-surface font-sans font-semibold py-4 px-6 rounded-lg shadow-sm hover:bg-on-surface/90 transition-all active:scale-[0.98] duration-150 flex items-center justify-between group disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full bg-primary-cta text-white font-sans font-semibold py-4 px-6 rounded-lg shadow-sm hover:bg-primary-cta/95 transition-all active:scale-[0.98] duration-150 flex items-center justify-between group disabled:opacity-50 disabled:pointer-events-none"
             >
               <span>Mulai Pesan</span>
-              <ArrowUpRight className="w-5 h-5 text-surface transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <ArrowUpRight className="w-5 h-5 text-white transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
           </form>
         </div>
