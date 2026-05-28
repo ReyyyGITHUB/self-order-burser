@@ -71,7 +71,8 @@ export default function QrisPaymentPage() {
       });
 
       if (!res.ok) {
-        throw new Error("Gagal memproses transaksi QRIS Louvin");
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Gagal memproses transaksi QRIS Louvin");
       }
 
       const data = await res.json();
