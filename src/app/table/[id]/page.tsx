@@ -228,18 +228,35 @@ export default function TablePage() {
 
         {/* Bottom: Content & Form */}
         <div className="flex-1 flex flex-col justify-center px-8 pb-8 z-10 bg-surface overflow-hidden gap-8">
-          {/* Editorial Header Text */}
-          <div className="flex flex-col gap-4">
+          {/* Editorial Header Text with Location Info */}
+          <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <span className="font-mono text-xs tracking-widest uppercase text-primary-cta font-semibold">MEJA {tableId}</span>
               <Utensils className="w-3.5 h-3.5 text-primary-cta" />
             </div>
-            <h1 className="font-sans text-[40px] leading-[1.1] tracking-tight text-on-surface font-bold">
-              Selamat<br />Datang.
+            <h1 className="font-sans text-[28px] leading-[1.15] tracking-tight text-on-surface font-bold">
+              Burjo Semarang Vol 2
             </h1>
-            <p className="font-sans text-sm text-muted-text max-w-[280px] leading-relaxed">
-              Yuk, kenalan dulu sebelum mulai pesan makanan favoritmu.
-            </p>
+            
+            {/* Restaurant Info & Ratings */}
+            <div className="flex flex-col gap-1.5 text-xs text-muted-text mt-1">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-amber-500 font-bold flex items-center gap-0.5">★ 4,1</span>
+                <span>(182)</span>
+                <span>·</span>
+                <span className="font-semibold text-text-primary">Rp 1–25.000</span>
+                <span>·</span>
+                <span>Restoran</span>
+              </div>
+              <p className="text-[11px] leading-relaxed text-muted-text/80">
+                Jl. Talangsari, Bendan Duwur, Kec. Gajahmungkur, Kota Semarang, Jawa Tengah 50235
+              </p>
+              <div className="flex flex-wrap gap-1 mt-1 font-sans text-[9px] font-semibold text-primary-cta">
+                <span className="bg-primary-cta/5 border border-primary-cta/10 px-2 py-0.5 rounded-full">Makan di tempat</span>
+                <span className="bg-primary-cta/5 border border-primary-cta/10 px-2 py-0.5 rounded-full">Bawa pulang</span>
+                <span className="bg-primary-cta/5 border border-primary-cta/10 px-2 py-0.5 rounded-full">Pesan antar</span>
+              </div>
+            </div>
           </div>
 
           {/* Input Field & Action */}
@@ -294,7 +311,7 @@ export default function TablePage() {
         <div>
           <h2 className="font-bold text-base text-primary-cta flex items-center gap-1.5">
             <Utensils className="w-4 h-4" />
-            Burjo Semarang
+            Burjo Semarang Vol 2
           </h2>
           <div className="flex items-center gap-1 mt-0.5">
             <span className="text-[10px] bg-primary-cta/10 text-primary-cta font-semibold px-2 py-0.5 rounded-full">Meja {tableId}</span>
