@@ -95,22 +95,8 @@ export default function CashPaymentPage() {
       )}
 
       {/* Header */}
-      <header className="bg-white border-b border-border-subtle px-6 py-4 flex items-center sticky top-0 z-30 shadow-sm justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => router.push(`/table/${tableId}/cart`)}
-            className="p-2 hover:bg-zinc-100 rounded-full text-text-primary transition-colors flex items-center justify-center"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h2 className="font-bold text-lg text-text-primary">Pembayaran Tunai</h2>
-        </div>
-        <button
-          onClick={() => router.push(`/table/${tableId}/cart`)}
-          className="p-2 hover:bg-zinc-100 rounded-full text-text-primary transition-colors flex items-center justify-center"
-        >
-          <ShoppingCart className="w-5 h-5" />
-        </button>
+      <header className="bg-white border-b border-border-subtle px-6 py-4 flex items-center sticky top-0 z-30 shadow-sm justify-center flex-shrink-0">
+        <h2 className="font-bold text-lg text-text-primary text-center">Pembayaran Tunai</h2>
       </header>
 
       {/* Main Content */}

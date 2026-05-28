@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, ShoppingCart, Download, Check, Timer, RefreshCw } from "lucide-react";
+import { Download, Check, Timer, RefreshCw } from "lucide-react";
 
 export default function QrisPaymentPage() {
   const params = useParams();
@@ -23,6 +23,8 @@ export default function QrisPaymentPage() {
   const [checkingPayment, setCheckingPayment] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
   useEffect(() => {
     setMounted(true);
@@ -76,6 +78,29 @@ export default function QrisPaymentPage() {
     // Jika tidak ada cache valid, panggil API Louvin
     createTransaction(currentAmount, currentCustomerName, currentOrderId);
   }, []);
+
+  // Live Payment Polling when NOT in Demo Mode
+  useEffect(() => {
+    if (!transactionId || paymentSuccess || loading || isDemoMode) return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/payment/status?id=${transactionId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.transaction.status === "settled") {
+            setPaymentSuccess(true);
+            localStorage.removeItem("cart_items");
+            localStorage.removeItem("pending_order_mitigation");
+          }
+        }
+      } catch (e) {
+        console.error("Error polling payment status:", e);
+      }
+    }, 3000); // Check every 3 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [transactionId, paymentSuccess, loading, isDemoMode]);
 
   const createTransaction = async (amount: number, name: string, ref: string) => {
     try {
@@ -145,27 +170,15 @@ export default function QrisPaymentPage() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const checkPaymentStatus = async () => {
-    if (!transactionId) return;
+  // Manually check/force payment for demo mode
+  const handleDemoConfirmPayment = async () => {
     setCheckingPayment(true);
-    try {
-      const res = await fetch(`/api/payment/status?id=${transactionId}`);
-      if (!res.ok) throw new Error("Gagal memverifikasi status pembayaran");
-      
-      const data = await res.json();
-      if (data.success && data.transaction.status === "settled") {
-        setPaymentSuccess(true);
-        localStorage.removeItem("cart_items");
-      } else {
-        // Not settled yet
-        alert("Pembayaran belum terdeteksi. Silakan selesaikan transaksi Anda di aplikasi.");
-      }
-    } catch (err: any) {
-      console.error(err);
-      alert(err.message || "Gagal menghubungi server");
-    } finally {
+    setTimeout(() => {
       setCheckingPayment(false);
-    }
+      setPaymentSuccess(true);
+      localStorage.removeItem("cart_items");
+      localStorage.removeItem("pending_order_mitigation");
+    }, 1500);
   };
 
   if (!mounted) {
@@ -208,23 +221,9 @@ export default function QrisPaymentPage() {
         </div>
       )}
 
-      {/* Header */}
-      <header className="bg-white border-b border-border-subtle px-4 py-2.5 flex items-center sticky top-0 z-30 shadow-sm justify-between flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push(`/table/${tableId}/cart`)}
-            className="p-1.5 hover:bg-zinc-100 rounded-full text-text-primary transition-colors flex items-center justify-center"
-          >
-            <ArrowLeft className="w-4.5 h-4.5" />
-          </button>
-          <h2 className="font-bold text-sm text-text-primary">Pembayaran QRIS</h2>
-        </div>
-        <button
-          onClick={() => router.push(`/table/${tableId}/cart`)}
-          className="p-1.5 hover:bg-zinc-100 rounded-full text-text-primary transition-colors flex items-center justify-center"
-        >
-          <ShoppingCart className="w-4.5 h-4.5" />
-        </button>
+      {/* Header (No Back & Cart Buttons to prevent exit spam) */}
+      <header className="bg-white border-b border-border-subtle px-6 py-3.5 flex items-center sticky top-0 z-30 shadow-sm justify-center flex-shrink-0">
+        <h2 className="font-bold text-sm text-text-primary text-center">Pembayaran QRIS</h2>
       </header>
 
       {/* Main Content (Scroll-free) */}
@@ -303,21 +302,28 @@ export default function QrisPaymentPage() {
           )}
         </section>
 
-        {/* Verification Check Status Button */}
-        <button
-          onClick={checkPaymentStatus}
-          disabled={checkingPayment || loading || !!errorMsg}
-          className="w-full bg-[#825429] text-white py-3 rounded-xl font-bold text-xs shadow-sm hover:bg-[#825429]/95 transition-all flex items-center justify-center gap-1.5 disabled:opacity-75 flex-shrink-0"
-        >
-          {checkingPayment ? (
-            <>
-              <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>Memverifikasi Pembayaran...</span>
-            </>
-          ) : (
-            <span>Saya Sudah Bayar</span>
-          )}
-        </button>
+        {/* Demo Mode Manual Bypass Button OR Automated Real-Time Verification Status */}
+        {isDemoMode ? (
+          <button
+            onClick={handleDemoConfirmPayment}
+            disabled={checkingPayment || loading || !!errorMsg}
+            className="w-full bg-[#825429] text-white py-3 rounded-xl font-bold text-xs shadow-sm hover:bg-[#825429]/95 transition-all flex items-center justify-center gap-1.5 disabled:opacity-75 flex-shrink-0"
+          >
+            {checkingPayment ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Memverifikasi Pembayaran...</span>
+              </>
+            ) : (
+              <span>Saya Sudah Bayar (Demo Mode)</span>
+            )}
+          </button>
+        ) : (
+          <div className="w-full py-3 flex items-center justify-center gap-2 text-text-secondary text-[11px] font-semibold bg-zinc-100 rounded-xl flex-shrink-0 border border-border-subtle">
+            <div className="w-3.5 h-3.5 border-2 border-[#825429] border-t-transparent rounded-full animate-spin"></div>
+            <span>Menunggu pembayaran otomatis terkonfirmasi...</span>
+          </div>
+        )}
       </main>
     </div>
   );

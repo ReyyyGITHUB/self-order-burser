@@ -146,6 +146,22 @@ export default function TablePage() {
 
   useEffect(() => {
     setMounted(true);
+
+    // Cek transaksi pending aktif untuk auto-redirect
+    const pendingOrderStr = localStorage.getItem("pending_order_mitigation");
+    if (pendingOrderStr) {
+      try {
+        const pendingOrder = JSON.parse(pendingOrderStr);
+        const elapsed = Date.now() - pendingOrder.timestamp;
+        if (elapsed < 900000) { // 15 menit
+          router.push(`/table/${tableId}/payment/${pendingOrder.paymentMethod}`);
+          return;
+        }
+      } catch (e) {
+        console.error("Gagal auto-redirect:", e);
+      }
+    }
+
     const savedName = localStorage.getItem("customer_name");
     const sessionTime = localStorage.getItem("session_created_at");
     
