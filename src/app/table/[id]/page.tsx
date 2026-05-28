@@ -357,12 +357,12 @@ export default function TablePage() {
       
       {/* Toast Notification */}
       {toast?.show && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 text-white py-3 px-5 rounded-2xl shadow-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 w-[90%] max-w-[360px]">
-          <div className="w-8 h-8 rounded-full bg-primary-cta/20 flex items-center justify-center text-primary-cta flex-shrink-0">
-            <Sparkles className="w-4.5 h-4.5 animate-bounce" />
+        <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-white border border-zinc-100 text-zinc-800 py-3 px-4.5 rounded-2xl shadow-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-3 duration-300 w-[90%] max-w-[360px]">
+          <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
+            <Check className="w-4.5 h-4.5" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-white/95 leading-relaxed truncate">{toast.message}</p>
+            <p className="text-xs font-semibold text-zinc-800 leading-relaxed truncate">{toast.message}</p>
           </div>
         </div>
       )}
