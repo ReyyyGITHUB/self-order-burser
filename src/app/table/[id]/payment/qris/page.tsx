@@ -13,7 +13,7 @@ export default function QrisPaymentPage() {
   const [customerName, setCustomerName] = useState("Pelanggan");
   const [totalAmount, setTotalAmount] = useState(25000);
   const [orderId, setOrderId] = useState("BJR-082");
-  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [showToast, setShowToast] = useState(false);
   
   // Louvin API states
@@ -136,7 +136,7 @@ export default function QrisPaymentPage() {
           qrString: data.payment.qr_string,
           amount: finalAmount,
           createdAt: Date.now(),
-          duration: 900 // 15 menit
+          duration: 300 // 5 menit
         };
         localStorage.setItem(`qris_cache_${ref}`, JSON.stringify(cachePayload));
       } else {

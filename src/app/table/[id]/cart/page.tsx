@@ -38,7 +38,7 @@ export default function CartPage() {
       try {
         const pendingOrder = JSON.parse(pendingOrderStr);
         const elapsed = Date.now() - pendingOrder.timestamp;
-        if (elapsed < 900000) { // 15 menit
+        if (elapsed < 300000) { // 5 menit
           router.push(`/table/${tableId}/payment/${pendingOrder.paymentMethod}`);
           return;
         }
