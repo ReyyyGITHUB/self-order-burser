@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare, ChevronDown, LogOut, Trash2 } from "lucide-react";
+import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare, ChevronDown, LogOut, Trash2, Sparkles, Info } from "lucide-react";
 
 // Hardcoded Menu Data
 const MENU_ITEMS = [
@@ -89,6 +89,8 @@ export default function TablePage() {
   const [customerName, setCustomerName] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
   const [inputName, setInputName] = useState("");
+  const [showInfoPopover, setShowInfoPopover] = useState(false);
+  const [toast, setToast] = useState<{ show: boolean; message: string } | null>(null);
 
   // Menu List states
   const [selectedCategory, setSelectedCategory] = useState("Semua");
@@ -100,6 +102,15 @@ export default function TablePage() {
   const [customNotes, setCustomNotes] = useState("");
   const [customQuantity, setCustomQuantity] = useState(1);
   const [showDesc, setShowDesc] = useState(false);
+
+  useEffect(() => {
+    if (toast?.show) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   useEffect(() => {
     setMounted(true);
@@ -174,6 +185,10 @@ export default function TablePage() {
       setCart(updatedCart);
       setSheetOpen(false);
       setSelectedItem(null);
+      setToast({
+        show: true,
+        message: `${selectedItem.name} dihapus dari pesanan`
+      });
       return;
     }
 
@@ -203,6 +218,11 @@ export default function TablePage() {
       setCart([...cart, newItem]);
     }
 
+    setToast({
+      show: true,
+      message: `${selectedItem.name} (${customQuantity}x) berhasil dimasukkan!`
+    });
+
     setSheetOpen(false);
     setSelectedItem(null);
   };
@@ -231,9 +251,9 @@ export default function TablePage() {
   if (!isRegistered) {
     return (
       <div className="bg-surface h-[100dvh] max-h-screen overflow-hidden flex flex-col font-sans antialiased text-on-surface w-full max-w-md mx-auto shadow-md">
-        {/* Top: Magazine-style framed image */}
-        <div className="w-full px-6 pt-5 pb-1 flex-shrink-0 max-h-[30vh]">
-          <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-sm bg-surface-container-high h-full">
+        {/* Top: Full-bleed hero image */}
+        <div className="w-full flex-shrink-0 max-h-[35vh]">
+          <div className="relative w-full aspect-[16/9] overflow-hidden bg-surface-container-high h-full">
             <img
               alt="Appetizing bowl of warm Burjo Order noodles"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
@@ -277,13 +297,32 @@ export default function TablePage() {
 
           {/* Input Field & Action */}
           <form onSubmit={handleStartOrder} className="flex flex-col gap-8">
-            <div className="flex flex-col gap-1.5">
-              <label className="font-mono text-[10px] tracking-widest text-outline" htmlFor="namaLengkap">
-                Nama Lengkap
-              </label>
+            <div className="flex flex-col gap-1.5 relative">
+              <div className="flex items-center gap-1.5">
+                <label className="font-mono text-[10px] tracking-widest text-outline" htmlFor="namaLengkap">
+                  Nama Lengkap
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowInfoPopover(!showInfoPopover)}
+                  className="text-muted-text hover:text-primary-cta transition-colors p-0.5 rounded-full flex items-center justify-center focus:outline-none"
+                  title="Kenapa butuh nama?"
+                >
+                  <Info className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {showInfoPopover && (
+                <div className="bg-zinc-900 text-white rounded-xl p-3 text-[11px] shadow-lg mt-0.5 mb-2 animate-in fade-in slide-in-from-top-1 duration-200 z-50">
+                  <p className="leading-relaxed font-sans font-medium text-white/95">
+                    Nama ini digunakan oleh pelayan untuk memanggil atau mencocokkan pesananmu ketika sudah siap dihidangkan.
+                  </p>
+                </div>
+              )}
+
               <div className="relative group">
                 <input
-                  className="w-full bg-transparent border-0 border-b-2 border-border-subtle py-2 px-0 font-sans text-base sm:text-lg text-on-surface placeholder:text-muted-text/30 focus:ring-0 focus:border-primary focus:outline-none transition-all rounded-none"
+                  className="w-full bg-transparent border-0 border-b-2 border-border-subtle py-2 px-0 font-sans text-base sm:text-lg text-on-surface placeholder:text-muted-text/30 focus:ring-0 focus:border-primary-cta focus:outline-none transition-all rounded-none"
                   id="namaLengkap"
                   placeholder="Masukkan nama"
                   type="text"
@@ -313,6 +352,18 @@ export default function TablePage() {
   // View 2: MAIN MENU & HOME PAGE (AFTER ONBOARDING)
   return (
     <div className="bg-page-bg min-h-screen flex flex-col font-sans text-on-surface w-full max-w-md mx-auto shadow-lg relative overflow-x-hidden">
+      
+      {/* Toast Notification */}
+      {toast?.show && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 text-white py-3 px-5 rounded-2xl shadow-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 w-[90%] max-w-[360px]">
+          <div className="w-8 h-8 rounded-full bg-primary-cta/20 flex items-center justify-center text-primary-cta flex-shrink-0">
+            <Sparkles className="w-4.5 h-4.5 animate-bounce" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-white/95 leading-relaxed truncate">{toast.message}</p>
+          </div>
+        </div>
+      )}
       
       {/* Dimming overlay when Bottom Sheet is open */}
       {sheetOpen && (
