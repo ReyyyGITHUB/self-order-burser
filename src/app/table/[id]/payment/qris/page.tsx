@@ -89,9 +89,8 @@ export default function QrisPaymentPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.success && data.transaction.status === "settled") {
-            setPaymentSuccess(true);
             localStorage.removeItem("cart_items");
-            localStorage.removeItem("pending_order_mitigation");
+            router.push(`/table/${tableId}/payment/receipt`);
           }
         }
       } catch (e) {
@@ -175,9 +174,8 @@ export default function QrisPaymentPage() {
     setCheckingPayment(true);
     setTimeout(() => {
       setCheckingPayment(false);
-      setPaymentSuccess(true);
       localStorage.removeItem("cart_items");
-      localStorage.removeItem("pending_order_mitigation");
+      router.push(`/table/${tableId}/payment/receipt`);
     }, 1500);
   };
 

@@ -48,9 +48,8 @@ export default function CashPaymentPage() {
     setConfirming(true);
     setTimeout(() => {
       setConfirming(false);
-      setConfirmed(true);
-      // Clean up order
       localStorage.removeItem("cart_items");
+      router.push(`/table/${tableId}/payment/receipt`);
     }, 2000);
   };
 
