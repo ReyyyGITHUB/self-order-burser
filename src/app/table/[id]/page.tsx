@@ -383,43 +383,61 @@ export default function TablePage() {
           ))}
         </div>
 
-        {/* Menu Items Grid (2x2 Grid) */}
-        <div className="grid grid-cols-2 gap-4 mt-2">
-          {filteredMenuItems.map((item) => (
-            <div
-              key={item.id}
-              className="bg-card-bg border border-border-subtle rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div>
-                {/* Product Image */}
-                {item.image && (
-                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-zinc-100 relative shadow-sm border border-border-light mb-2.5">
-                    <img
-                      alt={item.name}
-                      src={item.image}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
+        {/* Menu Sections (Makanan, Minuman) */}
+        <div className="flex flex-col gap-6 mt-4">
+          {CATEGORIES.filter(cat => cat !== "Semua").map((cat) => {
+            const itemsInCat = filteredMenuItems.filter(item => item.category === cat);
+            if (itemsInCat.length === 0) return null;
 
-                {/* Product Info */}
-                <h4 className="font-bold text-sm text-text-primary line-clamp-1">{item.name}</h4>
-              </div>
+            return (
+              <section key={cat} className="flex flex-col gap-3.5">
+                <h3 className="text-xs font-bold text-text-primary font-sans flex items-center gap-2 border-b border-border-subtle pb-2">
+                  <span>{cat}</span>
+                  <span className="text-[9px] bg-zinc-100 text-muted-text px-2 py-0.5 rounded-full font-semibold font-mono">
+                    {itemsInCat.length} menu
+                  </span>
+                </h3>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  {itemsInCat.map((item) => (
+                    <div
+                      key={item.id}
+                      className="bg-card-bg border border-border-subtle rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div>
+                        {/* Product Image */}
+                        {item.image && (
+                          <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-zinc-100 relative shadow-sm border border-border-light mb-2.5">
+                            <img
+                              alt={item.name}
+                              src={item.image}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
 
-              <div className="flex flex-col gap-2 mt-3 w-full">
-                <span className="font-bold text-[14px] text-primary-cta">
-                  Rp {item.price.toLocaleString("id-ID")}
-                </span>
-                <button
-                  onClick={() => handleOpenCustomization(item)}
-                  className="w-full bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white py-2 rounded-xl text-xs font-bold transition-all active:scale-95 duration-100 flex items-center justify-center gap-1"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  Tambah
-                </button>
-              </div>
-            </div>
-          ))}
+                        {/* Product Info */}
+                        <h4 className="font-bold text-sm text-text-primary line-clamp-1">{item.name}</h4>
+                      </div>
+
+                      <div className="flex flex-col gap-2 mt-3 w-full">
+                        <span className="font-bold text-[14px] text-primary-cta">
+                          Rp {item.price.toLocaleString("id-ID")}
+                        </span>
+                        <button
+                          onClick={() => handleOpenCustomization(item)}
+                          className="w-full bg-primary-cta/10 text-primary-cta hover:bg-primary-cta hover:text-white py-2 rounded-xl text-xs font-bold transition-all active:scale-95 duration-100 flex items-center justify-center gap-1"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          Tambah
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </main>
 
