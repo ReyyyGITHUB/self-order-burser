@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare } from "lucide-react";
+import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare, ChevronDown, LogOut } from "lucide-react";
 
 // Hardcoded Menu Data
 const MENU_ITEMS = [
@@ -99,6 +99,7 @@ export default function TablePage() {
   const [customSpicyLevel, setCustomSpicyLevel] = useState(1); // 0: Ori, 1: Sedang, 2: Pedas, 3: Gila
   const [customNotes, setCustomNotes] = useState("");
   const [customQuantity, setCustomQuantity] = useState(1);
+  const [showDesc, setShowDesc] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -124,6 +125,7 @@ export default function TablePage() {
     setCustomSpicyLevel(item.hasSpicy ? 1 : 0);
     setCustomNotes("");
     setCustomQuantity(1);
+    setShowDesc(false);
     setSheetOpen(true);
   };
 
@@ -276,10 +278,10 @@ export default function TablePage() {
             setIsRegistered(false);
             setCart([]);
           }}
-          className="p-2 text-muted-text hover:text-secondary-cta rounded-full hover:bg-zinc-100 transition-colors"
+          className="p-2 text-secondary-cta hover:text-red-700 hover:bg-red-50 rounded-full transition-colors"
           title="Keluar"
         >
-          <X className="w-4.5 h-4.5" />
+          <LogOut className="w-4.5 h-4.5" />
         </button>
       </header>
 
@@ -372,11 +374,10 @@ export default function TablePage() {
           </button>
         </div>
       )}
-
       {/* Bottom Sheet Customization */}
       {selectedItem && (
         <div
-          className={`absolute bottom-0 left-0 right-0 w-full bg-white rounded-t-2xl z-50 flex flex-col shadow-2xl transition-transform duration-300 ease-out border-t border-border-light ${
+          className={`fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white rounded-t-2xl z-50 flex flex-col shadow-2xl transition-transform duration-300 ease-out border-t border-border-light ${
             sheetOpen ? "translate-y-0" : "translate-y-full"
           }`}
         >
@@ -386,9 +387,9 @@ export default function TablePage() {
           </div>
 
           {/* Item Meta info */}
-          <div className="px-6 py-4 flex gap-4 border-b border-border-subtle">
+          <div className="px-6 py-4 flex gap-4 border-b border-border-subtle items-center">
             {selectedItem.image && (
-              <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm flex-shrink-0">
+              <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm flex-shrink-0 border border-border-light">
                 <img
                   alt={selectedItem.name}
                   src={selectedItem.image}
@@ -396,39 +397,56 @@ export default function TablePage() {
                 />
               </div>
             )}
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <h3 className="font-bold text-lg text-text-primary">{selectedItem.name}</h3>
               <p className="font-bold text-sm text-primary-cta mt-0.5">Rp {selectedItem.price.toLocaleString("id-ID")}</p>
+              
+              {/* Description Toggle */}
               {selectedItem.description && (
-                <p className="text-xs text-muted-text mt-1.5 leading-relaxed">
-                  {selectedItem.description}
-                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowDesc(!showDesc)}
+                  className="flex items-center gap-1 mt-1 text-[10px] text-primary-cta font-bold hover:underline focus:outline-none"
+                >
+                  <span>{showDesc ? "Sembunyikan Detail" : "Lihat Detail Makanan"}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transform transition-transform duration-200 ${showDesc ? "rotate-180" : ""}`} />
+                </button>
               )}
             </div>
           </div>
 
-          <div className="px-6 py-4 max-h-[50vh] overflow-y-auto">
+          {/* Collapsible Description Box */}
+          {showDesc && selectedItem.description && (
+            <div className="px-6 py-3 bg-zinc-50 border-b border-border-subtle text-[11px] text-muted-text leading-relaxed">
+              {selectedItem.description}
+            </div>
+          )}
+
+          <div className="px-6 py-4 overflow-y-auto max-h-[40vh] gap-5 flex flex-col">
             {/* Spicy Customization (if applicable) */}
             {selectedItem.hasSpicy && (
-              <div className="mb-6">
-                <div className="flex items-center gap-1 mb-2.5">
-                  <Flame className="w-4 h-4 text-secondary-cta" />
-                  <h4 className="font-bold text-sm text-text-primary">Level Pedas</h4>
+              <div>
+                <div className="flex items-center gap-1.5 mb-2.5">
+                  <Flame className="w-3.5 h-3.5 text-secondary-cta" />
+                  <h4 className="font-bold text-xs text-text-primary uppercase tracking-wider font-mono">Level Pedas</h4>
                 </div>
                 <div className="flex gap-2">
                   {[0, 1, 2, 3].map((lvl) => {
-                    const label = lvl === 0 ? "0 (Ori)" : lvl === 1 ? "1 (Sedang)" : lvl === 2 ? "2 (Pedas)" : "3 (Gila)";
+                    const title = lvl === 0 ? "Ori" : lvl === 1 ? "Sedang" : lvl === 2 ? "Pedas" : "Gila";
+                    const label = lvl === 0 ? "Lvl 0" : lvl === 1 ? "Lvl 1" : lvl === 2 ? "Lvl 2" : "Lvl 3";
                     return (
                       <button
                         key={lvl}
+                        type="button"
                         onClick={() => setCustomSpicyLevel(lvl)}
-                        className={`flex-1 py-2 px-1 rounded-xl text-xs font-semibold border text-center transition-all ${
+                        className={`flex-1 py-2 px-1 rounded-xl text-center border transition-all ${
                           customSpicyLevel === lvl
-                            ? "bg-primary-cta/10 border-primary-cta text-primary-cta shadow-sm font-bold"
+                            ? "bg-primary-cta/15 border-primary-cta text-primary-cta shadow-sm font-bold scale-[1.02]"
                             : "bg-card-bg border-border-subtle text-muted-text hover:border-primary-cta/50"
                         }`}
                       >
-                        {label}
+                        <div className="text-xs font-bold leading-none">{title}</div>
+                        <div className="text-[9px] opacity-70 mt-1 leading-none">{label}</div>
                       </button>
                     );
                   })}
@@ -438,17 +456,17 @@ export default function TablePage() {
 
             {/* Custom Notes */}
             {selectedItem.hasNotes && (
-              <div className="mb-6">
-                <div className="flex items-center gap-1 mb-2.5">
-                  <MessageSquare className="w-4 h-4 text-primary-cta" />
-                  <h4 className="font-bold text-sm text-text-primary">
-                    Catatan Khusus <span className="text-xs text-muted-text font-normal">(Opsional)</span>
+              <div>
+                <div className="flex items-center gap-1.5 mb-2.5">
+                  <MessageSquare className="w-3.5 h-3.5 text-primary-cta" />
+                  <h4 className="font-bold text-xs text-text-primary uppercase tracking-wider font-mono">
+                    Catatan Khusus <span className="text-[10px] text-muted-text font-normal lowercase">(opsional)</span>
                   </h4>
                 </div>
                 <textarea
-                  className="w-full bg-card-bg border border-border-subtle rounded-xl px-4 py-2 text-sm text-text-primary placeholder:text-muted-text/30 focus:border-primary-cta focus:outline-none resize-none transition-colors"
+                  className="w-full bg-card-bg border border-border-subtle rounded-xl p-3 text-xs text-text-primary placeholder:text-muted-text/30 focus:border-primary-cta focus:outline-none resize-none transition-colors shadow-inner"
                   placeholder="Contoh: tanpa sawi, telur setengah matang..."
-                  rows={2}
+                  rows={3}
                   value={customNotes}
                   onChange={(e) => setCustomNotes(e.target.value)}
                 />
@@ -456,30 +474,32 @@ export default function TablePage() {
             )}
           </div>
 
-          {/* Bottom Sticky Action: Quantity Selector and Add CTA */}
-          <div className="px-6 py-4 border-t border-border-subtle bg-white">
+          {/* Sticky Action Footer: Quantity Selector and Add CTA */}
+          <div className="px-6 py-4 border-t border-border-subtle bg-white rounded-b-2xl">
             <div className="flex items-center justify-between mb-4">
-              <span className="font-bold text-sm text-text-primary">Jumlah</span>
+              <span className="font-bold text-xs uppercase tracking-wider font-mono text-text-primary">Jumlah</span>
               <div className="flex items-center bg-card-bg border border-border-subtle rounded-xl shadow-sm">
                 <button
+                  type="button"
                   onClick={() => setCustomQuantity(Math.max(1, customQuantity - 1))}
-                  className="w-10 h-10 flex items-center justify-center text-muted-text hover:text-primary-cta transition-colors focus:outline-none"
+                  className="w-9 h-9 flex items-center justify-center text-muted-text hover:text-primary-cta transition-colors focus:outline-none"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3.5 h-3.5" />
                 </button>
-                <span className="w-8 text-center font-bold text-sm text-text-primary">{customQuantity}</span>
+                <span className="w-8 text-center font-bold text-xs text-text-primary">{customQuantity}</span>
                 <button
+                  type="button"
                   onClick={() => setCustomQuantity(customQuantity + 1)}
-                  className="w-10 h-10 flex items-center justify-center text-primary-cta hover:text-primary-cta/80 transition-colors focus:outline-none"
+                  className="w-9 h-9 flex items-center justify-center text-primary-cta hover:text-primary-cta/80 transition-colors focus:outline-none"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
             
             <button
               onClick={handleAddToCart}
-              className="w-full bg-primary-cta text-white py-4 px-6 rounded-xl font-bold shadow-md hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between"
+              className="w-full bg-primary-cta text-white py-3.5 px-5 rounded-xl font-bold shadow-md hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between text-sm"
             >
               <span>Tambah ke Keranjang</span>
               <span>Rp {(selectedItem.price * customQuantity).toLocaleString("id-ID")}</span>
