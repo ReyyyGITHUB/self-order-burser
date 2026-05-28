@@ -94,10 +94,9 @@ export default function TablePage() {
   const [selectedCategory, setSelectedCategory] = useState("Semua");
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Bottom Sheet customization states
   const [selectedItem, setSelectedItem] = useState<typeof MENU_ITEMS[0] | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [customSpicyLevel, setCustomSpicyLevel] = useState(1); // 0: Ori, 1: Sedang, 2: Pedas, 3: Gila
+  const [customSpicyLevel, setCustomSpicyLevel] = useState<number | null>(null); // null: Belum dipilih, 0: Ori, 1: Sedang, 2: Pedas, 3: Gila
   const [customNotes, setCustomNotes] = useState("");
   const [customQuantity, setCustomQuantity] = useState(1);
   const [showDesc, setShowDesc] = useState(false);
@@ -150,7 +149,7 @@ export default function TablePage() {
     // Cari apakah item ini sudah ada di keranjang
     const existing = cart.find((c) => c.menuItemId === item.id);
     
-    setCustomSpicyLevel(existing?.spicyLevel !== undefined ? existing.spicyLevel : (item.hasSpicy ? 1 : 0));
+    setCustomSpicyLevel(existing?.spicyLevel !== undefined ? existing.spicyLevel : null);
     setCustomNotes(existing?.notes || "");
     setCustomQuantity(existing ? existing.quantity : 1);
     setShowDesc(false);
@@ -159,6 +158,10 @@ export default function TablePage() {
 
   const handleAddToCart = () => {
     if (!selectedItem) return;
+
+    if (customQuantity > 0 && selectedItem.hasSpicy && customSpicyLevel === null) {
+      return; // Cegah checkout jika level pedas belum dipilih
+    }
 
     if (customQuantity === 0) {
       // Hapus item dari keranjang
@@ -179,7 +182,7 @@ export default function TablePage() {
       name: selectedItem.name,
       price: selectedItem.price,
       quantity: customQuantity,
-      spicyLevel: selectedItem.hasSpicy ? customSpicyLevel : undefined,
+      spicyLevel: selectedItem.hasSpicy && customSpicyLevel !== null ? customSpicyLevel : undefined,
       notes: customNotes.trim() ? customNotes.trim() : undefined,
       image: selectedItem.image
     };
@@ -516,9 +519,14 @@ export default function TablePage() {
             {/* Spicy Customization (if applicable) */}
             {selectedItem.hasSpicy && (
               <div>
-                <div className="flex items-center gap-1.5 mb-2.5">
-                  <Flame className="w-3.5 h-3.5 text-secondary-cta" />
-                  <h4 className="font-bold text-xs text-text-primary uppercase tracking-wider font-mono">Level Pedas</h4>
+                <div className="flex items-center justify-between mb-2.5">
+                  <div className="flex items-center gap-1.5">
+                    <Flame className="w-3.5 h-3.5 text-secondary-cta" />
+                    <h4 className="font-bold text-xs text-text-primary uppercase tracking-wider font-mono">Level Pedas</h4>
+                  </div>
+                  {customSpicyLevel === null && (
+                    <span className="text-[10px] text-secondary-cta font-bold animate-pulse">Wajib dipilih</span>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   {[0, 1, 2, 3].map((lvl) => {
@@ -598,7 +606,8 @@ export default function TablePage() {
             ) : (
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-primary-cta text-white py-3.5 px-5 rounded-xl font-semibold shadow-md hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between text-sm"
+                disabled={selectedItem.hasSpicy && customSpicyLevel === null}
+                className="w-full bg-primary-cta text-white py-3.5 px-5 rounded-xl font-semibold shadow-md hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between text-sm disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <span>Tambah ke Keranjang</span>
                 <span>Rp {(selectedItem.price * customQuantity).toLocaleString("id-ID")}</span>
