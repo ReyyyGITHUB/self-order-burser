@@ -220,15 +220,6 @@ export default function OrderDetailPanel({
 
         {/* Action Buttons */}
         <div className="flex gap-2.5 items-stretch w-full">
-          {/* Cetak Bill — selalu ada */}
-          <button
-            onClick={() => window.print()}
-            className="flex items-center justify-center gap-1.5 px-4 h-12 rounded-xl text-xs font-semibold border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container)] transition-all active:scale-[0.98]"
-          >
-            <Printer size={14} />
-            Cetak Bill
-          </button>
-
           {/* Batalkan */}
           {order.status !== "COMPLETED" && order.status !== "CANCELLED" && (
             <button
@@ -240,6 +231,15 @@ export default function OrderDetailPanel({
               Batalkan
             </button>
           )}
+
+          {/* Cetak Bill — selalu ada (Di Tengah) */}
+          <button
+            onClick={() => window.print()}
+            className="flex items-center justify-center gap-1.5 px-4 h-12 rounded-xl text-xs font-semibold border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container)] transition-all active:scale-[0.98]"
+          >
+            <Printer size={14} />
+            Cetak Bill
+          </button>
 
           {/* Selesai → COMPLETED */}
           {order.status === "PROCESSING" && (
@@ -265,7 +265,7 @@ export default function OrderDetailPanel({
             </button>
           )}
 
-          {/* Konfirmasi Cash (Paling Kanan & Paling Besar 🔴) */}
+          {/* Konfirmasi Cash (Paling Kanan) */}
           {isCashUnpaid && (
             <button
               onClick={onOpenCashModal}
