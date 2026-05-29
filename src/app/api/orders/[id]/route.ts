@@ -71,9 +71,14 @@ export async function PATCH(
       }
     }
 
-    // Catat ID Kasir yang memproses pesanan ini
+    // Catat ID Kasir yang memproses pesanan ini (Pastikan user ada di DB untuk cegah Foreign Key error)
     if (kasirId) {
-      updateData.kasirId = kasirId;
+      const userExists = await prisma.user.findUnique({
+        where: { id: kasirId }
+      });
+      if (userExists) {
+        updateData.kasirId = kasirId;
+      }
     }
 
     // PENANGANAN PENAMBAHAN/EDIT ITEM KASIR SECARA REALTIME

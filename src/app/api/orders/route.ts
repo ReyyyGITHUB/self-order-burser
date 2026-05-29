@@ -76,6 +76,17 @@ export async function POST(req: Request) {
     }
 
     // 5. Simpan ke Database menggunakan Prisma Transaction
+    // Cek apakah kasirId valid di DB jika dikirim (cegah foreign key error)
+    let verifiedKasirId: string | null = null;
+    if (kasirId) {
+      const userExists = await prisma.user.findUnique({
+        where: { id: kasirId }
+      });
+      if (userExists) {
+        verifiedKasirId = kasirId;
+      }
+    }
+
     const newOrder = await prisma.$transaction(async (tx) => {
       // Buat Order baru
       const order = await tx.order.create({
@@ -87,7 +98,7 @@ export async function POST(req: Request) {
           paymentStatus: "UNPAID",
           status: "PENDING_PAYMENT",
           totalAmount: totalAmount,
-          kasirId: kasirId || null, // Hubungkan ID kasir agar terdeteksi antrean manual
+          kasirId: verifiedKasirId, // Hubungkan ID kasir agar terdeteksi antrean manual jika valid
           orderItems: {
             create: orderItemsData
           }

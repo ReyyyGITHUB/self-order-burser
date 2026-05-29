@@ -190,15 +190,19 @@ export default function KasirPage() {
     }
 
     try {
-      await fetch(`/api/orders/${orderId}`, {
+      const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Gagal memperbarui pesanan");
+      }
       await fetchOrders();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Gagal update order:", err);
-      // Rollback jika gagal
+      alert(err.message || "Gagal memperbarui pesanan");
       await fetchOrders();
     }
   };
