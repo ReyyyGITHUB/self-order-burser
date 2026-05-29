@@ -66,27 +66,30 @@ export default function QuickAddPanel({
   const addToCart = async (item: MenuItem) => {
     // KONDISI REALTIME: Jika ada pesanan aktif yang sedang dipilih di detail panel tengah
     if (activeOrder && onUpdateOrder) {
-      // Periksa apakah item sudah ada di dalam pesanan tersebut
       const existingItem = activeOrder.orderItems.find((oi: any) => oi.menuItemId === item.id);
       
       let updatedItemsList = [];
       if (existingItem) {
-        // Jika sudah ada, naikkan kuantitasnya
         updatedItemsList = activeOrder.orderItems.map((oi: any) => 
           oi.menuItemId === item.id 
             ? { menuItemId: oi.menuItemId, quantity: oi.quantity + 1, name: item.name, price: item.price, notes: oi.notes || "[Tambahan Kasir]" }
             : { menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice, notes: oi.notes }
         );
       } else {
-        // Jika belum ada, tambahkan sebagai baris baru dengan catatan khusus
         updatedItemsList = [
           ...activeOrder.orderItems.map((oi: any) => ({ menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice, notes: oi.notes })),
-          { menuItemId: item.id, quantity: 1, name: item.name, price: item.price, notes: "[Tambahan Kasir]" }
+          { 
+            menuItemId: item.id, 
+            quantity: 1, 
+            name: item.name, 
+            price: item.price, 
+            notes: "[Tambahan Kasir]"
+          }
         ];
       }
 
-      // Langsung update database & update panel tengah secara instan!
-      await onUpdateOrder(activeOrder.id, { items: updatedItemsList });
+      // PICU NON-BLOCKING: Jangan gunakan await di sini agar UI langsung render duluan!
+      onUpdateOrder(activeOrder.id, { items: updatedItemsList });
       return;
     }
 
