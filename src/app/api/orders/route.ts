@@ -15,7 +15,7 @@ function generateOrderItemId(orderId: string, index: number): string {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { tableId, customerName, paymentMethod, items } = body;
+    const { tableId, customerName, paymentMethod, items, kasirId } = body;
 
     // 1. Validasi Input Dasar
     if (!tableId || !customerName || !paymentMethod || !items || !Array.isArray(items) || items.length === 0) {
@@ -87,6 +87,7 @@ export async function POST(req: Request) {
           paymentStatus: "UNPAID",
           status: "PENDING_PAYMENT",
           totalAmount: totalAmount,
+          kasirId: kasirId || null, // Hubungkan ID kasir agar terdeteksi antrean manual
           orderItems: {
             create: orderItemsData
           }

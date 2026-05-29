@@ -146,51 +146,114 @@ export default function OrderDetailPanel({
           </div>
 
           {/* Items */}
-          {order.orderItems.map((item, idx) => (
-            <div
-              key={item.id}
-              className={`grid grid-cols-[3rem_1fr_5.5rem_6rem] gap-2 px-4 py-3.5 text-xs items-center ${
-                idx < order.orderItems.length - 1
-                  ? "border-b border-[var(--outline-variant)]"
-                  : ""
-              }`}
-            >
-              {/* Qty Badge */}
-              <div className="flex justify-center">
-                <span className="inline-flex items-center justify-center px-2 py-1 rounded-lg bg-[var(--primary-container)] text-[var(--primary)] font-bold text-[11px] min-w-[2rem] shadow-sm">
-                  {item.quantity}x
-                </span>
-              </div>
+          {(() => {
+            const mainItems = order.orderItems.filter(
+              (oi) => !oi.notes?.includes("[Tambahan Kasir]")
+            );
+            const additionalItems = order.orderItems.filter(
+              (oi) => oi.notes?.includes("[Tambahan Kasir]")
+            );
 
-              {/* Item Details */}
-              <div>
-                <p className="font-semibold text-[var(--on-surface)] leading-tight">{item.menuItem.name}</p>
-                <div className="flex flex-wrap gap-1.5 mt-1.5">
-                  {item.spicyLevel > 0 && (
-                    <span className="flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded bg-red-50 text-red-600 font-medium">
-                      <Flame size={9} />
-                      {["", "Pedas", "Sedang", "Sangat Pedas"][item.spicyLevel]}
+            return (
+              <>
+                {/* 1. Kelompok Menu Utama */}
+                {mainItems.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className={`grid grid-cols-[3rem_1fr_5.5rem_6rem] gap-2 px-4 py-3.5 text-xs items-center ${
+                      idx < mainItems.length - 1 || additionalItems.length > 0
+                        ? "border-b border-[var(--outline-variant)]"
+                        : ""
+                    }`}
+                  >
+                    {/* Qty Badge */}
+                    <div className="flex justify-center">
+                      <span className="inline-flex items-center justify-center px-2 py-1 rounded-lg bg-[var(--primary-container)] text-[var(--primary)] font-bold text-[11px] min-w-[2rem] shadow-sm">
+                        {item.quantity}x
+                      </span>
+                    </div>
+
+                    {/* Item Details */}
+                    <div>
+                      <p className="font-semibold text-[var(--on-surface)] leading-tight">{item.menuItem.name}</p>
+                      <div className="flex flex-wrap gap-1.5 mt-1.5">
+                        {item.spicyLevel > 0 && (
+                          <span className="flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded bg-red-50 text-red-600 font-medium">
+                            <Flame size={9} />
+                            {["", "Pedas", "Sedang", "Sangat Pedas"][item.spicyLevel]}
+                          </span>
+                        )}
+                        {item.notes && !item.notes.includes("[Tambahan Kasir]") && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--surface-container)] text-[var(--on-surface-variant)]">
+                            {item.notes}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Unit Price */}
+                    <span className="text-right text-[var(--muted-text)] font-medium">
+                      Rp {Number(item.unitPrice).toLocaleString("id-ID")}
                     </span>
-                  )}
-                  {item.notes && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--surface-container)] text-[var(--on-surface-variant)]">
-                      {item.notes}
+
+                    {/* Subtotal */}
+                    <span className="text-right font-bold text-[var(--on-surface)] text-sm">
+                      Rp {Number(item.subtotal).toLocaleString("id-ID")}
                     </span>
-                  )}
-                </div>
-              </div>
+                  </div>
+                ))}
 
-              {/* Unit Price */}
-              <span className="text-right text-[var(--muted-text)] font-medium">
-                Rp {Number(item.unitPrice).toLocaleString("id-ID")}
-              </span>
+                {/* Separator / Title untuk Menu Tambahan */}
+                {additionalItems.length > 0 && (
+                  <div className="px-4 py-2 bg-orange-50 border-b border-[var(--outline-variant)] text-[9px] font-bold text-orange-700 uppercase tracking-wider flex items-center justify-between">
+                    <span>Menu Tambahan Manual</span>
+                    <span className="text-[8px] bg-orange-200 px-1.5 py-0.5 rounded">Kasir</span>
+                  </div>
+                )}
 
-              {/* Subtotal */}
-              <span className="text-right font-bold text-[var(--on-surface)] text-sm">
-                Rp {Number(item.subtotal).toLocaleString("id-ID")}
-              </span>
-            </div>
-          ))}
+                {/* 2. Kelompok Menu Tambahan */}
+                {additionalItems.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className={`grid grid-cols-[3rem_1fr_5.5rem_6rem] gap-2 px-4 py-3.5 text-xs items-center bg-orange-50/20 ${
+                      idx < additionalItems.length - 1
+                        ? "border-b border-[var(--outline-variant)]"
+                        : ""
+                    }`}
+                  >
+                    {/* Qty Badge */}
+                    <div className="flex justify-center">
+                      <span className="inline-flex items-center justify-center px-2 py-1 rounded-lg bg-orange-100 text-orange-800 font-bold text-[11px] min-w-[2rem] shadow-sm">
+                        {item.quantity}x
+                      </span>
+                    </div>
+
+                    {/* Item Details */}
+                    <div>
+                      <p className="font-semibold text-[var(--on-surface)] leading-tight">{item.menuItem.name}</p>
+                      {item.notes && item.notes !== "[Tambahan Kasir]" && (
+                        <div className="mt-1 flex gap-1">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-white text-[var(--on-surface-variant)] border border-orange-100">
+                            {item.notes.replace("[Tambahan Kasir]", "").trim()}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Unit Price */}
+                    <span className="text-right text-[var(--muted-text)] font-medium">
+                      Rp {Number(item.unitPrice).toLocaleString("id-ID")}
+                    </span>
+
+                    {/* Subtotal */}
+                    <span className="text-right font-bold text-orange-700 text-sm">
+                      Rp {Number(item.subtotal).toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                ))}
+              </>
+            );
+          })()}
         </div>
       </div>
 

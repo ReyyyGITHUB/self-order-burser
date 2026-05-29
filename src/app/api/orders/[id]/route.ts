@@ -103,7 +103,7 @@ export async function PATCH(
             unitPrice: Number(menuItem.price),
             subtotal: subtotal,
             spicyLevel: 0,
-            notes: ""
+            notes: item.notes || ""
           });
         }
       }

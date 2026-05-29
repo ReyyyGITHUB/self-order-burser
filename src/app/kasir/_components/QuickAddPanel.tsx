@@ -74,14 +74,14 @@ export default function QuickAddPanel({
         // Jika sudah ada, naikkan kuantitasnya
         updatedItemsList = activeOrder.orderItems.map((oi: any) => 
           oi.menuItemId === item.id 
-            ? { menuItemId: oi.menuItemId, quantity: oi.quantity + 1, name: item.name, price: item.price }
-            : { menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice }
+            ? { menuItemId: oi.menuItemId, quantity: oi.quantity + 1, name: item.name, price: item.price, notes: oi.notes || "[Tambahan Kasir]" }
+            : { menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice, notes: oi.notes }
         );
       } else {
-        // Jika belum ada, tambahkan sebagai baris baru
+        // Jika belum ada, tambahkan sebagai baris baru dengan catatan khusus
         updatedItemsList = [
-          ...activeOrder.orderItems.map((oi: any) => ({ menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice })),
-          { menuItemId: item.id, quantity: 1, name: item.name, price: item.price }
+          ...activeOrder.orderItems.map((oi: any) => ({ menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice, notes: oi.notes })),
+          { menuItemId: item.id, quantity: 1, name: item.name, price: item.price, notes: "[Tambahan Kasir]" }
         ];
       }
 
@@ -113,6 +113,7 @@ export default function QuickAddPanel({
           tableId: selectedTableId,
           customerName,
           paymentMethod,
+          kasirId: "kasir-placeholder-id", // Catat bahwa pesanan manual ini diinput oleh kasir
           items: cart.map((c) => ({ menuItemId: c.menuItemId, quantity: c.quantity })),
         }),
       });
