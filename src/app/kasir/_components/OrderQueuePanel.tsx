@@ -23,6 +23,7 @@ interface OrderQueuePanelProps {
   onOpenCamera: () => void;
   loading: boolean;
   totalActive: number;
+  width: number;
 }
 
 const FILTER_TABS = [
@@ -126,9 +127,13 @@ export default function OrderQueuePanel({
   onOpenCamera,
   loading,
   totalActive,
+  width,
 }: OrderQueuePanelProps) {
   return (
-    <div className="w-[280px] shrink-0 flex flex-col border-r border-[var(--outline-variant)] bg-white overflow-hidden">
+    <div 
+      style={{ width: `${width}px` }} 
+      className="shrink-0 flex flex-col border-r border-[var(--outline-variant)] bg-white overflow-hidden"
+    >
       {/* Header */}
       <div className="px-4 pt-4 pb-3 border-b border-[var(--outline-variant)]">
         <div className="flex items-center justify-between mb-3">

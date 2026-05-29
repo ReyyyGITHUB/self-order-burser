@@ -51,8 +51,32 @@ export default function KasirPage() {
   const [isCashModalOpen, setIsCashModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [queueWidth, setQueueWidth] = useState(300); // Lebar antrean dinamis
 
   const activeOrder = orders.find((o) => o.id === activeOrderId) ?? null;
+
+  // Handler resize mouse drag
+  const startResizing = (mouseDownEvent: React.MouseEvent) => {
+    mouseDownEvent.preventDefault();
+    const startWidth = queueWidth;
+    const startX = mouseDownEvent.clientX;
+
+    const doDrag = (mouseMoveEvent: MouseEvent) => {
+      const newWidth = startWidth + (mouseMoveEvent.clientX - startX);
+      if (newWidth >= 240 && newWidth <= 480) {
+        setQueueWidth(newWidth);
+      }
+    };
+
+    const stopDrag = () => {
+      document.removeEventListener("mousemove", doDrag);
+      document.removeEventListener("mouseup", stopDrag);
+    };
+
+    document.addEventListener("mousemove", doDrag);
+    document.addEventListener("mouseup", stopDrag);
+  };
+
 
 
   // Fetch orders
@@ -144,7 +168,7 @@ export default function KasirPage() {
   });
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full w-full overflow-hidden select-none">
       {/* Panel Kiri: Queue */}
       <OrderQueuePanel
         orders={filteredOrders}
@@ -155,7 +179,16 @@ export default function KasirPage() {
         onOpenCamera={() => setIsCameraOpen(true)}
         loading={loading}
         totalActive={orders.filter((o) => o.status !== "COMPLETED" && o.status !== "CANCELLED").length}
+        width={queueWidth}
       />
+
+      {/* Resize Handle Splitter */}
+      <div
+        onMouseDown={startResizing}
+        className="w-1.5 shrink-0 bg-transparent hover:bg-[var(--primary)] active:bg-[var(--primary)] cursor-col-resize transition-colors relative z-10 flex items-center justify-center group"
+      >
+        <div className="w-[2px] h-8 bg-[var(--outline-variant)] group-hover:bg-white group-active:bg-white rounded" />
+      </div>
 
       {/* Panel Tengah: Detail */}
       <OrderDetailPanel
