@@ -351,12 +351,12 @@ export default function QrisPaymentPage() {
                 disabled={changingMethod || loading}
                 className="text-[10px] text-primary-cta underline font-bold mt-1.5 transition-all disabled:opacity-50 cursor-pointer flex-shrink-0"
               >
-                {changingMethod ? "Memproses..." : "Ganti Metode Pembayaran (Tunai)"}
+                {changingMethod ? "Memproses..." : "Ingin Bayar Tunai? Ganti ke Bayar di Kasir"}
               </button>
 
               {/* Info Petunjuk Scan langsung di bawah Tombol Ganti Metode */}
               <p className="text-[9px] text-text-secondary leading-relaxed text-center max-w-[260px] mt-1 flex-shrink-0">
-                Scan QR menggunakan aplikasi <strong className="text-text-primary font-semibold">Gopay, OVO, ShopeePay, dll</strong>
+                Scan QR menggunakan aplikasi <strong className="text-text-primary font-semibold">Gopay, OVO, ShopeePay, LinkAja, dll</strong>
               </p>
             </>
           )}
@@ -394,9 +394,9 @@ export default function QrisPaymentPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in">
           <div className="bg-white rounded-2xl p-5 w-full max-w-[320px] shadow-2xl flex flex-col gap-4 animate-scale-up border border-border-subtle">
             <div className="text-center flex flex-col gap-1.5">
-              <h3 className="text-sm font-bold text-text-primary">Ganti Metode Pembayaran?</h3>
+              <h3 className="text-sm font-bold text-text-primary">Ganti ke Bayar di Kasir?</h3>
               <p className="text-[10px] text-text-secondary leading-relaxed px-1">
-                Pesanan Anda akan dialihkan ke pembayaran <strong className="text-text-primary">Tunai di Kasir</strong>. Harap selesaikan pembayaran di meja kasir.
+                Pesanan Anda akan dialihkan ke metode pembayaran <strong className="text-text-primary">Tunai / Debit manual</strong>. Silakan selesaikan pembayaran langsung di meja kasir.
               </p>
             </div>
             
@@ -411,7 +411,7 @@ export default function QrisPaymentPage() {
                 onClick={handleConfirmChangePayment}
                 className="flex-1 py-2.5 bg-primary-cta hover:bg-primary-cta/90 text-white rounded-xl text-[10px] font-bold shadow-md transition-all active:scale-[0.98] cursor-pointer"
               >
-                Ya, Ganti Tunai
+                Ya, Bayar di Kasir
               </button>
             </div>
           </div>

@@ -212,7 +212,7 @@ export default function ReceiptPage() {
         )}
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-extrabold text-text-primary">
-            {paymentStatus === "PAID" ? "Pembayaran Berhasil!" : "Menunggu Pembayaran"}
+            {paymentStatus === "PAID" ? "Pembayaran Berhasil!" : "Selesaikan Pembayaran di Kasir"}
           </h2>
           <p className="text-2xl font-black font-mono text-[#825429] mt-1 tracking-wider">
             #{orderId}
@@ -280,8 +280,8 @@ export default function ReceiptPage() {
                 <Clock className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[10px] text-text-secondary">Estimasi Waktu Penyajian</p>
-                <p className="text-xs font-bold text-text-primary mt-0.5">~10 - 15 Menit</p>
+                <p className="text-[10px] text-text-secondary">Pesanan Sedang Diproses</p>
+                <p className="text-xs font-bold text-text-primary mt-0.5">Sedang disiapkan di dapur</p>
               </div>
             </div>
           ) : (
@@ -290,8 +290,8 @@ export default function ReceiptPage() {
                 <Clock className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[10px] text-orange-700">Tunjukkan ID ke Kasir</p>
-                <p className="text-xs font-bold text-orange-800 mt-0.5">Silakan bayar tunai di meja kasir</p>
+                <p className="text-[10px] text-orange-700">Silakan ke Meja Kasir</p>
+                <p className="text-xs font-bold text-orange-800 mt-0.5">Tunjukkan ID pesanan ini untuk membayar</p>
               </div>
             </div>
           )}
