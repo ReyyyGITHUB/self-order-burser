@@ -1,5 +1,4 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { Wifi, WifiOff, ChevronDown } from "lucide-react";
 
 interface KasirTopbarProps {
@@ -15,6 +14,13 @@ const dateLabel = now.toLocaleDateString("id-ID", {
 });
 
 export default function KasirTopbar({ isOnline }: KasirTopbarProps) {
+  const [userName, setUserName] = useState("Kasir");
+
+  useEffect(() => {
+    const savedName = sessionStorage.getItem("kasir_name");
+    if (savedName) setUserName(savedName);
+  }, []);
+
   return (
     <header className="flex items-center justify-between px-5 py-3 border-b border-[var(--outline-variant)] bg-white shrink-0">
       <div>
@@ -41,9 +47,9 @@ export default function KasirTopbar({ isOnline }: KasirTopbarProps) {
         {/* Avatar */}
         <button className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-[var(--surface-container)] transition-colors">
           <div className="w-7 h-7 rounded-full bg-[var(--primary-container)] flex items-center justify-center">
-            <span className="text-xs font-bold text-[var(--primary)]">A</span>
+            <span className="text-xs font-bold text-[var(--primary)]">{userName[0]}</span>
           </div>
-          <span className="text-sm font-medium text-[var(--on-surface)]">Andi</span>
+          <span className="text-sm font-medium text-[var(--on-surface)]">{userName}</span>
           <ChevronDown size={14} className="text-[var(--muted-text)]" />
         </button>
       </div>

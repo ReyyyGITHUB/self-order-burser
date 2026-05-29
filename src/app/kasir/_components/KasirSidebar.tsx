@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   MonitorCheck,
@@ -42,11 +43,17 @@ const navGroups: { label: string; items: NavItem[] }[] = [
   },
 ];
 
-// TODO: replace with real auth role from session
-const userRole = "ADMIN";
-const userName = "Andi";
-
 export default function KasirSidebar({ currentPath }: { currentPath: string }) {
+  const [userName, setUserName] = useState("Kasir");
+  const [userRole, setUserRole] = useState("KASIR");
+
+  useEffect(() => {
+    const savedName = sessionStorage.getItem("kasir_name");
+    const savedRole = sessionStorage.getItem("kasir_role");
+    if (savedName) setUserName(savedName);
+    if (savedRole) setUserRole(savedRole);
+  }, []);
+
   const isActive = (href: string) => {
     if (href === "/kasir") return currentPath === "/kasir";
     return currentPath.startsWith(href);
@@ -54,6 +61,9 @@ export default function KasirSidebar({ currentPath }: { currentPath: string }) {
 
   const handleLogout = () => {
     sessionStorage.removeItem("kasir_logged_in");
+    sessionStorage.removeItem("kasir_username");
+    sessionStorage.removeItem("kasir_name");
+    sessionStorage.removeItem("kasir_role");
     window.location.href = "/kasir";
   };
 

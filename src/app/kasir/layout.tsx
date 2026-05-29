@@ -46,6 +46,9 @@ export default function KasirLayout({ children }: { children: React.ReactNode })
     setTimeout(() => {
       if (username === "kasir" && password === "kasir123") {
         sessionStorage.setItem("kasir_logged_in", "true");
+        sessionStorage.setItem("kasir_username", "kasir");
+        sessionStorage.setItem("kasir_name", "Kasir Burjo");
+        sessionStorage.setItem("kasir_role", "KASIR");
         setIsLoggedIn(true);
       } else {
         setErrorMsg("Username atau Password salah!");
@@ -56,6 +59,9 @@ export default function KasirLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     sessionStorage.removeItem("kasir_logged_in");
+    sessionStorage.removeItem("kasir_username");
+    sessionStorage.removeItem("kasir_name");
+    sessionStorage.removeItem("kasir_role");
     setIsLoggedIn(false);
     setUsername("");
     setPassword("");
@@ -65,7 +71,7 @@ export default function KasirLayout({ children }: { children: React.ReactNode })
   // Loading screen (cegah flickering saat cek sessionStorage)
   if (isLoggedIn === null) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[var(--surface-container-low)]">
+      <div className="flex h-screen items-center justify-center">
         <div className="w-8 h-8 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
