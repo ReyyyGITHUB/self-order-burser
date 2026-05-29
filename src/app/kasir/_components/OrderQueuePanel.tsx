@@ -188,8 +188,13 @@ export default function OrderQueuePanel({
               const cashUnpaid = orders.filter(
                 (o) => o.paymentMethod === "CASH" && o.paymentStatus === "UNPAID"
               );
-              const otherOrders = orders.filter(
-                (o) => !(o.paymentMethod === "CASH" && o.paymentStatus === "UNPAID")
+              // Pesanan Self-Order: pesanan lunas/proses yang dibuat dari HP pelanggan (kasirId null)
+              const selfOrders = orders.filter(
+                (o) => !(o.paymentMethod === "CASH" && o.paymentStatus === "UNPAID") && !o.kasirId
+              );
+              // Pesanan Kasir/Manual: pesanan yang diinput kasir sendiri (kasirId tidak null)
+              const kasirManualOrders = orders.filter(
+                (o) => !(o.paymentMethod === "CASH" && o.paymentStatus === "UNPAID") && o.kasirId
               );
 
               return (
@@ -207,29 +212,45 @@ export default function OrderQueuePanel({
                     </div>
                   )}
 
-                  {/* Separator jika kedua grup ada */}
-                  {cashUnpaid.length > 0 && otherOrders.length > 0 && (
+                  {/* Separator A-B */}
+                  {cashUnpaid.length > 0 && (selfOrders.length > 0 || kasirManualOrders.length > 0) && (
                     <div className="relative py-1">
                       <div className="absolute inset-0 flex items-center" aria-hidden="true">
                         <div className="w-full border-t border-dashed border-[var(--outline-variant)]"></div>
                       </div>
-                      <div className="relative flex justify-center text-[9px] uppercase">
-                        <span className="bg-white px-2 text-[var(--muted-text)] font-semibold">Proses & Lainnya</span>
+                    </div>
+                  )}
+
+                  {/* Kelompok B: Pesanan Self-Order (Pelanggan) */}
+                  {selfOrders.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="px-1 flex items-center gap-1.5">
+                        <span className="text-[10px] font-bold text-[var(--primary)] uppercase tracking-wider">
+                          Self-Order Pelanggan ({selfOrders.length})
+                        </span>
+                      </div>
+                      {selfOrders.map((order) => renderOrderCard(order))}
+                    </div>
+                  )}
+
+                  {/* Separator B-C */}
+                  {selfOrders.length > 0 && kasirManualOrders.length > 0 && (
+                    <div className="relative py-1">
+                      <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                        <div className="w-full border-t border-dashed border-[var(--outline-variant)]"></div>
                       </div>
                     </div>
                   )}
 
-                  {/* Kelompok B: Pesanan Diproses & Lunas */}
-                  {otherOrders.length > 0 && (
+                  {/* Kelompok C: Tambah Pesanan Kasir (Manual) */}
+                  {kasirManualOrders.length > 0 && (
                     <div className="space-y-2">
-                      {cashUnpaid.length > 0 && (
-                        <div className="px-1">
-                          <span className="text-[10px] font-bold text-[var(--muted-text)] uppercase tracking-wider">
-                            Pesanan Aktif ({otherOrders.length})
-                          </span>
-                        </div>
-                      )}
-                      {otherOrders.map((order) => renderOrderCard(order))}
+                      <div className="px-1">
+                        <span className="text-[10px] font-bold text-purple-600 uppercase tracking-wider">
+                          Ditambahkan Kasir ({kasirManualOrders.length})
+                        </span>
+                      </div>
+                      {kasirManualOrders.map((order) => renderOrderCard(order))}
                     </div>
                   )}
                 </div>

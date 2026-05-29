@@ -146,6 +146,46 @@ export default function KasirPage() {
     orderId: string,
     updates: any
   ) => {
+    // OPTIMISTIC UPDATE: Tampilkan di Frontend dulu tanpa menunggu respons API
+    if (updates.items && Array.isArray(updates.items)) {
+      setOrders((prevOrders) =>
+        prevOrders.map((order) => {
+          if (order.id !== orderId) return order;
+
+          let newTotalAmount = 0;
+          const updatedOrderItems = updates.items.map((updatedItem: any) => {
+            // Cari item menu dari data menuItems yang ada di orderItems sebelumnya atau cari referensi menu
+            const existingOI = order.orderItems.find((oi) => oi.menuItemId === updatedItem.menuItemId);
+            
+            const unitPrice = existingOI ? Number(existingOI.unitPrice) : (Number(updatedItem.price) || 0);
+            const subtotal = unitPrice * updatedItem.quantity;
+            newTotalAmount += subtotal;
+
+            return {
+              id: existingOI?.id || `temp-${Math.random()}`,
+              menuItemId: updatedItem.menuItemId,
+              quantity: updatedItem.quantity,
+              unitPrice: unitPrice,
+              subtotal: subtotal,
+              spicyLevel: existingOI?.spicyLevel || 0,
+              notes: existingOI?.notes || "",
+              menuItem: existingOI?.menuItem || {
+                id: updatedItem.menuItemId,
+                name: updatedItem.name || "Loading...",
+                imageUrl: null,
+              },
+            };
+          });
+
+          return {
+            ...order,
+            totalAmount: newTotalAmount,
+            orderItems: updatedOrderItems,
+          };
+        })
+      );
+    }
+
     try {
       await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
@@ -155,6 +195,8 @@ export default function KasirPage() {
       await fetchOrders();
     } catch (err) {
       console.error("Gagal update order:", err);
+      // Rollback jika gagal
+      await fetchOrders();
     }
   };
 

@@ -74,14 +74,14 @@ export default function QuickAddPanel({
         // Jika sudah ada, naikkan kuantitasnya
         updatedItemsList = activeOrder.orderItems.map((oi: any) => 
           oi.menuItemId === item.id 
-            ? { menuItemId: oi.menuItemId, quantity: oi.quantity + 1 }
-            : { menuItemId: oi.menuItemId, quantity: oi.quantity }
+            ? { menuItemId: oi.menuItemId, quantity: oi.quantity + 1, name: item.name, price: item.price }
+            : { menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice }
         );
       } else {
         // Jika belum ada, tambahkan sebagai baris baru
         updatedItemsList = [
-          ...activeOrder.orderItems.map((oi: any) => ({ menuItemId: oi.menuItemId, quantity: oi.quantity })),
-          { menuItemId: item.id, quantity: 1 }
+          ...activeOrder.orderItems.map((oi: any) => ({ menuItemId: oi.menuItemId, quantity: oi.quantity, name: oi.menuItem.name, price: oi.unitPrice })),
+          { menuItemId: item.id, quantity: 1, name: item.name, price: item.price }
         ];
       }
 
