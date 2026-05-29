@@ -269,7 +269,7 @@ export default function OrderDetailPanel({
           {isCashUnpaid && (
             <button
               onClick={onOpenCashModal}
-              className="flex-1 flex items-center justify-center gap-2 px-6 h-12 rounded-xl text-sm font-bold bg-orange-600 hover:bg-orange-700 text-white transition-all shadow-md animate-pulse hover:animate-none active:scale-[0.98]"
+              className="flex-1 flex items-center justify-center gap-2 px-6 h-12 rounded-xl text-sm font-bold bg-orange-600 hover:bg-orange-700 text-white transition-all shadow-md active:scale-[0.98]"
             >
               <Banknote size={18} />
               Konfirmasi Pembayaran Cash
