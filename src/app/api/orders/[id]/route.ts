@@ -59,6 +59,13 @@ export async function PATCH(
     // Jika pelanggan mengubah metode pembayaran (e.g. dari QRIS ke CASH)
     if (paymentMethod) {
       updateData.paymentMethod = paymentMethod;
+      
+      // SECURITY & INTEGRASI FIX: Jika berganti ke CASH, paksa status kembali ke belum bayar
+      // agar antrean masuk ke dalam POS Kasir (karena QRIS di demo mode terbuat otomatis sebagai PAID/COMPLETED)
+      if (paymentMethod === "CASH") {
+        updateData.paymentStatus = "UNPAID";
+        updateData.status = "PENDING_PAYMENT";
+      }
     }
 
     // Jika kasir mengupdate status pesanan (e.g. PROCESSING, COMPLETED, CANCELLED)
@@ -145,6 +152,12 @@ export async function PATCH(
       await prisma.table.update({
         where: { id: updatedOrder.tableId },
         data: { status: "AVAILABLE" }
+      });
+    } else {
+      // Jika status aktif/menunggu pembayaran, pastikan status meja diatur ke OCCUPIED (Terisi)
+      await prisma.table.update({
+        where: { id: updatedOrder.tableId },
+        data: { status: "OCCUPIED" }
       });
     }
 
