@@ -171,7 +171,7 @@ export default function OrderQueuePanel({
       </div>
 
       {/* Queue List */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
+      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {loading ? (
           <div className="flex items-center justify-center h-32">
             <Loader2 size={20} className="animate-spin text-[var(--muted-text)]" />
