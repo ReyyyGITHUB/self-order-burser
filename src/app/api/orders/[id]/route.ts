@@ -31,7 +31,7 @@ export async function GET(
   }
 }
 
-// PATCH /api/orders/[id] - Update status pesanan / pembayaran oleh kasir
+// PATCH /api/orders/[id] - Update status pesanan / pembayaran / tambah item oleh kasir
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -39,11 +39,14 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { status, paymentStatus, kasirId } = body;
+    const { status, paymentStatus, kasirId, items } = body;
 
-    // Ambil data order lama untuk pengecekan
+    // Ambil data order lama untuk pengecekan beserta item dan harga menunya
     const existingOrder = await prisma.order.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        orderItems: true
+      }
     });
 
     if (!existingOrder) {
@@ -71,6 +74,47 @@ export async function PATCH(
     // Catat ID Kasir yang memproses pesanan ini
     if (kasirId) {
       updateData.kasirId = kasirId;
+    }
+
+    // PENANGANAN PENAMBAHAN/EDIT ITEM KASIR SECARA REALTIME
+    if (items && Array.isArray(items)) {
+      let newTotalAmount = 0;
+
+      // Hapus item lama terlebih dahulu untuk kita gantikan dengan komposisi item yang baru
+      await prisma.orderItem.deleteMany({
+        where: { orderId: id }
+      });
+
+      // Iterasi item menu baru untuk dihitung harganya
+      const newItemsData = [];
+      for (const item of items) {
+        const menuItem = await prisma.menuItem.findUnique({
+          where: { id: item.menuItemId }
+        });
+
+        if (menuItem) {
+          const subtotal = Number(menuItem.price) * item.quantity;
+          newTotalAmount += subtotal;
+
+          newItemsData.push({
+            orderId: id,
+            menuItemId: item.menuItemId,
+            quantity: item.quantity,
+            unitPrice: Number(menuItem.price),
+            subtotal: subtotal,
+            spicyLevel: 0,
+            notes: ""
+          });
+        }
+      }
+
+      // Buat item baru di database
+      await prisma.orderItem.createMany({
+        data: newItemsData
+      });
+
+      // Update nilai total belanja baru
+      updateData.totalAmount = newTotalAmount;
     }
 
     const updatedOrder = await prisma.order.update({

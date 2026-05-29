@@ -144,7 +144,7 @@ export default function KasirPage() {
   // Update order status
   const updateOrderStatus = async (
     orderId: string,
-    updates: Partial<Pick<Order, "status" | "paymentStatus" | "kasirId">>
+    updates: any
   ) => {
     try {
       await fetch(`/api/orders/${orderId}`, {
@@ -202,6 +202,8 @@ export default function KasirPage() {
         onOrderCreated={fetchOrders} 
         isOpen={isQuickAddOpen}
         onToggle={() => setIsQuickAddOpen(!isQuickAddOpen)}
+        activeOrder={activeOrder}
+        onUpdateOrder={updateOrderStatus}
       />
 
       {/* Modal Kamera */}
