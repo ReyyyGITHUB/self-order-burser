@@ -367,7 +367,7 @@ export default function CartPage() {
                     type="radio"
                     value="qris"
                   />
-                  <div className="p-4 rounded-2xl border border-border-subtle bg-white flex items-center justify-between gap-3 transition-all peer-checked:border-primary-cta peer-checked:bg-primary-cta/5 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.99] w-full">
+                  <div className="py-[22px] px-5 rounded-2xl border border-border-subtle bg-white flex items-center justify-between gap-3 transition-all peer-checked:border-primary-cta peer-checked:bg-primary-cta/5 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.99] w-full">
                     <div className="flex items-center gap-3.5">
                       <QrCode className="w-5.5 h-5.5 text-primary-cta" />
                       <span className="font-bold text-sm text-text-primary">QRIS / E-Wallet</span>
@@ -390,7 +390,7 @@ export default function CartPage() {
                     type="radio"
                     value="cash"
                   />
-                  <div className="p-4 rounded-2xl border border-border-subtle bg-white flex items-center justify-between gap-3 transition-all peer-checked:border-primary-cta peer-checked:bg-primary-cta/5 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.99] w-full">
+                  <div className="py-[22px] px-5 rounded-2xl border border-border-subtle bg-white flex items-center justify-between gap-3 transition-all peer-checked:border-primary-cta peer-checked:bg-primary-cta/5 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.99] w-full">
                     <div className="flex items-center gap-3.5">
                       <Banknote className="w-5.5 h-5.5 text-primary-cta" />
                       <span className="font-bold text-sm text-text-primary">Tunai / Bayar di Kasir</span>
