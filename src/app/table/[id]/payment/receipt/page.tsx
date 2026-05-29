@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Check, Clock, Calendar, Hash, Receipt, ArrowRight, Utensils } from "lucide-react";
+import { Check, Clock, Calendar, Hash, Receipt, ArrowRight, Utensils, RefreshCw } from "lucide-react";
 
 interface CartItem {
   menuItemId: string;
@@ -214,6 +214,9 @@ export default function ReceiptPage() {
           <h2 className="text-xl font-extrabold text-text-primary">
             {paymentStatus === "PAID" ? "Pembayaran Berhasil!" : "Menunggu Pembayaran"}
           </h2>
+          <p className="text-2xl font-black font-mono text-[#825429] mt-1 tracking-wider">
+            #{orderId}
+          </p>
           <p className="text-[10px] text-muted-text uppercase tracking-widest font-mono">Meja {tableId} · {customerName}</p>
         </div>
       </section>
@@ -377,5 +380,4 @@ export default function ReceiptPage() {
       </main>
     </div>
   );
-}
 }
