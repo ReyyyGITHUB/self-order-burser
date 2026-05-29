@@ -171,8 +171,12 @@ export default function CartPage() {
       // Hapus keranjang setelah pesanan berhasil dibuat
       localStorage.removeItem("cart_items");
 
-      // Redirect ke route pembayaran masing-masing
-      router.push(`/table/${tableId}/payment/${paymentMethod}`);
+      // Redirect ke route pembayaran masing-masing (Bypass Cash langsung ke Receipt)
+      if (paymentMethod === "cash" || paymentMethod === "CASH") {
+        router.push(`/table/${tableId}/payment/receipt`);
+      } else {
+        router.push(`/table/${tableId}/payment/${paymentMethod}`);
+      }
     } catch (error) {
       console.error("Gagal melakukan checkout:", error);
       alert("Terjadi kesalahan koneksi. Silakan coba lagi.");

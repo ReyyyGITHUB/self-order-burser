@@ -136,14 +136,14 @@ export default function TablePage() {
       return;
     }
 
-    // Cek transaksi pending aktif untuk auto-redirect (Solusi 3 & Lock)
+    // Cek transaksi pending aktif untuk auto-redirect langsung ke Receipt (Struk Pending)
     const pendingOrderStr = localStorage.getItem("pending_order_mitigation");
     if (pendingOrderStr) {
       try {
         const pendingOrder = JSON.parse(pendingOrderStr);
         const elapsed = Date.now() - pendingOrder.timestamp;
-        if (elapsed < 300000) { // 5 menit
-          router.push(`/table/${tableId}/payment/${pendingOrder.paymentMethod}`);
+        if (elapsed < 600000) { // 10 menit
+          router.push(`/table/${tableId}/payment/receipt`);
           return;
         }
       } catch (e) {
