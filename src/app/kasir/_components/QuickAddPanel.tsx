@@ -26,11 +26,13 @@ interface Table {
 
 interface QuickAddPanelProps {
   onOrderCreated: () => void;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 const CATEGORIES = ["Semua", "Makanan", "Minuman", "Snack"];
 
-export default function QuickAddPanel({ onOrderCreated }: QuickAddPanelProps) {
+export default function QuickAddPanel({ onOrderCreated, isOpen, onToggle }: QuickAddPanelProps) {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [tables, setTables] = useState<Table[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -90,11 +92,35 @@ export default function QuickAddPanel({ onOrderCreated }: QuickAddPanelProps) {
     }
   };
 
+  if (!isOpen) {
+    return (
+      <button
+        onClick={onToggle}
+        className="w-12 shrink-0 flex flex-col items-center pt-6 bg-white border-l border-[var(--outline-variant)] hover:bg-[var(--surface-container-low)] transition-all cursor-pointer group"
+      >
+        <div className="w-8 h-8 rounded-full bg-[var(--primary-container)] group-hover:bg-[var(--primary)] flex items-center justify-center transition-colors mb-4">
+          <Plus size={16} className="text-[var(--primary)] group-hover:text-white" />
+        </div>
+        <span className="text-[10px] font-bold text-[var(--muted-text)] tracking-wider uppercase [writing-mode:vertical-lr] rotate-180">
+          Tambah Pesanan
+        </span>
+      </button>
+    );
+  }
+
   return (
-    <div className="w-[300px] shrink-0 flex flex-col border-l border-[var(--outline-variant)] bg-white overflow-hidden">
+    <div className="w-[320px] shrink-0 flex flex-col border-l border-[var(--outline-variant)] bg-white overflow-hidden transition-all duration-300">
       {/* Header */}
       <div className="px-4 pt-4 pb-3 border-b border-[var(--outline-variant)]">
-        <p className="text-sm font-semibold text-[var(--on-surface)] mb-3">Tambah Pesanan Manual</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-sm font-semibold text-[var(--on-surface)]">Tambah Pesanan Manual</p>
+          <button 
+            onClick={onToggle} 
+            className="text-[10px] font-bold text-[var(--primary)] hover:underline"
+          >
+            Sembunyikan
+          </button>
+        </div>
 
         {/* Search */}
         <div className="relative mb-2">
@@ -132,7 +158,7 @@ export default function QuickAddPanel({ onOrderCreated }: QuickAddPanelProps) {
             <button
               key={item.id}
               onClick={() => addToCart(item)}
-              className="flex flex-col items-start p-2.5 rounded-xl border border-[var(--outline-variant)] bg-[var(--surface-container-low)] hover:bg-[var(--primary-container)] hover:border-[var(--primary)] transition-all active:scale-95 text-left group"
+              className="flex flex-col items-start p-2.5 rounded-xl border border-[var(--outline-variant)] bg-[var(--surface-container-low)] hover:bg-[var(--primary-container)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all active:scale-95 text-left group"
             >
               <span className="text-[11px] font-medium text-[var(--on-surface)] group-hover:text-[var(--primary)] leading-tight mb-1">
                 {item.name}

@@ -50,8 +50,10 @@ export default function KasirPage() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isCashModalOpen, setIsCashModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
 
   const activeOrder = orders.find((o) => o.id === activeOrderId) ?? null;
+
 
   // Fetch orders
   const fetchOrders = useCallback(async () => {
@@ -163,7 +165,11 @@ export default function KasirPage() {
       />
 
       {/* Panel Kanan: Quick Add */}
-      <QuickAddPanel onOrderCreated={fetchOrders} />
+      <QuickAddPanel 
+        onOrderCreated={fetchOrders} 
+        isOpen={isQuickAddOpen}
+        onToggle={() => setIsQuickAddOpen(!isQuickAddOpen)}
+      />
 
       {/* Modal Kamera */}
       {isCameraOpen && (

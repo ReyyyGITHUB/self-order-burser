@@ -53,6 +53,10 @@ export default function CashPaymentModal({ order, onClose, onConfirm }: CashPaym
     });
   }, []);
 
+  const handleUangPas = () => {
+    setStack([{ value: totalTagihan, count: 1 }]);
+  };
+
   const handleConfirm = async () => {
     if (!cukup) return;
     setConfirming(true);
@@ -120,6 +124,16 @@ export default function CashPaymentModal({ order, onClose, onConfirm }: CashPaym
           </div>
         </div>
 
+        {/* Uang Pas Quick Option */}
+        <div className="px-6 pt-1">
+          <button
+            onClick={handleUangPas}
+            className="w-full py-2.5 rounded-xl text-xs font-bold bg-[var(--primary)] hover:bg-[var(--secondary)] text-white transition-all shadow-sm flex items-center justify-center gap-2 active:scale-95"
+          >
+            <Banknote size={14} /> Bayar Uang Pas (Rp {totalTagihan.toLocaleString("id-ID")})
+          </button>
+        </div>
+
         {/* Denomination Buttons */}
         <div className="px-6 py-3">
           <p className="text-[10px] font-semibold text-[var(--muted-text)] uppercase tracking-widest mb-2">
@@ -158,9 +172,29 @@ export default function CashPaymentModal({ order, onClose, onConfirm }: CashPaym
           </div>
         </div>
 
+        {/* Input Manual */}
+        <div className="px-6 pb-2">
+          <p className="text-[10px] font-semibold text-[var(--muted-text)] uppercase tracking-widest mb-1.5">
+            Ketik Manual
+          </p>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted-text)]">Rp</span>
+            <input
+              type="number"
+              value={totalDiterima || ""}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setStack(val > 0 ? [{ value: val, count: 1 }] : []);
+              }}
+              placeholder="Masukkan nominal..."
+              className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-[var(--outline-variant)] bg-[var(--surface-container-low)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+            />
+          </div>
+        </div>
+
         {/* Stack Display */}
         <div className="px-6 pb-3 min-h-[2.5rem]">
-          {stack.length > 0 && (
+          {stack.length > 0 && stack[0].value !== totalTagihan && (
             <div className="flex flex-wrap gap-1.5 items-center">
               <span className="text-[10px] text-[var(--muted-text)]">Dimasukkan:</span>
               {stack.map((entry) => (

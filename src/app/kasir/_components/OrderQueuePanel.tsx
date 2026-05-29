@@ -177,53 +177,112 @@ export default function OrderQueuePanel({
             <p className="text-xs text-[var(--muted-text)]">Tidak ada pesanan aktif</p>
           </div>
         ) : (
-          orders.map((order) => {
-            const isActive = order.id === activeOrderId;
-            const needsAction =
-              order.paymentMethod === "CASH" && order.paymentStatus === "UNPAID";
-            const previewItems = order.orderItems
-              .slice(0, 2)
-              .map((i) => `${i.quantity}× ${i.menuItem.name}`)
-              .join(", ");
+          (() => {
+            // Filter pembagian khusus jika filter status adalah ACTIVE (Semua Aktif)
+            if (filterStatus === "ACTIVE") {
+              const cashUnpaid = orders.filter(
+                (o) => o.paymentMethod === "CASH" && o.paymentStatus === "UNPAID"
+              );
+              const otherOrders = orders.filter(
+                (o) => !(o.paymentMethod === "CASH" && o.paymentStatus === "UNPAID")
+              );
 
-            return (
-              <button
-                key={order.id}
-                onClick={() => onSelectOrder(order.id)}
-                className={`w-full text-left p-3 rounded-xl border transition-all duration-150 ${
-                  isActive
-                    ? "border-[var(--primary)] bg-[var(--primary-container)] shadow-sm"
-                    : needsAction
-                    ? "border-orange-200 bg-orange-50 hover:border-orange-300"
-                    : "border-[var(--outline-variant)] bg-white hover:bg-[var(--surface-container-low)]"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-1 mb-1.5">
-                  <span className="text-xs font-bold text-[var(--on-surface)]">#{order.id}</span>
-                  <StatusBadge order={order} />
-                </div>
+              return (
+                <div className="space-y-4">
+                  {/* Kelompok A: Tunggu Pembayaran Cash */}
+                  {cashUnpaid.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between px-1">
+                        <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">
+                          Menunggu Uang Cash ({cashUnpaid.length})
+                        </span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                      </div>
+                      {cashUnpaid.map((order) => renderOrderCard(order))}
+                    </div>
+                  )}
 
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <PaymentBadge method={order.paymentMethod} />
-                    <span className="text-[10px] text-[var(--muted-text)]">
-                      Meja {order.table.tableNumber}
-                    </span>
-                  </div>
-                  {order.status !== "COMPLETED" && order.status !== "CANCELLED" && (
-                    <OrderTimer createdAt={order.createdAt} />
+                  {/* Separator jika kedua grup ada */}
+                  {cashUnpaid.length > 0 && otherOrders.length > 0 && (
+                    <div className="relative py-1">
+                      <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                        <div className="w-full border-t border-dashed border-[var(--outline-variant)]"></div>
+                      </div>
+                      <div className="relative flex justify-center text-[9px] uppercase">
+                        <span className="bg-white px-2 text-[var(--muted-text)] font-semibold">Proses & Lainnya</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Kelompok B: Pesanan Diproses & Lunas */}
+                  {otherOrders.length > 0 && (
+                    <div className="space-y-2">
+                      {cashUnpaid.length > 0 && (
+                        <div className="px-1">
+                          <span className="text-[10px] font-bold text-[var(--muted-text)] uppercase tracking-wider">
+                            Pesanan Aktif ({otherOrders.length})
+                          </span>
+                        </div>
+                      )}
+                      {otherOrders.map((order) => renderOrderCard(order))}
+                    </div>
                   )}
                 </div>
+              );
+            }
 
-                <p className="text-[11px] text-[var(--on-surface-variant)] truncate">
-                  {previewItems}
-                  {order.orderItems.length > 2 && ` +${order.orderItems.length - 2} lainnya`}
-                </p>
-              </button>
-            );
-          })
+            // Default render untuk tab filter lain
+            return orders.map((order) => renderOrderCard(order));
+          })()
         )}
       </div>
     </div>
   );
+
+  // Helper render kartu pesanan agar kodenya reusable dan rapi
+  function renderOrderCard(order: Order) {
+    const isActive = order.id === activeOrderId;
+    const needsAction =
+      order.paymentMethod === "CASH" && order.paymentStatus === "UNPAID";
+    const previewItems = order.orderItems
+      .slice(0, 2)
+      .map((i) => `${i.quantity}× ${i.menuItem.name}`)
+      .join(", ");
+
+    return (
+      <button
+        key={order.id}
+        onClick={() => onSelectOrder(order.id)}
+        className={`w-full text-left p-3 rounded-xl border transition-all duration-150 ${
+          isActive
+            ? "border-[var(--primary)] bg-[var(--primary-container)] shadow-sm font-medium"
+            : needsAction
+            ? "border-orange-200 bg-orange-50/70 hover:border-orange-300"
+            : "border-[var(--outline-variant)] bg-white hover:bg-[var(--surface-container-low)]"
+        }`}
+      >
+        <div className="flex items-start justify-between gap-1 mb-1.5">
+          <span className="text-xs font-bold text-[var(--on-surface)]">#{order.id}</span>
+          <StatusBadge order={order} />
+        </div>
+
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-1.5">
+            <PaymentBadge method={order.paymentMethod} />
+            <span className="text-[10px] text-[var(--muted-text)]">
+              Meja {order.table.tableNumber}
+            </span>
+          </div>
+          {order.status !== "COMPLETED" && order.status !== "CANCELLED" && (
+            <OrderTimer createdAt={order.createdAt} />
+          )}
+        </div>
+
+        <p className="text-[11px] text-[var(--on-surface-variant)] truncate">
+          {previewItems}
+          {order.orderItems.length > 2 && ` +${order.orderItems.length - 2} lainnya`}
+        </p>
+      </button>
+    );
+  }
 }

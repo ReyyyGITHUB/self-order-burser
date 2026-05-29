@@ -73,11 +73,14 @@ export default function OrderDetailPanel({
 
   if (!order) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-[var(--surface-container-low)] text-center gap-3">
-        <div className="w-16 h-16 rounded-2xl bg-[var(--surface-container)] flex items-center justify-center">
-          <FileText size={28} className="text-[var(--outline-variant)]" />
+      <div className="flex-1 flex flex-col items-center justify-center bg-[var(--surface-container-low)] text-center p-6">
+        <div className="w-16 h-16 rounded-2xl bg-[var(--surface-container)] flex items-center justify-center mb-4">
+          <FileText size={28} className="text-[var(--primary)]" />
         </div>
-        <p className="text-sm text-[var(--muted-text)]">Pilih pesanan dari antrean</p>
+        <p className="text-sm font-bold text-[var(--on-surface)] mb-1">Tidak ada pesanan terpilih</p>
+        <p className="text-xs text-[var(--muted-text)] max-w-xs leading-relaxed">
+          Pilih salah satu kartu pesanan dari antrean antrean di sebelah kiri atau ketuk tombol <span className="font-semibold text-[var(--primary)]">Scan QR</span> untuk mulai memproses pembayaran.
+        </p>
       </div>
     );
   }
