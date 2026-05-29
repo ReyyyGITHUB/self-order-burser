@@ -120,6 +120,12 @@ Used for body copy, form labels, headlines, and standard text hierarchy. Ensures
 **Token:** `--font-sans`  
 **Role:** Versatile workhorse for body text, navigation, headings, and forms. Maintains clarity and friendliness across all sizes.
 
+> [!IMPORTANT]
+> **Aturan Kelipatan 2, 4, 8 (4px/8px Grid & Mobile Legibility)**
+> - Seluruh ukuran huruf (**Font Size**) wajib mengikuti type scale kelipatan 2 (misal: 12px, 14px, 16px, 18px, 20px, 24px, 32px).
+> - **BATAS MINIMUM MOBILE:** Demi kenyamanan mata di HP asli (*real mobile devices*), ukuran font terkecil yang diperbolehkan di antarmuka pembeli adalah **12px (`text-xs` / `--text-caption`)**. Ukuran di bawah 12px (seperti 8px, 9px, 10px) dilarang keras untuk menjaga kemudahan membaca (*high legibility*).
+> - Seluruh margin, padding, dan gap antarelemen wajib menggunakan basis **kelipatan 4px & 8px** (misal: 4px, 8px, 12px, 16px, 20px, 24px, 32px, 40px) untuk menjamin kerapian layout yang konsisten.
+
 ### Type Scale
 
 | Role | Size | Line Height | Weight | Token |

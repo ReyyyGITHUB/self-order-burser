@@ -217,7 +217,7 @@ export default function ReceiptPage() {
           <p className="text-2xl font-black font-mono text-[#825429] mt-1 tracking-wider">
             #{orderId}
           </p>
-          <p className="text-[10px] text-muted-text uppercase tracking-widest font-mono">Meja {tableId} · {customerName}</p>
+          <p className="text-xs text-muted-text uppercase tracking-widest font-mono">Meja {tableId} · {customerName}</p>
         </div>
       </section>
 
@@ -237,11 +237,11 @@ export default function ReceiptPage() {
                 Burjo Semarang Vol 2
               </span>
               {paymentStatus === "PAID" ? (
-                <span className="text-[9px] bg-[#4a7c6d]/10 border border-[#4a7c6d]/20 text-[#4a7c6d] font-bold px-2.5 py-0.5 rounded-full font-sans tracking-wide">
+                <span className="text-[11px] bg-[#4a7c6d]/10 border border-[#4a7c6d]/20 text-[#4a7c6d] font-bold px-2.5 py-0.5 rounded-full font-sans tracking-wide">
                   LUNAS
                 </span>
               ) : (
-                <span className="text-[9px] bg-orange-100 border border-orange-200 text-orange-700 font-bold px-2.5 py-0.5 rounded-full font-sans tracking-wide animate-pulse">
+                <span className="text-[11px] bg-orange-100 border border-orange-200 text-orange-700 font-bold px-2.5 py-0.5 rounded-full font-sans tracking-wide animate-pulse">
                   PENDING
                 </span>
               )}
@@ -250,12 +250,12 @@ export default function ReceiptPage() {
             <hr className="border-border-subtle border-dashed" />
 
             {/* Receipt Details Grid */}
-            <div className="grid grid-cols-2 gap-y-2.5 text-[10px] text-text-secondary font-medium">
+            <div className="grid grid-cols-2 gap-y-2.5 text-xs text-text-secondary font-medium">
               <div className="flex items-center gap-1.5">
                 <Hash className="w-3.5 h-3.5 text-zinc-400" />
                 <span>ID Pesanan</span>
               </div>
-              <div className="text-right font-extrabold text-text-primary font-mono text-[11px]">#{orderId}</div>
+              <div className="text-right font-extrabold text-text-primary font-mono text-xs">#{orderId}</div>
 
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-zinc-400" />
@@ -280,7 +280,7 @@ export default function ReceiptPage() {
                 <Clock className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[10px] text-text-secondary">Pesanan Sedang Diproses</p>
+                <p className="text-xs text-text-secondary">Pesanan Sedang Diproses</p>
                 <p className="text-xs font-bold text-text-primary mt-0.5">Sedang disiapkan di dapur</p>
               </div>
             </div>
@@ -290,7 +290,7 @@ export default function ReceiptPage() {
                 <Clock className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[10px] text-orange-700">Silakan ke Meja Kasir</p>
+                <p className="text-xs text-orange-700">Silakan ke Meja Kasir</p>
                 <p className="text-xs font-bold text-orange-800 mt-0.5">Tunjukkan ID pesanan ini untuk membayar</p>
               </div>
             </div>
@@ -300,7 +300,7 @@ export default function ReceiptPage() {
 
           {/* Order Items Table list */}
           <div className="flex flex-col gap-2.5">
-            <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest font-mono">Daftar Menu</span>
+            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest font-mono">Daftar Menu</span>
             
             <div className="flex flex-col gap-3.5">
               {items.map((item, idx) => (
@@ -309,12 +309,12 @@ export default function ReceiptPage() {
                     <p className="font-bold text-text-primary truncate">{item.name}</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {item.spicyLevel !== undefined && (
-                        <span className="bg-[#ffdcc2] text-[#825429] px-1.5 py-0.5 rounded text-[8px] font-bold font-sans">
+                        <span className="bg-[#ffdcc2] text-[#825429] px-1.5 py-0.5 rounded text-[11px] font-bold font-sans">
                           Lvl {item.spicyLevel}
                         </span>
                       )}
                       {item.notes && (
-                        <span className="bg-zinc-100 text-muted-text px-1.5 py-0.5 rounded text-[8px] font-medium font-sans">
+                        <span className="bg-zinc-100 text-muted-text px-1.5 py-0.5 rounded text-[11px] font-medium font-sans">
                           "{item.notes}"
                         </span>
                       )}
@@ -322,7 +322,7 @@ export default function ReceiptPage() {
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="font-semibold text-text-primary">x{item.quantity}</p>
-                    <p className="font-mono text-[10px] text-muted-text mt-0.5">Rp {(item.price * item.quantity).toLocaleString("id-ID")}</p>
+                    <p className="font-mono text-xs text-muted-text mt-0.5">Rp {(item.price * item.quantity).toLocaleString("id-ID")}</p>
                   </div>
                 </div>
               ))}
@@ -333,19 +333,19 @@ export default function ReceiptPage() {
 
           {/* Pricing Calculation Summary */}
           <div className="flex flex-col gap-2.5 text-xs">
-            <div className="flex justify-between items-center text-text-secondary text-[11px]">
+            <div className="flex justify-between items-center text-text-secondary text-xs">
               <span>Subtotal</span>
               <span className="font-mono">Rp {getSubtotal().toLocaleString("id-ID")}</span>
             </div>
-            <div className="flex justify-between items-center text-text-secondary text-[11px]">
+            <div className="flex justify-between items-center text-text-secondary text-xs">
                <span className="line-through opacity-50">Pajak (11%)</span>
                <span className="font-mono text-[#128260] font-bold flex items-center gap-1.5">
-                 <span className="line-through text-muted-text/50 font-normal text-[10px]">Rp {Math.round(getSubtotal() * 0.11).toLocaleString("id-ID")}</span>
+                 <span className="line-through text-muted-text/50 font-normal text-xs">Rp {Math.round(getSubtotal() * 0.11).toLocaleString("id-ID")}</span>
                  <span>Rp 0</span>
                </span>
              </div>
             <div className="flex justify-between items-center border-t border-border-subtle pt-2.5">
-              <span className="font-mono font-bold text-[10px] uppercase tracking-wider text-text-primary">Total Bayar</span>
+              <span className="font-mono font-bold text-xs uppercase tracking-wider text-text-primary">Total Bayar</span>
               <span className="font-mono text-base font-extrabold text-primary-cta">Rp {totalAmount.toLocaleString("id-ID")}</span>
             </div>
           </div>

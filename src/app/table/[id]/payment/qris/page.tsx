@@ -266,7 +266,7 @@ export default function QrisPaymentPage() {
     <div className="bg-page-bg h-screen max-h-screen flex flex-col font-sans text-on-surface w-full max-w-md mx-auto shadow-lg relative overflow-hidden">
       {/* Toast Notification */}
       {showToast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-neutral-800 text-white text-[10px] px-3.5 py-2.5 rounded-xl shadow-lg flex items-center gap-1.5 animate-toast-in">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-neutral-800 text-white text-xs px-3.5 py-2.5 rounded-xl shadow-lg flex items-center gap-1.5 animate-toast-in">
           <Check className="w-3.5 h-3.5 text-success" />
           <span>QR Code berhasil disimpan</span>
         </div>
@@ -285,7 +285,7 @@ export default function QrisPaymentPage() {
             <Timer className="w-4 h-4 animate-pulse" />
           </div>
           <div className="flex items-center justify-between w-full">
-            <p className="text-[10px] text-text-secondary">Selesaikan pembayaran dalam</p>
+            <p className="text-xs text-text-secondary">Selesaikan pembayaran dalam</p>
             <p className="font-bold text-xs text-[#825429] font-mono">
               {loading ? "--:--" : formatTime(timeLeft)}
             </p>
@@ -308,19 +308,19 @@ export default function QrisPaymentPage() {
           ) : loading ? (
             <div className="flex flex-col items-center justify-center py-8 gap-3">
               <div className="w-8 h-8 border-4 border-[#825429] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-[11px] text-text-secondary">Menyiapkan QRIS dari Louvin...</p>
+              <p className="text-xs text-text-secondary">Menyiapkan QRIS dari Louvin...</p>
             </div>
           ) : (
             <>
               <div className="text-center flex-shrink-0">
-                <p className="text-[10px] text-text-secondary font-medium uppercase tracking-wider">Total Bayar</p>
+                <p className="text-xs text-text-secondary font-medium uppercase tracking-wider">Total Bayar</p>
                 <p className="text-xl font-bold text-[#825429] mt-0.5 font-mono">Rp {totalAmount.toLocaleString("id-ID")}</p>
               </div>
 
               {/* QR Code Container (Highly optimized sizing & larger QR for scan UX) */}
               <div className="relative w-56 h-56 bg-white border border-border-subtle rounded-xl p-1 flex flex-col items-center justify-center shadow-inner group flex-shrink min-h-0 aspect-square">
                 {/* Tiny QRIS label */}
-                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 py-0.5 rounded-full border border-border-subtle text-[7px] font-bold text-zinc-400 tracking-wider flex items-center justify-center">
+                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 py-0.5 rounded-full border border-border-subtle text-[11px] font-bold text-zinc-400 tracking-wider flex items-center justify-center">
                   QRIS
                 </div>
 
@@ -332,14 +332,14 @@ export default function QrisPaymentPage() {
                     className="w-full h-full object-contain rounded-lg"
                   />
                 ) : (
-                  <div className="text-center text-[10px] text-text-secondary">Gagal memuat QR</div>
+                  <div className="text-center text-xs text-text-secondary">Gagal memuat QR</div>
                 )}
               </div>
 
               {/* Save Button */}
               <button
                 onClick={handleSaveQR}
-                className="flex items-center gap-1.5 border border-border-subtle bg-white hover:bg-zinc-50 text-text-primary px-4 py-1.5 rounded-lg font-semibold text-[10px] shadow-sm transition-all active:scale-[0.98] flex-shrink-0"
+                className="flex items-center gap-1.5 border border-border-subtle bg-white hover:bg-zinc-50 text-text-primary px-4 py-1.5 rounded-lg font-semibold text-xs shadow-sm transition-all active:scale-[0.98] flex-shrink-0"
               >
                 <Download className="w-3.5 h-3.5 text-text-secondary" />
                 <span>Simpan QR</span>
@@ -349,13 +349,13 @@ export default function QrisPaymentPage() {
               <button
                 onClick={handleChangePaymentMethod}
                 disabled={changingMethod || loading}
-                className="text-[10px] text-primary-cta underline font-bold mt-1.5 transition-all disabled:opacity-50 cursor-pointer flex-shrink-0"
+                className="text-xs text-primary-cta underline font-bold mt-1.5 transition-all disabled:opacity-50 cursor-pointer flex-shrink-0"
               >
                 {changingMethod ? "Memproses..." : "Ingin Bayar Tunai? Ganti ke Bayar di Kasir"}
               </button>
 
               {/* Info Petunjuk Scan langsung di bawah Tombol Ganti Metode */}
-              <p className="text-[9px] text-text-secondary leading-relaxed text-center max-w-[260px] mt-1 flex-shrink-0">
+              <p className="text-xs text-text-secondary leading-relaxed text-center max-w-[260px] mt-1 flex-shrink-0">
                 Scan QR menggunakan aplikasi <strong className="text-text-primary font-semibold">Gopay, OVO, ShopeePay, LinkAja, dll</strong>
               </p>
             </>
@@ -395,7 +395,7 @@ export default function QrisPaymentPage() {
           <div className="bg-white rounded-2xl p-5 w-full max-w-[320px] shadow-2xl flex flex-col gap-4 animate-scale-up border border-border-subtle">
             <div className="text-center flex flex-col gap-1.5">
               <h3 className="text-sm font-bold text-text-primary">Ganti ke Bayar di Kasir?</h3>
-              <p className="text-[10px] text-text-secondary leading-relaxed px-1">
+              <p className="text-xs text-text-secondary leading-relaxed px-1">
                 Pesanan Anda akan dialihkan ke metode pembayaran <strong className="text-text-primary">Tunai / Debit manual</strong>. Silakan selesaikan pembayaran langsung di meja kasir.
               </p>
             </div>
@@ -403,13 +403,13 @@ export default function QrisPaymentPage() {
             <div className="flex gap-2.5 w-full">
               <button
                 onClick={() => setShowConfirmDialog(false)}
-                className="flex-1 py-2.5 border border-border-subtle rounded-xl text-[10px] font-bold text-text-secondary bg-white hover:bg-zinc-50 transition-all active:scale-[0.98] cursor-pointer"
+                className="flex-1 py-2.5 border border-border-subtle rounded-xl text-xs font-bold text-text-secondary bg-white hover:bg-zinc-50 transition-all active:scale-[0.98] cursor-pointer"
               >
                 Batal
               </button>
               <button
                 onClick={handleConfirmChangePayment}
-                className="flex-1 py-2.5 bg-primary-cta hover:bg-primary-cta/90 text-white rounded-xl text-[10px] font-bold shadow-md transition-all active:scale-[0.98] cursor-pointer"
+                className="flex-1 py-2.5 bg-primary-cta hover:bg-primary-cta/90 text-white rounded-xl text-xs font-bold shadow-md transition-all active:scale-[0.98] cursor-pointer"
               >
                 Ya, Bayar di Kasir
               </button>

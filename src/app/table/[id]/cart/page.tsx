@@ -226,7 +226,7 @@ export default function CartPage() {
         </button>
         <div>
           <h2 className="font-bold text-base text-text-primary">Keranjang Belanja</h2>
-          <p className="text-[10px] text-muted-text font-mono uppercase tracking-wider mt-0.5">Meja {tableId} · {customerName}</p>
+          <p className="text-xs text-muted-text font-mono uppercase tracking-wider mt-0.5">Meja {tableId} · {customerName}</p>
         </div>
       </header>
 
@@ -316,13 +316,13 @@ export default function CartPage() {
                       ) : (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {item.spicyLevel !== undefined && (
-                            <span className="bg-secondary-cta/10 text-secondary-cta px-2 py-0.5 rounded-md font-mono text-[9px] font-bold">
+                            <span className="bg-secondary-cta/10 text-secondary-cta px-2 py-0.5 rounded-md font-mono text-xs font-bold">
                               Lvl {item.spicyLevel} ({item.spicyLevel === 0 ? "Ori" : item.spicyLevel === 1 ? "Sedang" : item.spicyLevel === 2 ? "Pedas" : "Gila"})
                             </span>
                           )}
                           <button
                             onClick={() => startEditingNotes(idx, item.notes || "")}
-                            className="bg-zinc-100 hover:bg-zinc-200 text-muted-text px-2 py-0.5 rounded-md text-[9px] font-semibold flex items-center gap-1 transition-colors group"
+                            className="bg-zinc-100 hover:bg-zinc-200 text-muted-text px-2 py-0.5 rounded-md text-xs font-semibold flex items-center gap-1 transition-colors group"
                             title="Edit catatan porsi ini"
                           >
                             <span className="truncate max-w-[150px]">{item.notes ? `"${item.notes}"` : "+ Tambah catatan"}</span>
@@ -427,7 +427,7 @@ export default function CartPage() {
               <div className="flex justify-between items-center text-xs text-muted-text font-medium">
                 <span className="line-through opacity-50">Pajak (11%)</span>
                 <span className="font-mono text-success font-semibold flex items-center gap-1.5">
-                  <span className="line-through text-muted-text/50 font-normal text-[10px]">Rp {Math.round(getSubtotal() * 0.11).toLocaleString("id-ID")}</span>
+                  <span className="line-through text-muted-text/50 font-normal text-xs">Rp {Math.round(getSubtotal() * 0.11).toLocaleString("id-ID")}</span>
                   <span>Rp 0</span>
                 </span>
               </div>
