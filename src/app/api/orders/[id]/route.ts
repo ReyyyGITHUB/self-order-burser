@@ -65,9 +65,9 @@ export async function PATCH(
     if (paymentStatus) {
       updateData.paymentStatus = paymentStatus;
       
-      // Jika pembayaran dikonfirmasi lunas, status pesanan otomatis berubah jadi CONFIRMED (diterima dapur) jika sebelumnya masih PENDING_PAYMENT
+      // Jika pembayaran dikonfirmasi lunas, status pesanan otomatis berubah jadi COMPLETED (selesai) jika sebelumnya masih PENDING_PAYMENT
       if (paymentStatus === "PAID" && existingOrder.status === "PENDING_PAYMENT") {
-        updateData.status = "CONFIRMED";
+        updateData.status = "COMPLETED";
       }
     }
 
@@ -136,7 +136,7 @@ export async function PATCH(
     });
 
     // Jika pesanan selesai (COMPLETED) atau dibatalkan (CANCELLED), kembalikan status meja menjadi AVAILABLE (Kosong/Tersedia)
-    if (status === "COMPLETED" || status === "CANCELLED") {
+    if (updatedOrder.status === "COMPLETED" || updatedOrder.status === "CANCELLED") {
       await prisma.table.update({
         where: { id: updatedOrder.tableId },
         data: { status: "AVAILABLE" }

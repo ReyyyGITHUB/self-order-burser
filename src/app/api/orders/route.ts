@@ -89,7 +89,7 @@ export async function POST(req: Request) {
 
     const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
     const initialPaymentStatus = (paymentMethod === "QRIS" && isDemoMode) ? "PAID" : "UNPAID";
-    const initialOrderStatus = (paymentMethod === "QRIS" && isDemoMode) ? "CONFIRMED" : "PENDING_PAYMENT";
+    const initialOrderStatus = (paymentMethod === "QRIS" && isDemoMode) ? "COMPLETED" : "PENDING_PAYMENT";
 
     const newOrder = await prisma.$transaction(async (tx) => {
       // Buat Order baru
@@ -117,10 +117,10 @@ export async function POST(req: Request) {
         }
       });
 
-      // Update status meja menjadi OCCUPIED (Terisi)
+      // Update status meja menjadi OCCUPIED (Terisi) atau tetap AVAILABLE jika pesanan langsung selesai (mode demo)
       await tx.table.update({
         where: { id: tableId },
-        data: { status: "OCCUPIED" }
+        data: { status: initialOrderStatus === "COMPLETED" ? "AVAILABLE" : "OCCUPIED" }
       });
 
       return order;

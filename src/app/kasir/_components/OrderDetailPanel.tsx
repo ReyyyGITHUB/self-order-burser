@@ -303,31 +303,6 @@ export default function OrderDetailPanel({
             <Printer size={14} />
             Cetak Bill
           </button>
-
-          {/* Selesai → COMPLETED */}
-          {order.status === "PROCESSING" && (
-            <button
-              onClick={() => handleAction({ status: "COMPLETED" })}
-              disabled={processing}
-              className="flex-1 flex items-center justify-center gap-1.5 px-5 h-12 rounded-xl text-sm font-bold bg-[var(--tertiary)] hover:bg-[var(--on-tertiary-fixed-variant)] text-white transition-all shadow-md disabled:opacity-60 active:scale-[0.98]"
-            >
-              {processing ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
-              Selesai
-            </button>
-          )}
-
-          {/* Proses → PROCESSING */}
-          {order.status === "CONFIRMED" && (
-            <button
-              onClick={() => handleAction({ status: "PROCESSING" })}
-              disabled={processing}
-              className="flex-1 flex items-center justify-center gap-1.5 px-5 h-12 rounded-xl text-sm font-bold bg-purple-600 hover:bg-purple-700 text-white transition-all shadow-md disabled:opacity-60 active:scale-[0.98]"
-            >
-              {processing ? <Loader2 size={15} className="animate-spin" /> : <ChefHat size={15} />}
-              Proses Masak
-            </button>
-          )}
-
           {/* Konfirmasi Cash (Paling Kanan) */}
           {isCashUnpaid && (
             <button

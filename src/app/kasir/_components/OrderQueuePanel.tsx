@@ -29,7 +29,6 @@ interface OrderQueuePanelProps {
 const FILTER_TABS = [
   { key: "ACTIVE", label: "Semua aktif" },
   { key: "PENDING_PAYMENT", label: "Belum bayar" },
-  { key: "PROCESSING", label: "Proses" },
   { key: "COMPLETED", label: "Selesai" },
 ];
 

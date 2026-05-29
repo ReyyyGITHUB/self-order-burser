@@ -271,7 +271,7 @@ export default function KasirPage() {
           onConfirm={async () => {
             await updateOrderStatus(activeOrder.id, {
               paymentStatus: "PAID",
-              status: "CONFIRMED",
+              status: "COMPLETED",
               kasirId: "kasir-placeholder-id",
             });
             setIsCashModalOpen(false);
