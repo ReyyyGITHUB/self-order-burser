@@ -354,11 +354,11 @@ export default function CartPage() {
               </div>
             </section>
 
-            {/* Payment Selector section with Dynamic Info Cards */}
+            {/* Payment Selector section - Stacked full-width rows */}
             <section className="flex flex-col gap-3">
               <h3 className="text-xs font-bold text-muted-text font-sans font-medium uppercase tracking-wider">Metode Pembayaran</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="relative cursor-pointer">
+              <div className="flex flex-col gap-2.5">
+                <label className="relative cursor-pointer w-full">
                   <input
                     checked={paymentMethod === "qris"}
                     onChange={() => setPaymentMethod("qris")}
@@ -367,16 +367,21 @@ export default function CartPage() {
                     type="radio"
                     value="qris"
                   />
-                  <div className="p-4 rounded-2xl border border-border-subtle bg-white flex flex-col items-center justify-center gap-2.5 transition-all peer-checked:border-sky-500 peer-checked:bg-sky-50/40 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.98]">
-                    <QrCode className="w-6.5 h-6.5 text-zinc-400 peer-checked:text-sky-600 transition-colors" />
-                    <span className="font-bold text-xs text-text-primary">QRIS / E-Wallet</span>
+                  <div className="p-4 rounded-2xl border border-border-subtle bg-white flex items-center justify-between gap-3 transition-all peer-checked:border-primary-cta peer-checked:bg-primary-cta/5 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.99] w-full">
+                    <div className="flex items-center gap-3.5">
+                      <QrCode className="w-5.5 h-5.5 text-primary-cta" />
+                      <span className="font-bold text-sm text-text-primary">QRIS / E-Wallet</span>
+                    </div>
+                    <div className="flex items-center justify-center w-5 h-5 rounded-full border border-border-subtle peer-checked:border-primary-cta peer-checked:bg-primary-cta text-white transition-all">
+                      <Check className="w-3 h-3 text-transparent peer-checked:text-white" />
+                    </div>
                   </div>
-                  <div className="absolute top-2.5 right-2.5 hidden peer-checked:flex">
-                    <Check className="w-3.5 h-3.5 bg-sky-500 text-white rounded-full p-0.5" />
+                  <div className="absolute top-1/2 -translate-y-1/2 right-4 hidden peer-checked:flex">
+                    <Check className="w-4 h-4 bg-primary-cta text-white rounded-full p-0.5" />
                   </div>
                 </label>
 
-                <label className="relative cursor-pointer">
+                <label className="relative cursor-pointer w-full">
                   <input
                     checked={paymentMethod === "cash"}
                     onChange={() => setPaymentMethod("cash")}
@@ -385,39 +390,19 @@ export default function CartPage() {
                     type="radio"
                     value="cash"
                   />
-                  <div className="p-4 rounded-2xl border border-border-subtle bg-white flex flex-col items-center justify-center gap-2.5 transition-all peer-checked:border-[#825429] peer-checked:bg-[#825429]/5 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.98]">
-                    <Banknote className="w-6.5 h-6.5 text-zinc-400 peer-checked:text-[#825429] transition-colors" />
-                    <span className="font-bold text-xs text-text-primary">Bayar di Kasir (Tunai)</span>
+                  <div className="p-4 rounded-2xl border border-border-subtle bg-white flex items-center justify-between gap-3 transition-all peer-checked:border-primary-cta peer-checked:bg-primary-cta/5 peer-checked:shadow-sm hover:bg-zinc-50 active:scale-[0.99] w-full">
+                    <div className="flex items-center gap-3.5">
+                      <Banknote className="w-5.5 h-5.5 text-primary-cta" />
+                      <span className="font-bold text-sm text-text-primary">Tunai / Bayar di Kasir</span>
+                    </div>
+                    <div className="flex items-center justify-center w-5 h-5 rounded-full border border-border-subtle peer-checked:border-primary-cta peer-checked:bg-primary-cta text-white transition-all">
+                      <Check className="w-3 h-3 text-transparent peer-checked:text-white" />
+                    </div>
                   </div>
-                  <div className="absolute top-2.5 right-2.5 hidden peer-checked:flex">
-                    <Check className="w-3.5 h-3.5 bg-[#825429] text-white rounded-full p-0.5" />
+                  <div className="absolute top-1/2 -translate-y-1/2 right-4 hidden peer-checked:flex">
+                    <Check className="w-4 h-4 bg-primary-cta text-white rounded-full p-0.5" />
                   </div>
                 </label>
-              </div>
-
-              {/* Dynamic Warning/Notification Cards based on selection to prevent mistake */}
-              <div className="overflow-hidden transition-all duration-300">
-                {paymentMethod === "qris" ? (
-                  <div className="bg-sky-50 border border-sky-100/80 rounded-2xl p-3.5 flex gap-2.5 items-start animate-fade-in shadow-sm">
-                    <QrCode className="w-4 h-4 text-sky-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="text-[10px] font-bold text-sky-850">Anda Memilih Bayar QRIS Instan</h4>
-                      <p className="text-[9px] text-sky-700/80 leading-relaxed mt-0.5">
-                        Anda akan langsung diarahkan ke halaman QRIS Louvin setelah menekan tombol pesanan. Pembayaran diproses mandiri di ponsel.
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="bg-[#fdf4ed] border border-[#f8e5d6] rounded-2xl p-3.5 flex gap-2.5 items-start animate-fade-in shadow-sm">
-                    <Banknote className="w-4 h-4 text-[#825429] mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="text-[10px] font-bold text-[#825429]">Anda Memilih Bayar di Kasir (Tunai)</h4>
-                      <p className="text-[9px] text-[#825429]/80 leading-relaxed mt-0.5">
-                        Pesanan baru akan diproses di dapur <strong>setelah Anda melakukan pembayaran tunai langsung</strong> ke meja kasir dan dikonfirmasi lunas.
-                      </p>
-                    </div>
-                  </div>
-                )}
               </div>
             </section>
 
@@ -462,25 +447,11 @@ export default function CartPage() {
           <button
             onClick={handlePlaceOrder}
             disabled={isOrdering}
-            className={`w-full text-white py-4 px-5 rounded-xl font-bold shadow-lg transition-all active:scale-[0.98] flex items-center justify-between text-sm disabled:opacity-50 ${
-              paymentMethod === "qris" 
-                ? "bg-sky-600 hover:bg-sky-700 shadow-sky-600/10 shadow-lg" 
-                : "bg-primary-cta hover:bg-primary-cta/95 shadow-primary-cta/10 shadow-lg"
-            }`}
+            className="w-full bg-primary-cta text-white py-4 px-5 rounded-xl font-bold shadow-lg hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between text-sm disabled:opacity-50"
           >
             <span className="flex items-center gap-2">
-              {paymentMethod === "qris" ? (
-                <QrCode className="w-4.5 h-4.5" />
-              ) : (
-                <Banknote className="w-4.5 h-4.5" />
-              )}
-              <span>
-                {isOrdering 
-                  ? "Memproses..." 
-                  : paymentMethod === "qris" 
-                    ? "Pesan & Bayar QRIS Instan" 
-                    : "Pesan & Bayar di Kasir (Tunai)"}
-              </span>
+              <ShoppingBag className="w-4.5 h-4.5" />
+              <span>{isOrdering ? "Memproses..." : "Pesan Sekarang"}</span>
             </span>
             <span className="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-lg">
               <span>Rp {getTotal().toLocaleString("id-ID")}</span>
