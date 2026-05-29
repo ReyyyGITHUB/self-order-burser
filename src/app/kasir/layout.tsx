@@ -76,10 +76,10 @@ export default function KasirLayout({ children }: { children: React.ReactNode })
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#fafaf9] p-6 font-sans select-none">
         <div className="w-full max-w-sm flex flex-col gap-8">
-          {/* Minimal Header */}
-          <div className="flex flex-col gap-2">
-            <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0 mb-2">
-              <ChefHat size={20} className="text-white" />
+          {/* Minimal Header (Centered & Branded) */}
+          <div className="flex flex-col items-center text-center gap-2">
+            <div className="w-12 h-12 rounded-xl bg-[var(--primary)] flex items-center justify-center shrink-0 mb-1 shadow-sm">
+              <ChefHat size={22} className="text-white" />
             </div>
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Masuk ke POS Kasir</h2>
             <p className="text-xs text-zinc-500">
@@ -104,7 +104,7 @@ export default function KasirLayout({ children }: { children: React.ReactNode })
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-zinc-200 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 transition-all bg-white text-zinc-900"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-zinc-200 focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all bg-white text-zinc-900"
                 required
                 autoFocus
               />
@@ -119,7 +119,7 @@ export default function KasirLayout({ children }: { children: React.ReactNode })
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-zinc-200 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 transition-all bg-white text-zinc-900"
+                  className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-zinc-200 focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all bg-white text-zinc-900"
                   required
                 />
                 <button
@@ -136,7 +136,7 @@ export default function KasirLayout({ children }: { children: React.ReactNode })
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-4 bg-zinc-900 hover:bg-zinc-800 text-white py-3 rounded-lg text-sm font-semibold shadow-sm active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full mt-4 bg-[var(--primary)] hover:bg-[var(--secondary)] text-white py-3 rounded-lg text-sm font-semibold shadow-sm active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
