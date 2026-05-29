@@ -350,11 +350,6 @@ export default function QrisPaymentPage() {
               >
                 {changingMethod ? "Memproses..." : "Ganti Metode Pembayaran (Tunai)"}
               </button>
-
-              {/* Compact Instructions */}
-              <p className="text-[10px] text-text-secondary leading-relaxed text-center max-w-[260px] flex-shrink-0">
-                Scan QR menggunakan aplikasi <strong className="text-text-primary font-semibold">Gopay, OVO, ShopeePay, dll</strong>
-              </p>
             </>
           )}
         </section>
@@ -384,6 +379,11 @@ export default function QrisPaymentPage() {
             <span className="text-center leading-none">Menunggu pembayaran otomatis terkonfirmasi...</span>
           </div>
         )}
+
+        {/* Info Petunjuk Scan di Paling Bawah */}
+        <p className="text-[9px] text-text-secondary leading-relaxed text-center max-w-[260px] mx-auto flex-shrink-0">
+          Scan QR menggunakan aplikasi <strong className="text-text-primary font-semibold">Gopay, OVO, ShopeePay, dll</strong>
+        </p>
       </main>
     </div>
   );
