@@ -51,14 +51,52 @@ export default function CashPaymentPage() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleConfirmKasir = () => {
+  const handleConfirmKasir = async () => {
+    if (confirming) return;
     setConfirming(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch(`/api/orders/${orderId}`);
+      if (res.ok) {
+        const orderData = await res.json();
+        if (orderData.paymentStatus === "PAID") {
+          localStorage.setItem("payment_completed_flag", "true");
+          localStorage.removeItem("cart_items");
+          setConfirmed(true);
+          setTimeout(() => {
+            router.push(`/table/${tableId}/payment/receipt`);
+          }, 2000);
+          return;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
       setConfirming(false);
-      localStorage.removeItem("cart_items");
-      router.push(`/table/${tableId}/payment/receipt`);
-    }, 2000);
+    }
   };
+
+  // Jalankan polling otomatis di sisi buyer setiap 4 detik sebagai fail-safe websocket
+  useEffect(() => {
+    if (!mounted || !orderId) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/orders/${orderId}`);
+        if (res.ok) {
+          const orderData = await res.json();
+          if (orderData.paymentStatus === "PAID") {
+            localStorage.setItem("payment_completed_flag", "true");
+            localStorage.removeItem("cart_items");
+            setConfirmed(true);
+            clearInterval(interval);
+            setTimeout(() => {
+              router.push(`/table/${tableId}/payment/receipt`);
+            }, 2000);
+          }
+        }
+      } catch {}
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [mounted, orderId, tableId]);
 
   if (!mounted) {
     return (
@@ -81,10 +119,10 @@ export default function CashPaymentPage() {
           </p>
         </div>
         <button
-          onClick={() => router.push(`/table/${tableId}`)}
+          onClick={() => router.push(`/table/${tableId}/payment/receipt`)}
           className="bg-primary-cta text-white py-3.5 px-6 rounded-xl font-bold shadow-md hover:bg-primary-cta/95 transition-all mt-4"
         >
-          Kembali ke Menu Utama
+          Lihat Struk Digital
         </button>
       </div>
     );
@@ -156,25 +194,27 @@ export default function CashPaymentPage() {
 
         {/* Bottom Actions */}
         <div className="w-full mt-auto flex flex-col gap-4 items-center">
-          {/* Pesan Lagi button */}
-          <button
-            onClick={() => router.push(`/table/${tableId}`)}
-            className="w-full bg-zinc-200 text-text-primary py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-300 transition-all flex items-center justify-center"
-          >
-            Pesan Lagi
-          </button>
-
-          {/* Real cashier status checking simulator styled as a premium centered status card */}
+          {/* Cek Status Pembayaran (Menggantikan Pesan Lagi) */}
           <button
             onClick={handleConfirmKasir}
             disabled={confirming}
-            className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-xs font-semibold text-text-secondary bg-zinc-50 hover:bg-zinc-100/50 border border-border-subtle rounded-xl shadow-sm transition-all active:scale-[0.99] disabled:opacity-80 cursor-pointer"
+            className="w-full bg-primary-cta text-white py-3.5 rounded-xl font-bold text-sm hover:bg-primary-cta/95 transition-all flex items-center justify-center gap-2 shadow-md active:scale-[0.99] disabled:opacity-80"
           >
+            {confirming ? (
+              <RefreshCw className="w-4 h-4 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4" />
+            )}
+            Cek Status Pembayaran
+          </button>
+
+          {/* Real cashier status checking simulator styled as a premium centered status card */}
+          <div className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-xs font-semibold text-text-secondary bg-zinc-50 border border-border-subtle rounded-xl shadow-sm">
             <div className="w-4 h-4 border-2 border-primary-cta border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
             <span className="text-center leading-none">
-              {confirming ? "Mengecek konfirmasi..." : "Menunggu konfirmasi kasir..."}
+              Menunggu konfirmasi kasir...
             </span>
-          </button>
+          </div>
         </div>
       </main>
     </div>
