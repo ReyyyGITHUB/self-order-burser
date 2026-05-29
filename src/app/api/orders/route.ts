@@ -87,6 +87,10 @@ export async function POST(req: Request) {
       }
     }
 
+    const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+    const initialPaymentStatus = (paymentMethod === "QRIS" && isDemoMode) ? "PAID" : "UNPAID";
+    const initialOrderStatus = (paymentMethod === "QRIS" && isDemoMode) ? "CONFIRMED" : "PENDING_PAYMENT";
+
     const newOrder = await prisma.$transaction(async (tx) => {
       // Buat Order baru
       const order = await tx.order.create({
@@ -95,8 +99,8 @@ export async function POST(req: Request) {
           tableId: tableId,
           customerName: customerName,
           paymentMethod: paymentMethod,
-          paymentStatus: "UNPAID",
-          status: "PENDING_PAYMENT",
+          paymentStatus: initialPaymentStatus,
+          status: initialOrderStatus,
           totalAmount: totalAmount,
           kasirId: verifiedKasirId, // Hubungkan ID kasir agar terdeteksi antrean manual jika valid
           orderItems: {
