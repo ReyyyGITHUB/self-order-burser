@@ -346,7 +346,7 @@ export default function QrisPaymentPage() {
               <button
                 onClick={handleChangePaymentMethod}
                 disabled={changingMethod || loading}
-                className="text-[10px] text-primary-cta hover:underline font-bold mt-1.5 transition-all disabled:opacity-50 cursor-pointer flex-shrink-0"
+                className="text-[10px] text-primary-cta underline font-bold mt-1.5 transition-all disabled:opacity-50 cursor-pointer flex-shrink-0"
               >
                 {changingMethod ? "Memproses..." : "Ganti Metode Pembayaran (Tunai)"}
               </button>
