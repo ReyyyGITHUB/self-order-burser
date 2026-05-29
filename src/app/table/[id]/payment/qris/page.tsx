@@ -342,6 +342,15 @@ export default function QrisPaymentPage() {
                 <span>Simpan QR</span>
               </button>
 
+              {/* Tombol Ganti Metode Pembayaran (Teks saja) */}
+              <button
+                onClick={handleChangePaymentMethod}
+                disabled={changingMethod || loading}
+                className="text-[10px] text-[#825429] hover:underline font-bold mt-1 transition-all disabled:opacity-50 cursor-pointer flex-shrink-0"
+              >
+                {changingMethod ? "Memproses..." : "Ganti Metode Pembayaran (Tunai)"}
+              </button>
+
               {/* Compact Instructions */}
               <p className="text-[10px] text-text-secondary leading-relaxed text-center max-w-[260px] flex-shrink-0">
                 Scan QR menggunakan aplikasi <strong className="text-text-primary font-semibold">Gopay, OVO, ShopeePay, dll</strong>
@@ -375,15 +384,6 @@ export default function QrisPaymentPage() {
             <span className="text-center leading-none">Menunggu pembayaran otomatis terkonfirmasi...</span>
           </div>
         )}
-
-        {/* Tombol Ganti Metode Pembayaran */}
-        <button
-          onClick={handleChangePaymentMethod}
-          disabled={changingMethod || loading}
-          className="w-full py-3.5 px-4 text-center text-xs font-bold text-[#825429] bg-white border border-[#825429]/20 hover:bg-zinc-50 rounded-xl transition-all shadow-sm disabled:opacity-50 flex-shrink-0"
-        >
-          {changingMethod ? "Memproses..." : "Ganti Metode Pembayaran (Tunai / Kasir)"}
-        </button>
       </main>
     </div>
   );
