@@ -22,7 +22,7 @@ export default function CartPage() {
   const [mounted, setMounted] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [paymentMethod, setPaymentMethod] = useState<"qris" | "cash">("qris");
+  const [paymentMethod, setPaymentMethod] = useState<"qris" | "cash" | null>(null);
   const [orderNotes, setOrderNotes] = useState("");
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
@@ -121,7 +121,7 @@ export default function CartPage() {
   };
 
   const handlePlaceOrder = async () => {
-    if (cart.length === 0) return;
+    if (cart.length === 0 || !paymentMethod) return;
     setIsOrdering(true);
 
     try {
@@ -446,12 +446,22 @@ export default function CartPage() {
         <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto p-4 z-30 bg-gradient-to-t from-page-bg via-page-bg/95 to-transparent">
           <button
             onClick={handlePlaceOrder}
-            disabled={isOrdering}
-            className="w-full bg-primary-cta text-white py-4 px-5 rounded-xl font-bold shadow-lg hover:bg-primary-cta/95 transition-all active:scale-[0.98] flex items-center justify-between text-sm disabled:opacity-50"
+            disabled={isOrdering || !paymentMethod}
+            className={`w-full text-white py-4 px-5 rounded-xl font-bold shadow-lg transition-all active:scale-[0.98] flex items-center justify-between text-sm ${
+              !paymentMethod 
+                ? "bg-zinc-400 cursor-not-allowed opacity-60 shadow-none" 
+                : "bg-primary-cta hover:bg-primary-cta/95 active:scale-[0.98]"
+            }`}
           >
             <span className="flex items-center gap-2">
               <ShoppingBag className="w-4.5 h-4.5" />
-              <span>{isOrdering ? "Memproses..." : "Pesan Sekarang"}</span>
+              <span>
+                {isOrdering 
+                  ? "Memproses..." 
+                  : !paymentMethod 
+                    ? "Pilih Metode Pembayaran" 
+                    : "Pesan Sekarang"}
+              </span>
             </span>
             <span className="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-lg">
               <span>Rp {getTotal().toLocaleString("id-ID")}</span>
