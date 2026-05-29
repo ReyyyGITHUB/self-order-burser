@@ -52,6 +52,11 @@ export default function KasirSidebar({ currentPath }: { currentPath: string }) {
     return currentPath.startsWith(href);
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("kasir_logged_in");
+    window.location.href = "/kasir";
+  };
+
   return (
     <aside className="flex flex-col w-[220px] shrink-0 h-full border-r border-[var(--outline-variant)] bg-white overflow-y-auto">
       {/* Logo */}
@@ -115,6 +120,7 @@ export default function KasirSidebar({ currentPath }: { currentPath: string }) {
             <p className="text-[10px] text-[var(--muted-text)]">{userRole === "ADMIN" ? "Owner" : "Kasir"}</p>
           </div>
           <button
+            onClick={handleLogout}
             className="p-1.5 rounded-lg text-[var(--muted-text)] hover:text-[var(--error)] hover:bg-[var(--error-container)] transition-colors"
             title="Keluar"
           >
