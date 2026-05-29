@@ -172,7 +172,7 @@ export default function CartPage() {
       localStorage.removeItem("cart_items");
 
       // Redirect ke route pembayaran masing-masing (Bypass Cash langsung ke Receipt)
-      if (paymentMethod === "cash" || paymentMethod === "CASH") {
+      if (paymentMethod === "cash") {
         router.push(`/table/${tableId}/payment/receipt`);
       } else {
         router.push(`/table/${tableId}/payment/${paymentMethod}`);
