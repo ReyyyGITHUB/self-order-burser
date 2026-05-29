@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ShoppingBag, ArrowLeft, X, Plus, Minus, QrCode, CreditCard, ChevronRight, Check } from "lucide-react";
+import { ShoppingBag, ArrowLeft, X, Plus, Minus, QrCode, CreditCard, ChevronRight, Check, Banknote } from "lucide-react";
 
 interface CartItem {
   menuItemId: string;
@@ -32,13 +32,10 @@ export default function CartPage() {
   useEffect(() => {
     setMounted(true);
 
-    // Cart Force-Purge Guard (Solusi 4) - Jika baru sukses bayar, bersihkan paksa sisa cache di memori browser
+    // Cart Force-Purge Guard & Security Redirect - Jika transaksi sudah lunas, lempar kembali ke halaman struk
     const paymentCompletedFlag = localStorage.getItem("payment_completed_flag");
     if (paymentCompletedFlag === "true") {
-      localStorage.removeItem("cart_items");
-      localStorage.removeItem("pending_order_mitigation");
-      localStorage.removeItem("payment_completed_flag");
-      window.location.reload();
+      router.replace(`/table/${tableId}/payment/receipt`);
       return;
     }
 
@@ -116,57 +113,71 @@ export default function CartPage() {
   };
 
   const getTax = () => {
-    return Math.round(getSubtotal() * 0.11);
+    return 0; // Pajak gratis (dicoret di UI)
   };
 
   const getTotal = () => {
-    return getSubtotal() + getTax();
+    return getSubtotal(); // Total hanya subtotal
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (cart.length === 0) return;
     setIsOrdering(true);
 
-    const currentTotal = getTotal();
-    const currentCart = [...cart];
-    const currentMethod = paymentMethod;
+    try {
+      const dbTableId = localStorage.getItem("table_id") || String(tableId);
+      
+      const payload = {
+        tableId: dbTableId,
+        customerName: customerName,
+        paymentMethod: paymentMethod.toUpperCase(), // 'QRIS' atau 'CASH'
+        items: cart.map(item => ({
+          menuItemId: item.menuItemId,
+          quantity: item.quantity,
+          spicyLevel: item.spicyLevel || 0,
+          notes: item.notes || ""
+        }))
+      };
 
-    // Simulasi penempatan pesanan di frontend-only
-    setTimeout(() => {
-      setIsOrdering(false);
-      
-      let finalOrderId = `BJR-${Math.floor(100 + Math.random() * 900)}`;
-      
-      // Cek apakah pesanan identik dengan pesanan pending sebelumnya untuk reuse Order ID
-      const prevPendingStr = localStorage.getItem("pending_order_mitigation");
-      if (prevPendingStr) {
-        try {
-          const prevPending = JSON.parse(prevPendingStr);
-          const isSameCart = JSON.stringify(prevPending.items) === JSON.stringify(currentCart);
-          const isSameTotal = prevPending.total === currentTotal;
-          const isSameMethod = prevPending.paymentMethod === currentMethod;
-          
-          if (isSameCart && isSameTotal && isSameMethod) {
-            finalOrderId = prevPending.orderId;
-          }
-        } catch (e) {
-          console.error("Gagal mencocokkan order ID sebelumnya:", e);
-        }
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || "Gagal membuat pesanan. Silakan coba lagi.");
+        setIsOrdering(false);
+        return;
       }
-      
-      // Simpan riwayat order sementara
+
+      const data = await res.json();
+      const order = data.order;
+
+      // Simpan rincian pesanan asli ke local storage untuk tracking
       const pendingOrder = {
-        orderId: finalOrderId,
-        items: currentCart,
-        total: currentTotal,
-        paymentMethod: currentMethod,
-        timestamp: Date.now()
+        orderId: order.id,
+        items: cart,
+        total: Number(order.totalAmount),
+        paymentMethod: paymentMethod, // 'qris' atau 'cash'
+        timestamp: Date.now(),
+        qrisData: order.qrisData // Simpan data string QRIS dari Louvin
       };
       localStorage.setItem("pending_order_mitigation", JSON.stringify(pendingOrder));
 
+      // Hapus keranjang setelah pesanan berhasil dibuat
+      localStorage.removeItem("cart_items");
+
       // Redirect ke route pembayaran masing-masing
-      router.push(`/table/${tableId}/payment/${currentMethod}`);
-    }, 1500);
+      router.push(`/table/${tableId}/payment/${paymentMethod}`);
+    } catch (error) {
+      console.error("Gagal melakukan checkout:", error);
+      alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
+      setIsOrdering(false);
+    }
   };
 
   if (!mounted) {
@@ -371,7 +382,7 @@ export default function CartPage() {
                     value="cash"
                   />
                   <div className="p-4 rounded-2xl border border-border-subtle bg-white flex flex-col items-center justify-center gap-2 transition-all peer-checked:border-primary-cta peer-checked:bg-primary-cta/5 peer-checked:shadow-sm">
-                    <CreditCard className="w-7 h-7 text-muted-text peer-checked:text-primary-cta" />
+                    <Banknote className="w-7 h-7 text-muted-text peer-checked:text-primary-cta" />
                     <span className="font-bold text-xs text-text-primary">Tunai / Kasir</span>
                   </div>
                   <div className="absolute top-2 right-2 hidden peer-checked:flex text-primary-cta">
@@ -400,8 +411,11 @@ export default function CartPage() {
                 <span className="font-mono text-text-primary">Rp {getSubtotal().toLocaleString("id-ID")}</span>
               </div>
               <div className="flex justify-between items-center text-xs text-muted-text font-medium">
-                <span>Pajak (11%)</span>
-                <span className="font-mono text-text-primary">Rp {getTax().toLocaleString("id-ID")}</span>
+                <span className="line-through opacity-50">Pajak (11%)</span>
+                <span className="font-mono text-success font-semibold flex items-center gap-1.5">
+                  <span className="line-through text-muted-text/50 font-normal text-[10px]">Rp {Math.round(getSubtotal() * 0.11).toLocaleString("id-ID")}</span>
+                  <span>Rp 0</span>
+                </span>
               </div>
               <hr className="border-border-subtle my-1" />
               <div className="flex justify-between items-center">

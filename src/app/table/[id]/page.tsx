@@ -2,73 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare, ChevronDown, LogOut, Trash2, Sparkles, Info } from "lucide-react";
-
-// Hardcoded Menu Data
-const MENU_ITEMS = [
-  {
-    id: "1",
-    name: "Mie Dok Dok",
-    description: "Mie soup khas burjo dengan bumbu gurih kental, telur orak-arik, sayuran segar, dan kuah hangat nikmat.",
-    price: 15000,
-    category: "Makanan",
-    hasSpicy: true,
-    hasNotes: true,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBaXctnCpXa9SsX1UUUvcWzipjtw_MSj6POf1WGxJ3NlJ8gptVSpLqX1dCxs5rWo0sKtzcu8lW4pGA50f4TyG_evAjx6EzHNNSb6sZHfSVlGn1VcI8paZAzAXDBuPm62s_P4wfRVediR1E6jzwawhPOeUUIN2s4D7RRo2cDis2C2HVSrbOcZ_qjlTrmFsIHkcohPLQeODB4Xn9aHC-zvp4e2SUCTHmo_rLlo_USWV-E3S-AOxfLezKt-ScQDFJ15sTCbXPwIBpLvrF2"
-  },
-  {
-    id: "2",
-    name: "Nasi Gila Burjo",
-    description: "Nasi hangat bertabur tumisan sosis, bakso, telur dengan bumbu manis pedas gurih ala Burjo Semarang.",
-    price: 16000,
-    category: "Makanan",
-    hasSpicy: true,
-    hasNotes: true,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
-  },
-  {
-    id: "3",
-    name: "Intel Rebus (Indomie Telur)",
-    description: "Indomie rebus hangat disajikan dengan telur rebus setengah matang, sawi hijau, dan taburan bawang goreng.",
-    price: 12000,
-    category: "Makanan",
-    hasSpicy: true,
-    hasNotes: true,
-    image: "https://lh3.googleusercontent.com/aida/ADBb0ujJZwC405KohpKlRRL8AktY3CJ-4zju7BbjO6kGYBhsLNb91RgKGI6hIqLT8smd7Ld6yOgpPiL0vhDztklGh4mS-7i1QPy4mpzNy-YfB_DvOLkUmdykQsw1DuKDJDdixzZa73y-KuBu104EOX1pcSqeTkOl3uDhEXoH_1UvY-BOLp3ZBiwHD36stiIaSYIx_Uw2o4IQPLpMmaFIMOvJNkoZJeroNfvUCNr0p3cU_BmEXD72mlqdflZGT8UW"
-  },
-  {
-    id: "4",
-    name: "Bubur Kacang Ijo",
-    description: "Bubur kacang hijau manis legit disiram santan gurih kental dan susu kental manis.",
-    price: 10000,
-    category: "Makanan",
-    hasSpicy: false,
-    hasNotes: true,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
-  },
-  {
-    id: "5",
-    name: "Es Teh Manis",
-    description: "Teh seduh khas burjo manis dingin menyegarkan tenggorokan.",
-    price: 4000,
-    category: "Minuman",
-    hasSpicy: false,
-    hasNotes: true,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
-  },
-  {
-    id: "6",
-    name: "Es Jeruk Peras",
-    description: "Jeruk peras asli segar kaya vitamin C disajikan dingin.",
-    price: 6000,
-    category: "Minuman",
-    hasSpicy: false,
-    hasNotes: true,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAh5dbOT5X0_Ct7TRMW4EK-AUm6a2oFyPrhfru5ARdYMJq3JBK0elVSIPWbe_2CbudgQReT0w4-jMmOmP0BuBq_XHcVwdDhAbQmQJtZ8Ro8z5dQBvjwFoGNeS6dgsgS--MrZ-_ZtgvezN8YwIZpcoK8jphHo96sMZhgw2vbFiIchw1bYx-laVeYGzPlvK-QZtHrDufTUXc3BHqg3L1xa2Gg7N_9ps7XkbFcvmIuUdDpAU0YG74GU3wEpGddA16afAG89HndVMt7PF"
-  }
-];
-
-const CATEGORIES = ["Semua", "Makanan", "Minuman"];
+import { ArrowUpRight, Check, Utensils, Plus, Minus, ShoppingBag, X, Flame, MessageSquare, ChevronDown, LogOut, Trash2, Sparkles, Info, Search } from "lucide-react";
 
 interface CartItem {
   menuItemId: string;
@@ -86,17 +20,23 @@ export default function TablePage() {
   const tableId = params?.id;
 
   const [mounted, setMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
   const [inputName, setInputName] = useState("");
   const [showInfoPopover, setShowInfoPopover] = useState(false);
   const [toast, setToast] = useState<{ show: boolean; message: string } | null>(null);
 
+  // Dynamic Menu states from Database
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>(["Semua"]);
+  const [loadingMenu, setLoadingMenu] = useState(true);
+
   // Menu List states
   const [selectedCategory, setSelectedCategory] = useState("Semua");
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const [selectedItem, setSelectedItem] = useState<typeof MENU_ITEMS[0] | null>(null);
+  const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [customSpicyLevel, setCustomSpicyLevel] = useState<number | null>(null); // null: Belum dipilih, 0: Ori, 1: Sedang, 2: Pedas, 3: Gila
   const [customNotes, setCustomNotes] = useState("");
@@ -106,6 +46,45 @@ export default function TablePage() {
   // Mitigation - Pending Order state
   const [pendingOrder, setPendingOrder] = useState<any | null>(null);
   const [showPendingModal, setShowPendingModal] = useState(false);
+
+  // Fetch Menu from Database
+  useEffect(() => {
+    async function fetchMenu() {
+      try {
+        const res = await fetch("/api/menu");
+        if (res.ok) {
+          const data = await res.json();
+          
+          // Map data database agar sesuai dengan nama variabel di frontend
+          const mappedItems = (data.menuItems || []).map((item: any) => {
+            const isDrink = item.category?.id === "minuman" || item.category?.name?.toLowerCase() === "minuman";
+            const defaultPlaceholder = isDrink ? "/placeholder-drink.png" : "/placeholder-food.png";
+            return {
+              ...item,
+              image: item.imageUrl || defaultPlaceholder,
+              price: Number(item.price),
+              hasSpicy: item.hasSpicyOption,
+              hasNotes: item.hasNotesOption
+            };
+          });
+
+          setMenuItems(mappedItems);
+          
+          // Ambil nama kategori yang unik
+          const catNames = (data.categories || []).map((c: any) => c.name);
+          setCategories(["Semua", ...catNames]);
+        }
+      } catch (err) {
+        console.error("Gagal memuat menu:", err);
+      } finally {
+        setLoadingMenu(false);
+      }
+    }
+    if (mounted) {
+      fetchMenu();
+    }
+  }, [mounted]);
+
 
   // Periksa expired 10 menit pada order tertunda
   useEffect(() => {
@@ -212,7 +191,7 @@ export default function TablePage() {
     setIsRegistered(true);
   };
 
-  const handleOpenCustomization = (item: typeof MENU_ITEMS[0]) => {
+  const handleOpenCustomization = (item: any) => {
     setSelectedItem(item);
     
     // Cari apakah item ini sudah ada di keranjang
@@ -293,9 +272,12 @@ export default function TablePage() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const filteredMenuItems = selectedCategory === "Semua"
-    ? MENU_ITEMS
-    : MENU_ITEMS.filter((item) => item.category === selectedCategory);
+  const filteredMenuItems = menuItems.filter((item) => {
+    const matchesCategory = selectedCategory === "Semua" || item.category?.name === selectedCategory;
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
 
   if (!mounted) {
     return (
@@ -492,9 +474,33 @@ export default function TablePage() {
           </div>
         </div>
 
+        {/* Search Bar */}
+        <div className="relative mb-5">
+          <input
+            type="text"
+            placeholder="Cari menu favoritmu (mie dok-dok, es teh...)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white border border-border-subtle rounded-2xl py-3 pl-11 pr-10 text-xs text-text-primary placeholder:text-muted-text/40 shadow-sm focus:border-primary-cta focus:outline-none transition-all"
+          />
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text/60">
+            <Search className="w-4 h-4" />
+          </div>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-zinc-100 rounded-full text-muted-text transition-colors flex items-center justify-center"
+              type="button"
+              title="Bersihkan pencarian"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
         {/* Categories Horizontal Scroll */}
         <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-none sticky top-[68px] bg-page-bg z-20">
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -511,8 +517,8 @@ export default function TablePage() {
 
         {/* Menu Sections (Makanan, Minuman) */}
         <div className="flex flex-col gap-6 mt-4">
-          {CATEGORIES.filter(cat => cat !== "Semua").map((cat) => {
-            const itemsInCat = filteredMenuItems.filter(item => item.category === cat);
+          {categories.filter(cat => cat !== "Semua").map((cat) => {
+            const itemsInCat = filteredMenuItems.filter(item => item.category?.name === cat);
             if (itemsInCat.length === 0) return null;
 
             return (
@@ -593,7 +599,7 @@ export default function TablePage() {
       {/* Bottom Sheet Customization */}
       {selectedItem && (
         <div
-          className={`fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white rounded-t-2xl z-50 flex flex-col shadow-2xl transition-transform duration-300 ease-out border-t border-border-light ${
+          className={`fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white rounded-t-2xl z-50 flex flex-col shadow-2xl transition-transform duration-300 ease-out border-t border-border-light animate-slide-up ${
             sheetOpen ? "translate-y-0" : "translate-y-full"
           }`}
         >

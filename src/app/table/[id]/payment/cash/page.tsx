@@ -20,6 +20,13 @@ export default function CashPaymentPage() {
   useEffect(() => {
     setMounted(true);
     
+    // SECURITY GUARD: Jika transaksi sudah selesai, jangan biarkan kembali ke halaman pembayaran
+    const paymentCompletedFlag = localStorage.getItem("payment_completed_flag");
+    if (paymentCompletedFlag === "true") {
+      router.replace(`/table/${tableId}/payment/receipt`);
+      return;
+    }
+    
     // Load pending order
     const pendingOrderStr = localStorage.getItem("pending_order_mitigation");
     if (pendingOrderStr) {
@@ -161,11 +168,11 @@ export default function CashPaymentPage() {
           <button
             onClick={handleConfirmKasir}
             disabled={confirming}
-            className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-xs font-semibold text-text-secondary bg-zinc-50 hover:bg-zinc-100 border border-border-subtle rounded-xl shadow-sm transition-all active:scale-[0.99] disabled:opacity-80"
+            className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-xs font-semibold text-text-secondary bg-zinc-50 hover:bg-zinc-100/50 border border-border-subtle rounded-xl shadow-sm transition-all active:scale-[0.99] disabled:opacity-80 cursor-pointer"
           >
-            <div className="w-4 h-4 border-2 border-[#825429] border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+            <div className="w-4 h-4 border-2 border-primary-cta border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
             <span className="text-center leading-none">
-              {confirming ? "Mengecek konfirmasi..." : "Menunggu konfirmasi kasir (Klik untuk Demo)"}
+              {confirming ? "Mengecek konfirmasi..." : "Menunggu konfirmasi kasir..."}
             </span>
           </button>
         </div>

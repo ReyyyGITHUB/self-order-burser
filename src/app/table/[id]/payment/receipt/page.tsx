@@ -125,7 +125,7 @@ export default function ReceiptPage() {
   };
 
   const getTax = () => {
-    return Math.round(getSubtotal() * 0.11);
+    return 0; // Pajak gratis (dicoret di UI)
   };
 
   // Bersihkan cache keranjang saat user menekan tombol "Pesan Lagi" untuk keluar dari halaman struk
@@ -257,9 +257,12 @@ export default function ReceiptPage() {
               <span className="font-mono">Rp {getSubtotal().toLocaleString("id-ID")}</span>
             </div>
             <div className="flex justify-between items-center text-text-secondary text-[11px]">
-              <span>Pajak (11%)</span>
-              <span className="font-mono">Rp {getTax().toLocaleString("id-ID")}</span>
-            </div>
+               <span className="line-through opacity-50">Pajak (11%)</span>
+               <span className="font-mono text-[#128260] font-bold flex items-center gap-1.5">
+                 <span className="line-through text-muted-text/50 font-normal text-[10px]">Rp {Math.round(getSubtotal() * 0.11).toLocaleString("id-ID")}</span>
+                 <span>Rp 0</span>
+               </span>
+             </div>
             <div className="flex justify-between items-center border-t border-border-subtle pt-2.5">
               <span className="font-mono font-bold text-[10px] uppercase tracking-wider text-text-primary">Total Bayar</span>
               <span className="font-mono text-base font-extrabold text-primary-cta">Rp {totalAmount.toLocaleString("id-ID")}</span>

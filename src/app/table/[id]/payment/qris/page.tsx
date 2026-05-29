@@ -29,6 +29,13 @@ export default function QrisPaymentPage() {
   useEffect(() => {
     setMounted(true);
     
+    // SECURITY GUARD: Jika transaksi sudah selesai, jangan biarkan kembali ke halaman pembayaran
+    const paymentCompletedFlag = localStorage.getItem("payment_completed_flag");
+    if (paymentCompletedFlag === "true") {
+      router.replace(`/table/${tableId}/payment/receipt`);
+      return;
+    }
+    
     // Load pending order details
     let currentAmount = 25000;
     let currentOrderId = "BJR-082";
@@ -42,6 +49,15 @@ export default function QrisPaymentPage() {
         currentOrderId = pendingOrder.orderId || `BJR-${Date.now().toString().slice(-3)}`;
         setTotalAmount(currentAmount);
         setOrderId(currentOrderId);
+
+        // OPTIMASI: Reuse data QRIS dari halaman checkout langsung!
+        if (pendingOrder.qrisData) {
+          const qData = pendingOrder.qrisData;
+          setTransactionId(qData.transaction?.id || qData.id);
+          setQrString(qData.payment?.qr_string || qData.qr_string || "");
+          setLoading(false);
+          return;
+        }
       } catch (e) {
         console.error("Error parsing pending order:", e);
       }
@@ -300,25 +316,28 @@ export default function QrisPaymentPage() {
           )}
         </section>
 
-        {/* Demo Mode Manual Bypass Button OR Automated Real-Time Verification Status */}
+        {/* Demo Mode Secret Clickable Banner OR Automated Real-Time Verification Status */}
         {isDemoMode ? (
           <button
             onClick={handleDemoConfirmPayment}
             disabled={checkingPayment || loading || !!errorMsg}
-            className="w-full bg-[#825429] text-white py-3 rounded-xl font-bold text-xs shadow-sm hover:bg-[#825429]/95 transition-all flex items-center justify-center gap-1.5 disabled:opacity-75 flex-shrink-0"
+            className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-text-secondary text-xs font-semibold bg-zinc-50 border border-border-subtle rounded-xl flex-shrink-0 shadow-sm cursor-pointer hover:bg-zinc-100/50 active:scale-[0.99] transition-all"
           >
             {checkingPayment ? (
               <>
-                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Memverifikasi Pembayaran...</span>
+                <div className="w-4 h-4 border-2 border-primary-cta border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                <span className="text-center leading-none">Memverifikasi Pembayaran...</span>
               </>
             ) : (
-              <span>Saya Sudah Bayar (Demo Mode)</span>
+              <>
+                <div className="w-4 h-4 border-2 border-primary-cta border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                <span className="text-center leading-none">Menunggu pembayaran otomatis terkonfirmasi...</span>
+              </>
             )}
           </button>
         ) : (
           <div className="w-full py-3.5 px-4 flex items-center justify-center gap-2.5 text-text-secondary text-xs font-semibold bg-zinc-50 border border-border-subtle rounded-xl flex-shrink-0 shadow-sm">
-            <div className="w-4 h-4 border-2 border-[#825429] border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+            <div className="w-4 h-4 border-2 border-primary-cta border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
             <span className="text-center leading-none">Menunggu pembayaran otomatis terkonfirmasi...</span>
           </div>
         )}
