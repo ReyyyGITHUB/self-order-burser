@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-export default function RouteLoader() {
+function RouteLoaderContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -50,13 +50,16 @@ export default function RouteLoader() {
   if (!isLoading) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-all duration-300">
-      <div className="flex flex-col items-center gap-3 rounded-2xl bg-white p-5 shadow-2xl dark:bg-zinc-900">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-        <p className="text-sm font-medium text-zinc-600 dark:text-zinc-300 animate-pulse">
-          Memuat halaman...
-        </p>
-      </div>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-transparent">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
     </div>
+  );
+}
+
+export default function RouteLoader() {
+  return (
+    <Suspense fallback={null}>
+      <RouteLoaderContent />
+    </Suspense>
   );
 }
