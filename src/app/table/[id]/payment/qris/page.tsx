@@ -21,8 +21,8 @@ export default function QrisPaymentPage() {
   const [qrString, setQrString] = useState("");
   const [loading, setLoading] = useState(true);
   const [checkingPayment, setCheckingPayment] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [changingMethod, setChangingMethod] = useState(false);
 
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
@@ -194,6 +194,40 @@ export default function QrisPaymentPage() {
       router.push(`/table/${tableId}/payment/receipt`);
     }, 1500);
   };
+  const handleChangePaymentMethod = async () => {
+    if (changingMethod) return;
+    const confirmChange = window.confirm("Apakah Anda ingin mengganti metode pembayaran menjadi Tunai/Kasir?");
+    if (!confirmChange) return;
+
+    setChangingMethod(true);
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentMethod: "CASH" })
+      });
+
+      if (res.ok) {
+        // Update local session
+        const pendingOrderStr = localStorage.getItem("pending_order_mitigation");
+        if (pendingOrderStr) {
+          const pendingOrder = JSON.parse(pendingOrderStr);
+          pendingOrder.paymentMethod = "cash";
+          localStorage.setItem("pending_order_mitigation", JSON.stringify(pendingOrder));
+        }
+        
+        // Redirect ke Receipt Page untuk Cash
+        router.push(`/table/${tableId}/payment/receipt`);
+      } else {
+        alert("Gagal mengganti metode pembayaran. Silakan hubungi kasir.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Terjadi kesalahan koneksi.");
+    } finally {
+      setChangingMethod(false);
+    }
+  };
 
   if (!mounted) {
     return (
@@ -341,6 +375,15 @@ export default function QrisPaymentPage() {
             <span className="text-center leading-none">Menunggu pembayaran otomatis terkonfirmasi...</span>
           </div>
         )}
+
+        {/* Tombol Ganti Metode Pembayaran */}
+        <button
+          onClick={handleChangePaymentMethod}
+          disabled={changingMethod || loading}
+          className="w-full py-3.5 px-4 text-center text-xs font-bold text-[#825429] bg-white border border-[#825429]/20 hover:bg-zinc-50 rounded-xl transition-all shadow-sm disabled:opacity-50 flex-shrink-0"
+        >
+          {changingMethod ? "Memproses..." : "Ganti Metode Pembayaran (Tunai / Kasir)"}
+        </button>
       </main>
     </div>
   );

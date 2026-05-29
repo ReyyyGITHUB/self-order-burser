@@ -39,7 +39,7 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { status, paymentStatus, kasirId, items } = body;
+    const { status, paymentStatus, kasirId, items, paymentMethod } = body;
 
     // Ambil data order lama untuk pengecekan beserta item dan harga menunya
     const existingOrder = await prisma.order.findUnique({
@@ -55,6 +55,11 @@ export async function PATCH(
 
     // Siapkan objek data untuk diupdate
     const updateData: any = {};
+
+    // Jika pelanggan mengubah metode pembayaran (e.g. dari QRIS ke CASH)
+    if (paymentMethod) {
+      updateData.paymentMethod = paymentMethod;
+    }
 
     // Jika kasir mengupdate status pesanan (e.g. PROCESSING, COMPLETED, CANCELLED)
     if (status) {
