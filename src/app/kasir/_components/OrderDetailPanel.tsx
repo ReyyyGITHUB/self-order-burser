@@ -138,8 +138,8 @@ export default function OrderDetailPanel({
       <div className="flex-1 overflow-y-auto px-5 py-4">
         <div className="bg-white rounded-2xl border border-[var(--outline-variant)] overflow-hidden">
           {/* Table Header */}
-          <div className="grid grid-cols-[2rem_1fr_5rem_5rem] gap-2 px-4 py-2.5 bg-[var(--surface-container)] text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-text)]">
-            <span>Qty</span>
+          <div className="grid grid-cols-[3rem_1fr_5.5rem_6rem] gap-2 px-4 py-2.5 bg-[var(--surface-container)] text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">
+            <span className="text-center">Qty</span>
             <span>Item</span>
             <span className="text-right">Harga</span>
             <span className="text-right">Total</span>
@@ -149,33 +149,44 @@ export default function OrderDetailPanel({
           {order.orderItems.map((item, idx) => (
             <div
               key={item.id}
-              className={`grid grid-cols-[2rem_1fr_5rem_5rem] gap-2 px-4 py-3 text-sm items-start ${
+              className={`grid grid-cols-[3rem_1fr_5.5rem_6rem] gap-2 px-4 py-3.5 text-xs items-center ${
                 idx < order.orderItems.length - 1
                   ? "border-b border-[var(--outline-variant)]"
                   : ""
               }`}
             >
-              <span className="font-bold text-[var(--primary)]">{item.quantity}</span>
+              {/* Qty Badge */}
+              <div className="flex justify-center">
+                <span className="inline-flex items-center justify-center px-2 py-1 rounded-lg bg-[var(--primary-container)] text-[var(--primary)] font-bold text-[11px] min-w-[2rem] shadow-sm">
+                  {item.quantity}x
+                </span>
+              </div>
+
+              {/* Item Details */}
               <div>
-                <p className="font-medium text-[var(--on-surface)]">{item.menuItem.name}</p>
-                <div className="flex flex-wrap gap-1.5 mt-1">
+                <p className="font-semibold text-[var(--on-surface)] leading-tight">{item.menuItem.name}</p>
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {item.spicyLevel > 0 && (
-                    <span className="flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded bg-red-50 text-red-600 font-medium">
+                    <span className="flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded bg-red-50 text-red-600 font-medium">
                       <Flame size={9} />
                       {["", "Pedas", "Sedang", "Sangat Pedas"][item.spicyLevel]}
                     </span>
                   )}
                   {item.notes && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--surface-container)] text-[var(--on-surface-variant)]">
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--surface-container)] text-[var(--on-surface-variant)]">
                       {item.notes}
                     </span>
                   )}
                 </div>
               </div>
-              <span className="text-right text-[var(--muted-text)] text-xs">
+
+              {/* Unit Price */}
+              <span className="text-right text-[var(--muted-text)] font-medium">
                 Rp {Number(item.unitPrice).toLocaleString("id-ID")}
               </span>
-              <span className="text-right font-semibold text-[var(--on-surface)] text-xs">
+
+              {/* Subtotal */}
+              <span className="text-right font-bold text-[var(--on-surface)] text-sm">
                 Rp {Number(item.subtotal).toLocaleString("id-ID")}
               </span>
             </div>
