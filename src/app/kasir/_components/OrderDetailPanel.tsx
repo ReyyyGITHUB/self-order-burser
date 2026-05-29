@@ -219,36 +219,25 @@ export default function OrderDetailPanel({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2.5 flex-wrap">
+        <div className="flex gap-2.5 items-stretch w-full">
           {/* Cetak Bill — selalu ada */}
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container)] transition-colors"
+            className="flex items-center justify-center gap-1.5 px-4 h-12 rounded-xl text-xs font-semibold border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container)] transition-all active:scale-[0.98]"
           >
-            <Printer size={15} />
+            <Printer size={14} />
             Cetak Bill
           </button>
 
-          {/* Konfirmasi Cash */}
-          {isCashUnpaid && (
+          {/* Batalkan */}
+          {order.status !== "COMPLETED" && order.status !== "CANCELLED" && (
             <button
-              onClick={onOpenCashModal}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-orange-500 hover:bg-orange-600 text-white transition-colors shadow-sm"
-            >
-              <Banknote size={15} />
-              Konfirmasi Cash
-            </button>
-          )}
-
-          {/* Proses → PROCESSING */}
-          {order.status === "CONFIRMED" && (
-            <button
-              onClick={() => handleAction({ status: "PROCESSING" })}
+              onClick={() => handleAction({ status: "CANCELLED" })}
               disabled={processing}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-purple-600 hover:bg-purple-700 text-white transition-colors shadow-sm disabled:opacity-60"
+              className="flex items-center justify-center gap-1.5 px-4 h-12 rounded-xl text-xs font-medium border border-[var(--outline-variant)] text-[var(--error)] hover:bg-[var(--error-container)] transition-all disabled:opacity-60 active:scale-[0.98]"
             >
-              {processing ? <Loader2 size={15} className="animate-spin" /> : <ChefHat size={15} />}
-              Proses
+              <XCircle size={14} />
+              Batalkan
             </button>
           )}
 
@@ -257,22 +246,33 @@ export default function OrderDetailPanel({
             <button
               onClick={() => handleAction({ status: "COMPLETED" })}
               disabled={processing}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-[var(--tertiary)] hover:bg-[var(--on-tertiary-fixed-variant)] text-white transition-colors shadow-sm disabled:opacity-60"
+              className="flex-1 flex items-center justify-center gap-1.5 px-5 h-12 rounded-xl text-sm font-bold bg-[var(--tertiary)] hover:bg-[var(--on-tertiary-fixed-variant)] text-white transition-all shadow-md disabled:opacity-60 active:scale-[0.98]"
             >
               {processing ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
               Selesai
             </button>
           )}
 
-          {/* Batalkan */}
-          {order.status !== "COMPLETED" && order.status !== "CANCELLED" && (
+          {/* Proses → PROCESSING */}
+          {order.status === "CONFIRMED" && (
             <button
-              onClick={() => handleAction({ status: "CANCELLED" })}
+              onClick={() => handleAction({ status: "PROCESSING" })}
               disabled={processing}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium border border-[var(--outline-variant)] text-[var(--error)] hover:bg-[var(--error-container)] transition-colors disabled:opacity-60"
+              className="flex-1 flex items-center justify-center gap-1.5 px-5 h-12 rounded-xl text-sm font-bold bg-purple-600 hover:bg-purple-700 text-white transition-all shadow-md disabled:opacity-60 active:scale-[0.98]"
             >
-              <XCircle size={15} />
-              Batalkan
+              {processing ? <Loader2 size={15} className="animate-spin" /> : <ChefHat size={15} />}
+              Proses Masak
+            </button>
+          )}
+
+          {/* Konfirmasi Cash (Paling Kanan & Paling Besar 🔴) */}
+          {isCashUnpaid && (
+            <button
+              onClick={onOpenCashModal}
+              className="flex-1 flex items-center justify-center gap-2 px-6 h-12 rounded-xl text-sm font-bold bg-orange-600 hover:bg-orange-700 text-white transition-all shadow-md animate-pulse hover:animate-none active:scale-[0.98]"
+            >
+              <Banknote size={18} />
+              Konfirmasi Pembayaran Cash
             </button>
           )}
         </div>
