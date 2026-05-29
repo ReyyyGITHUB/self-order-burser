@@ -101,6 +101,9 @@ export default function KasirPage() {
 
   useEffect(() => {
     fetchOrders();
+    // Setup polling otomatis setiap 5 detik sebagai backup realtime yang andal di local env
+    const interval = setInterval(fetchOrders, 5000);
+    return () => clearInterval(interval);
   }, [fetchOrders]);
 
   // Supabase Realtime subscription
@@ -168,7 +171,7 @@ export default function KasirPage() {
               unitPrice: unitPrice,
               subtotal: subtotal,
               spicyLevel: existingOI?.spicyLevel || 0,
-              notes: existingOI?.notes || "",
+              notes: updatedItem.notes || existingOI?.notes || "",
               menuItem: existingOI?.menuItem || {
                 id: updatedItem.menuItemId,
                 name: updatedItem.name || "Loading...",
