@@ -23,6 +23,7 @@ export default function QrisPaymentPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [changingMethod, setChangingMethod] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
@@ -194,11 +195,13 @@ export default function QrisPaymentPage() {
       router.push(`/table/${tableId}/payment/receipt`);
     }, 1500);
   };
-  const handleChangePaymentMethod = async () => {
+  const handleChangePaymentMethod = () => {
     if (changingMethod) return;
-    const confirmChange = window.confirm("Apakah Anda ingin mengganti metode pembayaran menjadi Tunai/Kasir?");
-    if (!confirmChange) return;
+    setShowConfirmDialog(true);
+  };
 
+  const handleConfirmChangePayment = async () => {
+    setShowConfirmDialog(false);
     setChangingMethod(true);
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
@@ -385,6 +388,35 @@ export default function QrisPaymentPage() {
           </div>
         )}
       </main>
+
+      {/* Premium Overlay Confirmation Modal */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl p-5 w-full max-w-[320px] shadow-2xl flex flex-col gap-4 animate-scale-up border border-border-subtle">
+            <div className="text-center flex flex-col gap-1.5">
+              <h3 className="text-sm font-bold text-text-primary">Ganti Metode Pembayaran?</h3>
+              <p className="text-[10px] text-text-secondary leading-relaxed px-1">
+                Pesanan Anda akan dialihkan ke pembayaran <strong className="text-text-primary">Tunai di Kasir</strong>. Harap selesaikan pembayaran di meja kasir.
+              </p>
+            </div>
+            
+            <div className="flex gap-2.5 w-full">
+              <button
+                onClick={() => setShowConfirmDialog(false)}
+                className="flex-1 py-2.5 border border-border-subtle rounded-xl text-[10px] font-bold text-text-secondary bg-white hover:bg-zinc-50 transition-all active:scale-[0.98] cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleConfirmChangePayment}
+                className="flex-1 py-2.5 bg-primary-cta hover:bg-primary-cta/90 text-white rounded-xl text-[10px] font-bold shadow-md transition-all active:scale-[0.98] cursor-pointer"
+              >
+                Ya, Ganti Tunai
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
