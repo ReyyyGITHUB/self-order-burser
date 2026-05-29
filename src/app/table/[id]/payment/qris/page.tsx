@@ -16,11 +16,11 @@ export default function QrisPaymentPage() {
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [showToast, setShowToast] = useState(false);
   
-  // Louvin API states
   const [transactionId, setTransactionId] = useState("");
   const [qrString, setQrString] = useState("");
   const [loading, setLoading] = useState(true);
   const [checkingPayment, setCheckingPayment] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [changingMethod, setChangingMethod] = useState(false);
 
