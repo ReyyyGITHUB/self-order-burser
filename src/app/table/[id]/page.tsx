@@ -523,9 +523,9 @@ export default function TablePage() {
 
             return (
               <section key={cat} className="flex flex-col gap-3.5">
-                <h3 className="text-xs font-bold text-text-primary font-sans flex items-center gap-2 border-b border-border-subtle pb-2">
+                <h3 className="text-base font-extrabold text-text-primary font-sans flex items-center gap-2 border-b border-border-subtle pb-2.5">
                   <span>{cat}</span>
-                  <span className="text-[9px] bg-zinc-100 text-muted-text px-2 py-0.5 rounded-full font-semibold font-mono">
+                  <span className="text-[10px] bg-primary-cta/5 border border-primary-cta/10 text-primary-cta px-2.5 py-0.5 rounded-full font-bold font-mono">
                     {itemsInCat.length} menu
                   </span>
                 </h3>
