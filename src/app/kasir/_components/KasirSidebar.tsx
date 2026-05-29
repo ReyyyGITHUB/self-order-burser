@@ -60,11 +60,7 @@ export default function KasirSidebar({ currentPath }: { currentPath: string }) {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("kasir_logged_in");
-    sessionStorage.removeItem("kasir_username");
-    sessionStorage.removeItem("kasir_name");
-    sessionStorage.removeItem("kasir_role");
-    window.location.href = "/kasir";
+    window.dispatchEvent(new Event("trigger-kasir-logout"));
   };
 
   return (

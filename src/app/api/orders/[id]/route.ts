@@ -39,7 +39,7 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { status, paymentStatus, kasirId, items, paymentMethod } = body;
+    const { status, paymentStatus, kasirId, items, paymentMethod, shiftId } = body;
 
     // Ambil data order lama untuk pengecekan beserta item dan harga menunya
     const existingOrder = await prisma.order.findUnique({
@@ -91,6 +91,11 @@ export async function PATCH(
       if (userExists) {
         updateData.kasirId = kasirId;
       }
+    }
+
+    // Catat ID Shift kasir jika sedang aktif
+    if (shiftId) {
+      updateData.shiftId = shiftId;
     }
 
     // PENANGANAN PENAMBAHAN/EDIT ITEM KASIR SECARA REALTIME

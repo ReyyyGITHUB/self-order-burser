@@ -108,6 +108,8 @@ model Order {
   paymentStatus    PaymentStatus @default(UNPAID) @map("payment_status")
   pgTransactionId  String?       @map("pg_transaction_id")
   totalAmount      Decimal       @db.Decimal(10, 2) @map("total_amount")
+  shiftId          String?       @map("shift_id")
+  shift            KasirShift?   @relation(fields: [shiftId], references: [id])
   orderItems       OrderItem[]
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @updatedAt @map("updated_at")
@@ -130,4 +132,20 @@ model OrderItem {
   updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("order_items")
+}
+
+model KasirShift {
+  id           String    @id @default(uuid())
+  kasirName    String    @map("kasir_name")
+  startTime    DateTime  @default(now()) @map("start_time")
+  endTime      DateTime? @map("end_time")
+  startingCash Decimal   @db.Decimal(10, 2) @map("starting_cash")
+  endingCash   Decimal?  @db.Decimal(10, 2) @map("ending_cash")
+  expectedCash Decimal   @db.Decimal(10, 2) @default(0) @map("expected_cash")
+  status       String    @default("OPEN")
+  orders       Order[]
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("kasir_shifts")
 }

@@ -190,10 +190,16 @@ export default function KasirPage() {
     }
 
     try {
+      const shiftId = typeof window !== "undefined" ? sessionStorage.getItem("kasir_shift_id") : null;
+      const payload = { ...updates };
+      if (shiftId) {
+        payload.shiftId = shiftId;
+      }
+
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
